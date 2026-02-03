@@ -46,6 +46,37 @@
         requirements: /home/www/{{location}}/requirements.txt
         virtualenv: /home/www/{{location}}/venv
 
+    - name: Install psycopg2-binary for ansible postgres module
+      pip:
+        name: psycopg2-binary
+
+    - name: Create PostgreSQL database
+      become: true
+      become_user: postgres
+      community.postgresql.postgresql_db:
+        name: "{{ projectname }}"
+        state: present
+
+    - name: Create PostgreSQL user
+      become: true
+      become_user: postgres
+      community.postgresql.postgresql_user:
+        name: "{{ projectname }}"
+        password: "{{ projectname }}2024!"
+        db: "{{ projectname }}"
+        priv: ALL
+        state: present
+
+    - name: Run Django migrations
+      command: /home/www/{{location}}/venv/bin/python /home/www/{{location}}/manage.py migrate
+      args:
+        chdir: /home/www/{{location}}
+
+    - name: Collect static files
+      command: /home/www/{{location}}/venv/bin/python /home/www/{{location}}/manage.py collectstatic --noinput
+      args:
+        chdir: /home/www/{{location}}
+
     - name: remove default nginx site config
       become: true
       file: path=/etc/nginx/sites-enabled/default state=absent
@@ -94,3 +125,9 @@
       supervisorctl:
         name: "{{ projectname }}"
         state: started
+
+    - name: Restart nginx
+      become: true
+      service:
+        name: nginx
+        state: restarted
