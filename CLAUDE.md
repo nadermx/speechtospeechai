@@ -117,6 +117,66 @@ response = requests.post(
 )
 ```
 
+## Deployment
+
+**Server**: DigitalOcean Droplet (167.172.17.40, s-2vcpu-4gb, nyc3)
+
+### Initial Deployment
+```bash
+cd ansible && ansible-playbook -i servers djangodeployubuntu20.yml
+```
+
+### Manual Deployment Steps
+```bash
+# SSH to server
+ssh root@167.172.17.40
+
+# Update code
+cd /home/www/speechtospeechai && git pull origin main
+
+# Install requirements if changed
+source venv/bin/activate && pip install -r requirements.txt
+
+# Run migrations
+python manage.py migrate
+
+# Collect static files
+python manage.py collectstatic --noinput
+
+# Restart
+supervisorctl restart speechtospeechai
+```
+
+### Quick Deploy (via ansible from local)
+```bash
+cd ansible && ansible -i servers all -m shell -a "cd /home/www/speechtospeechai && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && supervisorctl restart speechtospeechai" --become
+```
+
+### SSL Setup
+```bash
+ssh root@167.172.17.40
+certbot --nginx -d speechtospeechai.com -d www.speechtospeechai.com
+```
+
+### Logs
+```bash
+# Application logs
+tail -f /var/log/speechtospeechai/speechtospeechai.err.log
+tail -f /var/log/speechtospeechai/speechtospeechai.out.log
+
+# Django logs
+cat /var/log/speechtospeechai/speechtospeechai.log
+
+# Nginx logs
+tail -f /var/log/nginx/error.log
+```
+
+### Database Access
+```bash
+ssh root@167.172.17.40
+sudo -u postgres psql speechtospeechai
+```
+
 ## Resources
 
 - [PersonaPlex](https://research.nvidia.com/labs/adlr/personaplex/)
