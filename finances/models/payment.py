@@ -5,7 +5,8 @@ import requests
 import stripe
 from django.db import models
 from django.utils import timezone
-from square.client import Client
+from square import Square
+from square.client import SquareEnvironment
 
 from accounts.models import CustomUser
 from app.utils import Utils
@@ -552,9 +553,10 @@ class Payment(models.Model):
 
     @staticmethod
     def make_square_refund(payment_id, amount):
-        client = Client(
-            access_token=SQUARE_UP.get('secret'),
-            environment=SQUARE_UP.get('env'),
+        env = SquareEnvironment.SANDBOX if SQUARE_UP.get('env') == 'sandbox' else SquareEnvironment.PRODUCTION
+        client = Square(
+            token=SQUARE_UP.get('secret'),
+            environment=env,
         )
         body = {
             'idempotency_key': Utils.generate_uuid(),
@@ -569,7 +571,7 @@ class Payment(models.Model):
             'payment_id': payment_id,
             'reason': 'Customer requests a refund'
         }
-        result = client.refunds.refund_payment(body)
+        result = client.refunds.refund_payment(body=body)
 
         if result.is_error():
             msg = []
@@ -595,15 +597,16 @@ class Payment(models.Model):
         if not amount:
             return None, [i18n.get('empty_amount', 'empty_amount')]
 
-        client = Client(
-            access_token=SQUARE_UP.get('secret'),
-            environment=SQUARE_UP.get('env'),
+        env = SquareEnvironment.SANDBOX if SQUARE_UP.get('env') == 'sandbox' else SquareEnvironment.PRODUCTION
+        client = Square(
+            token=SQUARE_UP.get('secret'),
+            environment=env,
         )
         body = {
             'email_address': user.email,
-            'note': 'EstaCaido.com'
+            'note': 'SpeechToSpeechAI.com'
         }
-        result = client.customers.create_customer(body)
+        result = client.customers.create_customer(body=body)
 
         if result.is_error():
             payment = Payment.objects.create(
@@ -629,7 +632,7 @@ class Payment(models.Model):
         body = {
             'card_nonce': nonce
         }
-        result = client.customers.create_customer_card(customer_id, body)
+        result = client.customers.create_customer_card(customer_id=customer_id, body=body)
 
         if result.is_error():
             payment = Payment.objects.create(
@@ -670,7 +673,7 @@ class Payment(models.Model):
             'customer_id': customer_id,
             'note': 'Making Payment'
         }
-        result = client.payments.create_payment(body)
+        result = client.payments.create_payment(body=body)
 
         if result.is_error():
             payment = Payment.objects.create(
@@ -717,9 +720,10 @@ class Payment(models.Model):
     @staticmethod
     def make_charge_square_customer(user, amount=0):
         processor = Payment.SQUAREUP
-        client = Client(
-            access_token=SQUARE_UP.get('secret'),
-            environment=SQUARE_UP.get('env'),
+        env = SquareEnvironment.SANDBOX if SQUARE_UP.get('env') == 'sandbox' else SquareEnvironment.PRODUCTION
+        client = Square(
+            token=SQUARE_UP.get('secret'),
+            environment=env,
         )
         body = {
             'source_id': user.card_nonce,
@@ -736,7 +740,7 @@ class Payment(models.Model):
             'customer_id': user.payment_nonce,
             'note': 'Making Payment'
         }
-        result = client.payments.create_payment(body)
+        result = client.payments.create_payment(body=body)
 
         if result.is_error():
             payment = Payment.objects.create(
