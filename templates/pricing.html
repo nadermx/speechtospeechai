@@ -1,54 +1,256 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-    <div class="container text-center">
-        <h1 class="page-header">{{ g.i18n.pricing|default:"Pricing" }}</h1>
-        <p class="lead">{{ g.i18n.pricing_subtitle|default:"Choose the plan that works for you" }}</p>
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4 text-center">
+        <h1 class="display-4 fw-bold mb-4">Simple, Transparent Pricing</h1>
+        <p class="lead mb-4 opacity-75">Start free, scale as you grow. No hidden fees.</p>
     </div>
-    <form class="container-md pricing-form"
-          action="{% url 'checkout' %}"
-          method="get">
-        <div class="row">
-            {% for plan in plans %}
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input"
-                               type="radio"
-                               name="plan"
-                               id="{{ plan.code_name }}"
-                               value="{{ plan.code_name }}"
-                               {% if forloop.first %}checked{% endif %} >
-                        <label class="form-check-label"
-                               for="{{ plan.code_name }}">
-                                <span class="price-wrapper">
-                                    <span class="price-value">US$ {{ plan.price }}</span><br>
-                                    {% if plan.is_subscription %}
-                                        {{ g.i18n.monthly|default:"per month" }}
-                                    {% else %}
-                                        {{ g.i18n.single_charge|default:"one-time" }}
-                                    {% endif %}
-                                </span>
-                            <br>
-                            <span class="plan-check">
-                                {% include 'svgs/check.html' %}
-                                {% if plan.credits %}
-                                    <span>{{ plan.credits }} {{ g.i18n.credits|default:"credits" }}</span>
-                                {% else %}
-                                    <span>{{ g.i18n.unlimited_access|default:"Unlimited access" }}</span>
-                                {% endif %}
-                            </span>
-                        </label>
+</section>
+
+<!-- Pricing Cards -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            <!-- Free Plan -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-muted mb-3">Free</h5>
+                        <div class="display-4 fw-bold mb-1">$0</div>
+                        <p class="text-muted mb-4">Forever free</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span><strong>10 credits</strong>/month</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>All tools included</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>API access</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>3 cloned voices</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-x-circle text-muted me-2 mt-1"></i>
+                                <span class="text-muted">Custom training</span>
+                            </li>
+                        </ul>
+                        <a href="/signup/" class="btn btn-outline-primary w-100">Get Started</a>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
+
+            <!-- Starter Plan -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-muted mb-3">Starter</h5>
+                        <div class="display-4 fw-bold mb-1">$9</div>
+                        <p class="text-muted mb-4">per month</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span><strong>100 credits</strong>/month</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>All tools included</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>API access</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>10 cloned voices</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-x-circle text-muted me-2 mt-1"></i>
+                                <span class="text-muted">Custom training</span>
+                            </li>
+                        </ul>
+                        <a href="/checkout/?plan=starter" class="btn btn-outline-primary w-100">Choose Starter</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-primary shadow">
+                    <div class="card-header bg-primary text-white text-center py-2">
+                        <span class="fw-bold">Most Popular</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-muted mb-3">Pro</h5>
+                        <div class="display-4 fw-bold mb-1">$29</div>
+                        <p class="text-muted mb-4">per month</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span><strong>500 credits</strong>/month</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>All tools + Webhooks</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span><strong>Unlimited</strong> voices</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Custom training</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Priority processing</span>
+                            </li>
+                        </ul>
+                        <a href="/checkout/?plan=pro" class="btn btn-primary w-100">Choose Pro</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-muted mb-3">Enterprise</h5>
+                        <div class="display-4 fw-bold mb-1">$99</div>
+                        <p class="text-muted mb-4">per month</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span><strong>2000 credits</strong>/month</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Everything in Pro</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Dedicated GPU access</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>SLA guarantee</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                <span>Priority support</span>
+                            </li>
+                        </ul>
+                        <a href="/checkout/?plan=enterprise" class="btn btn-outline-primary w-100">Choose Enterprise</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <hr>
-        <button id="pricingbutton"
-                class="btn btn-success btn-lg">{{ g.i18n.purchase|default:"Purchase" }}</button>
-        <br>
-        <p class="small mt-3">
-            <strong>{{ g.i18n.risk_free|default:"Risk-free" }}:</strong> {{ g.i18n.money_back|default:"30-day money-back guarantee" }}<br>
-            <strong>{{ g.i18n.flexible|default:"Flexible" }}:</strong> {{ g.i18n.change_plan_whenever|default:"Change or cancel anytime" }}<br>
-            <strong>{{ g.i18n.fair|default:"Fair" }}:</strong> {{ g.i18n.credits_never_expire|default:"Credits never expire" | safe }}
-        </p>
-    </form>
+    </div>
+</section>
+
+<!-- Credit Usage -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">How Credits Work</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-person-badge fs-1 text-primary mb-3"></i>
+                        <h6>Voice Cloning</h6>
+                        <p class="display-6 fw-bold text-primary mb-0">1 credit</p>
+                        <small class="text-muted">per voice clone</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-chat-square-text fs-1 text-success mb-3"></i>
+                        <h6>Text to Speech</h6>
+                        <p class="display-6 fw-bold text-success mb-0">1 credit</p>
+                        <small class="text-muted">per 1000 characters</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-mic fs-1 text-info mb-3"></i>
+                        <h6>Speech to Text</h6>
+                        <p class="display-6 fw-bold text-info mb-0">1 credit</p>
+                        <small class="text-muted">per minute</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-headset fs-1 text-danger mb-3"></i>
+                        <h6>Real-Time Chat</h6>
+                        <p class="display-6 fw-bold text-danger mb-0">1 credit</p>
+                        <small class="text-muted">per minute</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Frequently Asked Questions</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Do unused credits roll over?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! Unused monthly credits roll over for up to 3 months.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Can I cancel anytime?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! You can cancel your subscription at any time. You'll keep access until the end of your billing period.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Is there a refund policy?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, we offer a 7-day money-back guarantee. See our <a href="/refund/">refund policy</a> for details.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

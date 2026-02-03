@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3">
+                        <li class="breadcrumb-item"><a href="/" class="text-light">Home</a></li>
+                        <li class="breadcrumb-item active text-success">Text to Speech</li>
+                    </ol>
+                </nav>
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-chat-square-text text-success me-3"></i>Text to Speech
+                </h1>
+                <p class="lead mb-4 opacity-75">
+                    Convert any text to natural-sounding speech. Choose from 50+ premium voices, 29 languages, and customize emotion, speed, and pitch.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success"><i class="bi bi-mic me-1"></i>50+ Voices</span>
+                    <span class="badge bg-primary"><i class="bi bi-globe me-1"></i>29 Languages</span>
+                    <span class="badge bg-info"><i class="bi bi-emoji-smile me-1"></i>Emotion Control</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Tool -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Text Input Panel -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-pencil me-2"></i>Enter Your Text</h5>
+                        <span class="badge bg-secondary" id="charCount">0 / 5000</span>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control border-0" rows="8" id="textInput" placeholder="Enter the text you want to convert to speech..." maxlength="5000" style="resize: none;"></textarea>
+                    </div>
+                    <div class="card-footer bg-white border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button class="btn btn-outline-secondary btn-sm" title="Clear text">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" title="Paste from clipboard">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" title="Sample text">
+                                    <i class="bi bi-lightning"></i> Sample
+                                </button>
+                            </div>
+                            <small class="text-muted">Supports SSML tags</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice & Settings -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-sliders me-2"></i>Voice & Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <!-- Voice Selection -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Voice</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="voiceSelect">
+                                        <optgroup label="English (US)">
+                                            <option value="alloy">Alloy (Neutral)</option>
+                                            <option value="echo">Echo (Male)</option>
+                                            <option value="fable">Fable (British)</option>
+                                            <option value="nova" selected>Nova (Female)</option>
+                                            <option value="onyx">Onyx (Male, Deep)</option>
+                                            <option value="shimmer">Shimmer (Female, Warm)</option>
+                                        </optgroup>
+                                        <optgroup label="English (UK)">
+                                            <option value="amy-uk">Amy (British)</option>
+                                            <option value="brian-uk">Brian (British Male)</option>
+                                        </optgroup>
+                                        <optgroup label="Spanish">
+                                            <option value="lucia-es">Lucia (Spanish)</option>
+                                            <option value="pablo-es">Pablo (Spanish Male)</option>
+                                        </optgroup>
+                                        <optgroup label="French">
+                                            <option value="celine-fr">Celine (French)</option>
+                                            <option value="mathieu-fr">Mathieu (French Male)</option>
+                                        </optgroup>
+                                        <optgroup label="German">
+                                            <option value="marlene-de">Marlene (German)</option>
+                                            <option value="hans-de">Hans (German Male)</option>
+                                        </optgroup>
+                                        <optgroup label="My Cloned Voices">
+                                            <option value="custom" disabled>No cloned voices yet</option>
+                                        </optgroup>
+                                    </select>
+                                    <button class="btn btn-outline-secondary" type="button" title="Preview voice">
+                                        <i class="bi bi-play-fill"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Model -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Model</label>
+                                <select class="form-select" id="modelSelect">
+                                    <option value="fish-speech-v1.5" selected>Fish Speech v1.5 (Best)</option>
+                                    <option value="orpheus-3b">Orpheus TTS 3B (Expressive)</option>
+                                    <option value="openvoice-v2">OpenVoice v2 (Fast)</option>
+                                    <option value="xtts-v2">XTTS v2 (Versatile)</option>
+                                </select>
+                            </div>
+
+                            <!-- Speed -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Speed</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="range" class="form-range" id="speedRange" min="0.5" max="2" step="0.1" value="1">
+                                    <span class="badge bg-secondary" id="speedValue">1.0x</span>
+                                </div>
+                            </div>
+
+                            <!-- Pitch -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Pitch</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="range" class="form-range" id="pitchRange" min="-20" max="20" step="1" value="0">
+                                    <span class="badge bg-secondary" id="pitchValue">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Emotion (for Orpheus) -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Emotion</label>
+                                <select class="form-select" id="emotionSelect">
+                                    <option value="neutral" selected>Neutral</option>
+                                    <option value="happy">Happy</option>
+                                    <option value="sad">Sad</option>
+                                    <option value="angry">Angry</option>
+                                    <option value="fearful">Fearful</option>
+                                    <option value="surprised">Surprised</option>
+                                    <option value="whisper">Whisper</option>
+                                </select>
+                            </div>
+
+                            <!-- Output Format -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Output Format</label>
+                                <select class="form-select" id="formatSelect">
+                                    <option value="mp3" selected>MP3 (Recommended)</option>
+                                    <option value="wav">WAV (Lossless)</option>
+                                    <option value="ogg">OGG Vorbis</option>
+                                    <option value="flac">FLAC</option>
+                                </select>
+                            </div>
+
+                            <!-- Quality -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Quality</label>
+                                <select class="form-select" id="qualitySelect">
+                                    <option value="standard">Standard (128kbps)</option>
+                                    <option value="high" selected>High (256kbps)</option>
+                                    <option value="ultra">Ultra (320kbps)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="d-grid mt-4">
+                    <button class="btn btn-success btn-lg" id="generateBtn">
+                        <i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)
+                    </button>
+                </div>
+
+                <!-- Output Player -->
+                <div class="card shadow-sm mt-4 d-none" id="outputCard">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-soundwave me-2"></i>Generated Audio</h5>
+                    </div>
+                    <div class="card-body">
+                        <audio controls class="w-100 mb-3" id="outputPlayer"></audio>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success">
+                                <i class="bi bi-download me-2"></i>Download MP3
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="bi bi-share me-2"></i>Share
+                            </button>
+                            <button class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-repeat me-2"></i>Regenerate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Credits -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-coin me-2"></i>Your Credits</h6>
+                            <span class="badge bg-success fs-6">{{ user.credits|default:10 }}</span>
+                        </div>
+                        <p class="small text-muted mb-2">1 credit = ~1000 characters</p>
+                        <a href="/pricing/" class="small">Get more credits</a>
+                    </div>
+                </div>
+
+                <!-- Quick Voices -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-star me-2"></i>Popular Voices</h6>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-person-circle me-3 text-primary"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">Nova</div>
+                                <small class="text-muted">Female, Warm</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-play-fill"></i></button>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-person-circle me-3 text-info"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">Onyx</div>
+                                <small class="text-muted">Male, Deep</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-play-fill"></i></button>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+                            <i class="bi bi-person-circle me-3 text-success"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">Fable</div>
+                                <small class="text-muted">British, Storytelling</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-play-fill"></i></button>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SSML Help -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-code-slash me-2"></i>SSML Tags</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <code class="small">&lt;break time="1s"/&gt;</code>
+                            <p class="small text-muted mb-0">Add a pause</p>
+                        </div>
+                        <div class="mb-3">
+                            <code class="small">&lt;emphasis level="strong"&gt;...&lt;/emphasis&gt;</code>
+                            <p class="small text-muted mb-0">Emphasize words</p>
+                        </div>
+                        <div>
+                            <code class="small">&lt;prosody rate="slow"&gt;...&lt;/prosody&gt;</code>
+                            <p class="small text-muted mb-0">Control speech rate</p>
+                        </div>
+                        <a href="/api-docs/#ssml" class="small">Full SSML reference</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">What Can You Create?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-youtube display-4 text-danger mb-3"></i>
+                        <h5>Video Voiceovers</h5>
+                        <p class="text-muted small">Create professional narration for YouTube, explainer videos, and documentaries.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-book display-4 text-primary mb-3"></i>
+                        <h5>Audiobooks</h5>
+                        <p class="text-muted small">Convert entire books to audio with consistent, natural-sounding narration.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-mic display-4 text-success mb-3"></i>
+                        <h5>Podcasts</h5>
+                        <p class="text-muted small">Generate intro/outro narration or full podcast episodes from scripts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const textInput = document.getElementById('textInput');
+    const charCount = document.getElementById('charCount');
+    const speedRange = document.getElementById('speedRange');
+    const speedValue = document.getElementById('speedValue');
+    const pitchRange = document.getElementById('pitchRange');
+    const pitchValue = document.getElementById('pitchValue');
+
+    textInput.addEventListener('input', function() {
+        charCount.textContent = `${this.value.length} / 5000`;
+    });
+
+    speedRange.addEventListener('input', function() {
+        speedValue.textContent = `${this.value}x`;
+    });
+
+    pitchRange.addEventListener('input', function() {
+        pitchValue.textContent = this.value;
+    });
+});
+</script>
+{% endblock %}

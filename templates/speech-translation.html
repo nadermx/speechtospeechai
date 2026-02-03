@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="bi bi-translate text-info me-3"></i>Speech Translation
+        </h1>
+        <p class="lead mb-4 opacity-75">
+            Translate speech from one language to another while preserving the original speaker's voice characteristics and emotion.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-info"><i class="bi bi-globe me-1"></i>50+ Languages</span>
+            <span class="badge bg-success"><i class="bi bi-person-badge me-1"></i>Voice Preservation</span>
+            <span class="badge bg-warning text-dark"><i class="bi bi-lightning me-1"></i>Real-time</span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Tool -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-upload me-2"></i>Upload Audio</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="border-2 border-dashed rounded p-4 text-center bg-light">
+                            <i class="bi bi-cloud-arrow-up display-4 text-info mb-3"></i>
+                            <h6>Upload audio to translate</h6>
+                            <p class="text-muted small mb-3">MP3, WAV, FLAC supported (max 100MB)</p>
+                            <button class="btn btn-info text-white">
+                                <i class="bi bi-upload me-2"></i>Choose File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-sliders me-2"></i>Translation Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-5">
+                                <label class="form-label">Source Language</label>
+                                <select class="form-select">
+                                    <option value="auto" selected>Auto-detect</option>
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end justify-content-center">
+                                <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Target Language</label>
+                                <select class="form-select">
+                                    <option value="en">English</option>
+                                    <option value="es" selected>Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="preserveVoice" checked>
+                                    <label class="form-check-label" for="preserveVoice">
+                                        Preserve original voice characteristics
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button class="btn btn-info btn-lg text-white" disabled>
+                        <i class="bi bi-translate me-2"></i>Translate Speech (3 Credits/min)
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-coin me-2"></i>Your Credits</h6>
+                            <span class="badge bg-info fs-6">{{ user.credits|default:10 }}</span>
+                        </div>
+                        <a href="/pricing/" class="small">Get more credits</a>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-globe me-2"></i>Supported Languages</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-1">
+                            <span class="badge bg-secondary">English</span>
+                            <span class="badge bg-secondary">Spanish</span>
+                            <span class="badge bg-secondary">French</span>
+                            <span class="badge bg-secondary">German</span>
+                            <span class="badge bg-secondary">Chinese</span>
+                            <span class="badge bg-secondary">Japanese</span>
+                            <span class="badge bg-secondary">Korean</span>
+                            <span class="badge bg-secondary">+40 more</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

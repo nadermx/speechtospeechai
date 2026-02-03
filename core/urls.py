@@ -20,4 +20,16 @@ urlpatterns = [
     path('success/', views.SuccessPage.as_view(), name='success'),
     path('cancel/', views.CancelSubscriptionPage.as_view(), name='cancel'),
     path('delete-account/', views.DeleteAccountPage.as_view(), name='delete'),
+
+    # Speech to Speech AI Tools
+    path('voice-cloning/', views.VoiceCloningPage.as_view(), name='voice-cloning'),
+    path('text-to-speech/', views.TextToSpeechPage.as_view(), name='text-to-speech'),
+    path('speech-to-text/', views.SpeechToTextPage.as_view(), name='speech-to-text'),
+    path('voice-conversion/', views.VoiceConversionPage.as_view(), name='voice-conversion'),
+    path('real-time-chat/', views.RealTimeChatPage.as_view(), name='real-time-chat'),
+    path('speech-translation/', views.SpeechTranslationPage.as_view(), name='speech-translation'),
+    path('audio-enhancement/', views.AudioEnhancementPage.as_view(), name='audio-enhancement'),
+    path('custom-training/', views.CustomTrainingPage.as_view(), name='custom-training'),
+    path('api-docs/', views.APIDocsPage.as_view(), name='api-docs'),
+    path('models/', views.ModelsPage.as_view(), name='models'),
 ]

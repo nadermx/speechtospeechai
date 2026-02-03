@@ -552,3 +552,154 @@ class DeleteAccountPage(View):
                 'errors': errors
             }
         )
+
+
+# Speech to Speech AI Tool Pages
+class VoiceCloningPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'voice-cloning.html',
+            {
+                'title': f"Voice Cloning - Clone Any Voice | {config.PROJECT_NAME}",
+                'description': 'Clone any voice from just 10-30 seconds of audio. Zero-shot voice cloning with natural prosody and emotion preservation.',
+                'page': 'voice-cloning',
+                'g': settings
+            }
+        )
+
+
+class TextToSpeechPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'text-to-speech.html',
+            {
+                'title': f"Text to Speech - Convert Text to Natural Speech | {config.PROJECT_NAME}",
+                'description': 'Convert text to natural-sounding speech with 50+ premium voices, 29 languages, and emotion control.',
+                'page': 'text-to-speech',
+                'g': settings
+            }
+        )
+
+
+class SpeechToTextPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'speech-to-text.html',
+            {
+                'title': f"Speech to Text - Accurate Transcription | {config.PROJECT_NAME}",
+                'description': 'Transcribe audio and video with 99%+ accuracy. Speaker diarization, word timestamps, and 100+ language support.',
+                'page': 'speech-to-text',
+                'g': settings
+            }
+        )
+
+
+class VoiceConversionPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'voice-conversion.html',
+            {
+                'title': f"Voice Conversion - Transform Any Voice | {config.PROJECT_NAME}",
+                'description': 'Transform any voice into another while preserving speech content, timing, and emotion.',
+                'page': 'voice-conversion',
+                'g': settings
+            }
+        )
+
+
+class RealTimeChatPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'real-time-chat.html',
+            {
+                'title': f"Real-Time Voice Chat - Full-Duplex AI Conversation | {config.PROJECT_NAME}",
+                'description': 'Full-duplex conversational AI powered by PersonaPlex. Natural interruptions, backchannels, and under 200ms latency.',
+                'page': 'real-time-chat',
+                'g': settings
+            }
+        )
+
+
+class SpeechTranslationPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'speech-translation.html',
+            {
+                'title': f"Speech Translation - Translate Speech Across Languages | {config.PROJECT_NAME}",
+                'description': 'Translate speech from one language to another while preserving the original voice characteristics.',
+                'page': 'speech-translation',
+                'g': settings
+            }
+        )
+
+
+class AudioEnhancementPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'audio-enhancement.html',
+            {
+                'title': f"Audio Enhancement - Clean and Enhance Audio | {config.PROJECT_NAME}",
+                'description': 'Remove background noise, enhance clarity, and improve audio quality with AI.',
+                'page': 'audio-enhancement',
+                'g': settings
+            }
+        )
+
+
+class CustomTrainingPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'custom-training.html',
+            {
+                'title': f"Custom Voice Training - Train Your Own Voice Model | {config.PROJECT_NAME}",
+                'description': 'Train personalized voice models with your own data. Fine-tune for perfect quality on your specific use case.',
+                'page': 'custom-training',
+                'g': settings
+            }
+        )
+
+
+class APIDocsPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'api-docs.html',
+            {
+                'title': f"API Documentation | {config.PROJECT_NAME}",
+                'description': 'Integrate speech-to-speech AI into your applications with our simple REST API.',
+                'page': 'api',
+                'g': settings
+            }
+        )
+
+
+class ModelsPage(View):
+    def get(self, request):
+        settings = GlobalVars.get_globals(request)
+        return render(
+            request,
+            'models.html',
+            {
+                'title': f"AI Models - PersonaPlex, Fish Speech, Orpheus, Whisper | {config.PROJECT_NAME}",
+                'description': 'We integrate the best open-source speech AI models including PersonaPlex, Fish Speech, Orpheus TTS, and Whisper.',
+                'page': 'models',
+                'g': settings
+            }
+        )

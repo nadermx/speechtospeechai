@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-code-slash text-primary me-3"></i>API Documentation
+                </h1>
+                <p class="lead mb-4 opacity-75">
+                    Integrate speech-to-speech AI into your applications with our simple REST API. SDKs available for Python, JavaScript, and more.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#quickstart" class="btn btn-primary btn-lg">
+                        <i class="bi bi-lightning me-2"></i>Quickstart
+                    </a>
+                    <a href="https://github.com/nadermx/speechtospeechai-python" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-github me-2"></i>Python SDK
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- API Docs Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3 mb-4">
+                <div class="sticky-top" style="top: 80px;">
+                    <nav class="nav flex-column">
+                        <h6 class="text-muted mb-3">Getting Started</h6>
+                        <a class="nav-link active" href="#quickstart">Quickstart</a>
+                        <a class="nav-link" href="#authentication">Authentication</a>
+                        <a class="nav-link" href="#rate-limits">Rate Limits</a>
+
+                        <h6 class="text-muted mb-3 mt-4">Endpoints</h6>
+                        <a class="nav-link" href="#voice-cloning">Voice Cloning</a>
+                        <a class="nav-link" href="#text-to-speech">Text to Speech</a>
+                        <a class="nav-link" href="#speech-to-text">Speech to Text</a>
+                        <a class="nav-link" href="#voice-conversion">Voice Conversion</a>
+                        <a class="nav-link" href="#real-time">Real-Time Streaming</a>
+
+                        <h6 class="text-muted mb-3 mt-4">Reference</h6>
+                        <a class="nav-link" href="#models">Models</a>
+                        <a class="nav-link" href="#voices">Voices</a>
+                        <a class="nav-link" href="#errors">Error Codes</a>
+                        <a class="nav-link" href="#webhooks">Webhooks</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Quickstart -->
+                <section id="quickstart" class="mb-5">
+                    <h2 class="fw-bold mb-4">Quickstart</h2>
+                    <p class="lead">Get started with the Speech to Speech AI API in under 5 minutes.</p>
+
+                    <div class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold">Base URL</h6>
+                            <code class="fs-5">https://api.speechtospeechai.com/v1</code>
+                        </div>
+                    </div>
+
+                    <h5>1. Install the SDK</h5>
+                    <div class="card bg-dark text-light mb-4">
+                        <div class="card-header bg-black">
+                            <span class="badge bg-secondary">Python</span>
+                        </div>
+                        <div class="card-body">
+                            <pre class="mb-0"><code>pip install speechtospeechai</code></pre>
+                        </div>
+                    </div>
+
+                    <h5>2. Generate Speech</h5>
+                    <div class="card bg-dark text-light mb-4">
+                        <div class="card-header bg-black">
+                            <span class="badge bg-secondary">Python</span>
+                        </div>
+                        <div class="card-body">
+<pre class="mb-0"><code>from speechtospeechai import Client
+
+client = Client(api_key="your-api-key")
+
+# Generate speech from text
+audio = client.audio.speech.create(
+    model="fish-speech-v1.5",
+    voice="nova",
+    input="Hello! Welcome to Speech to Speech AI."
+)
+
+# Save to file
+audio.save("output.mp3")</code></pre>
+                        </div>
+                    </div>
+
+                    <h5>3. Clone a Voice</h5>
+                    <div class="card bg-dark text-light mb-4">
+                        <div class="card-header bg-black">
+                            <span class="badge bg-secondary">Python</span>
+                        </div>
+                        <div class="card-body">
+<pre class="mb-0"><code># Clone a voice from an audio sample
+voice = client.voices.clone(
+    name="My Custom Voice",
+    files=["sample.mp3"]
+)
+
+# Use the cloned voice
+audio = client.audio.speech.create(
+    model="fish-speech-v1.5",
+    voice=voice.id,
+    input="This is my cloned voice speaking!"
+)
+
+audio.save("cloned_output.mp3")</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Authentication -->
+                <section id="authentication" class="mb-5">
+                    <h2 class="fw-bold mb-4">Authentication</h2>
+                    <p>All API requests require authentication via an API key in the <code>Authorization</code> header.</p>
+
+                    <div class="card bg-dark text-light mb-4">
+                        <div class="card-header bg-black">
+                            <span class="badge bg-warning text-dark">Header</span>
+                        </div>
+                        <div class="card-body">
+                            <pre class="mb-0"><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Get your API key from your <a href="/account/#api-keys">account dashboard</a>.
+                    </div>
+                </section>
+
+                <!-- Voice Cloning API -->
+                <section id="voice-cloning" class="mb-5">
+                    <h2 class="fw-bold mb-4">Voice Cloning</h2>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <span class="badge bg-success me-2">POST</span>
+                            <code>/v1/voices/clone</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Clone a voice from an audio sample.</p>
+
+                            <h6 class="fw-bold mt-4">Request Body (multipart/form-data)</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>name</code></td>
+                                        <td>string</td>
+                                        <td>Yes</td>
+                                        <td>Name for the cloned voice</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>file</code></td>
+                                        <td>file</td>
+                                        <td>Yes</td>
+                                        <td>Audio file (10-30 seconds recommended)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>model</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Model to use (default: fish-speech-v1.5)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>language</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Language code (auto-detected if not specified)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h6 class="fw-bold mt-4">Response</h6>
+                            <div class="card bg-dark text-light">
+                                <div class="card-body">
+<pre class="mb-0"><code>{
+  "id": "voice_abc123xyz",
+  "name": "My Custom Voice",
+  "model": "fish-speech-v1.5",
+  "language": "en",
+  "status": "ready",
+  "created_at": "2026-02-03T12:00:00Z"
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Text to Speech API -->
+                <section id="text-to-speech" class="mb-5">
+                    <h2 class="fw-bold mb-4">Text to Speech</h2>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <span class="badge bg-success me-2">POST</span>
+                            <code>/v1/audio/speech</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Convert text to speech audio.</p>
+
+                            <h6 class="fw-bold mt-4">Request Body (JSON)</h6>
+                            <div class="card bg-dark text-light mb-3">
+                                <div class="card-body">
+<pre class="mb-0"><code>{
+  "model": "fish-speech-v1.5",
+  "voice": "nova",
+  "input": "Hello, world!",
+  "speed": 1.0,
+  "format": "mp3",
+  "emotion": "neutral"
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>model</code></td>
+                                        <td>string</td>
+                                        <td>Yes</td>
+                                        <td>TTS model (fish-speech-v1.5, orpheus-3b, etc.)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>voice</code></td>
+                                        <td>string</td>
+                                        <td>Yes</td>
+                                        <td>Voice ID (preset or cloned)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>input</code></td>
+                                        <td>string</td>
+                                        <td>Yes</td>
+                                        <td>Text to convert (max 5000 chars)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>speed</code></td>
+                                        <td>float</td>
+                                        <td>No</td>
+                                        <td>Speed multiplier (0.5-2.0, default 1.0)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>format</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Output format (mp3, wav, ogg, flac)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>emotion</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Emotion tag (neutral, happy, sad, angry)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h6 class="fw-bold mt-4">Response</h6>
+                            <p>Returns audio file binary with appropriate Content-Type header.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Speech to Text API -->
+                <section id="speech-to-text" class="mb-5">
+                    <h2 class="fw-bold mb-4">Speech to Text</h2>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <span class="badge bg-success me-2">POST</span>
+                            <code>/v1/audio/transcriptions</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Transcribe audio to text with speaker diarization and timestamps.</p>
+
+                            <h6 class="fw-bold mt-4">Request Body (multipart/form-data)</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>file</code></td>
+                                        <td>file</td>
+                                        <td>Yes</td>
+                                        <td>Audio/video file to transcribe</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>model</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Model (whisper-large-v3, whisper-turbo)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>language</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Language code (auto-detected if not set)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>diarization</code></td>
+                                        <td>boolean</td>
+                                        <td>No</td>
+                                        <td>Enable speaker diarization</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>timestamps</code></td>
+                                        <td>string</td>
+                                        <td>No</td>
+                                        <td>Timestamp granularity (word, segment)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h6 class="fw-bold mt-4">Response</h6>
+                            <div class="card bg-dark text-light">
+                                <div class="card-body">
+<pre class="mb-0"><code>{
+  "text": "Hello, how are you today?",
+  "language": "en",
+  "duration": 3.5,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 1.2,
+      "text": "Hello,",
+      "speaker": "SPEAKER_00"
+    },
+    {
+      "start": 1.3,
+      "end": 3.5,
+      "text": "how are you today?",
+      "speaker": "SPEAKER_00"
+    }
+  ]
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Models Reference -->
+                <section id="models" class="mb-5">
+                    <h2 class="fw-bold mb-4">Available Models</h2>
+
+                    <h5>Text-to-Speech Models</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Model ID</th>
+                                <th>Description</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>fish-speech-v1.5</code></td>
+                                <td>State-of-the-art multilingual TTS</td>
+                                <td>General use, highest quality</td>
+                            </tr>
+                            <tr>
+                                <td><code>orpheus-3b</code></td>
+                                <td>Expressive Llama-based TTS</td>
+                                <td>Emotional content, streaming</td>
+                            </tr>
+                            <tr>
+                                <td><code>openvoice-v2</code></td>
+                                <td>Fast voice cloning and conversion</td>
+                                <td>Quick turnaround, voice conversion</td>
+                            </tr>
+                            <tr>
+                                <td><code>xtts-v2</code></td>
+                                <td>Versatile multilingual TTS</td>
+                                <td>Long-form content, fine-tuning</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h5 class="mt-4">Speech-to-Text Models</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Model ID</th>
+                                <th>Description</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>whisper-large-v3</code></td>
+                                <td>OpenAI Whisper Large v3</td>
+                                <td>Highest accuracy, multilingual</td>
+                            </tr>
+                            <tr>
+                                <td><code>whisper-turbo</code></td>
+                                <td>Optimized Whisper for speed</td>
+                                <td>Fast transcription</td>
+                            </tr>
+                            <tr>
+                                <td><code>canary-qwen-2.5b</code></td>
+                                <td>NVIDIA Canary Qwen</td>
+                                <td>Lowest WER, English focus</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Errors -->
+                <section id="errors" class="mb-5">
+                    <h2 class="fw-bold mb-4">Error Codes</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>invalid_api_key</code></td>
+                                <td>401</td>
+                                <td>Invalid or missing API key</td>
+                            </tr>
+                            <tr>
+                                <td><code>insufficient_credits</code></td>
+                                <td>402</td>
+                                <td>Not enough credits for this operation</td>
+                            </tr>
+                            <tr>
+                                <td><code>rate_limit_exceeded</code></td>
+                                <td>429</td>
+                                <td>Too many requests</td>
+                            </tr>
+                            <tr>
+                                <td><code>invalid_request</code></td>
+                                <td>400</td>
+                                <td>Malformed request body</td>
+                            </tr>
+                            <tr>
+                                <td><code>model_not_found</code></td>
+                                <td>404</td>
+                                <td>Requested model doesn't exist</td>
+                            </tr>
+                            <tr>
+                                <td><code>voice_not_found</code></td>
+                                <td>404</td>
+                                <td>Requested voice doesn't exist</td>
+                            </tr>
+                            <tr>
+                                <td><code>file_too_large</code></td>
+                                <td>413</td>
+                                <td>Uploaded file exceeds size limit</td>
+                            </tr>
+                            <tr>
+                                <td><code>server_error</code></td>
+                                <td>500</td>
+                                <td>Internal server error</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

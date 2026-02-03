@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-arrow-repeat text-warning me-3"></i>Voice Conversion
+                </h1>
+                <p class="lead mb-4 opacity-75">
+                    Transform any voice into another while preserving speech content, timing, and emotion. Perfect for dubbing, anonymization, and creative projects.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-warning text-dark"><i class="bi bi-arrows-angle-contract me-1"></i>Any-to-Any</span>
+                    <span class="badge bg-success"><i class="bi bi-clock me-1"></i>Preserve Timing</span>
+                    <span class="badge bg-info"><i class="bi bi-lightning me-1"></i>Real-time Capable</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Tool -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <!-- Source Audio -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-file-earmark-music me-2"></i>Source Audio</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="border-2 border-dashed rounded p-4 text-center bg-light" id="sourceDropzone">
+                            <i class="bi bi-cloud-arrow-up display-4 text-warning mb-3"></i>
+                            <h6>Upload the audio you want to convert</h6>
+                            <p class="text-muted small mb-3">The speech content will be preserved</p>
+                            <input type="file" class="d-none" id="sourceFile" accept="audio/*">
+                            <button class="btn btn-warning" onclick="document.getElementById('sourceFile').click()">
+                                <i class="bi bi-upload me-2"></i>Upload Source Audio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target Voice -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Target Voice</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-pills mb-4" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="pill" href="#preset-voices">Preset Voices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="pill" href="#my-voices">My Cloned Voices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="pill" href="#upload-voice">Upload Sample</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="preset-voices">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="card border voice-option" data-voice="nova">
+                                            <div class="card-body text-center p-3">
+                                                <i class="bi bi-person-circle fs-1 text-primary mb-2"></i>
+                                                <h6 class="mb-1">Nova</h6>
+                                                <small class="text-muted">Female, Warm</small>
+                                                <button class="btn btn-sm btn-outline-primary mt-2 w-100">
+                                                    <i class="bi bi-play-fill me-1"></i>Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border voice-option" data-voice="onyx">
+                                            <div class="card-body text-center p-3">
+                                                <i class="bi bi-person-circle fs-1 text-info mb-2"></i>
+                                                <h6 class="mb-1">Onyx</h6>
+                                                <small class="text-muted">Male, Deep</small>
+                                                <button class="btn btn-sm btn-outline-primary mt-2 w-100">
+                                                    <i class="bi bi-play-fill me-1"></i>Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border voice-option" data-voice="shimmer">
+                                            <div class="card-body text-center p-3">
+                                                <i class="bi bi-person-circle fs-1 text-success mb-2"></i>
+                                                <h6 class="mb-1">Shimmer</h6>
+                                                <small class="text-muted">Female, Energetic</small>
+                                                <button class="btn btn-sm btn-outline-primary mt-2 w-100">
+                                                    <i class="bi bi-play-fill me-1"></i>Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="my-voices">
+                                <p class="text-muted text-center py-4">
+                                    <i class="bi bi-inbox display-4 d-block mb-2 opacity-25"></i>
+                                    No cloned voices yet. <a href="/voice-cloning/">Clone a voice</a> first.
+                                </p>
+                            </div>
+                            <div class="tab-pane fade" id="upload-voice">
+                                <div class="border-2 border-dashed rounded p-4 text-center bg-light">
+                                    <i class="bi bi-mic display-4 text-muted mb-3"></i>
+                                    <h6>Upload a voice sample</h6>
+                                    <p class="text-muted small">10-30 seconds of clear speech</p>
+                                    <button class="btn btn-outline-primary">
+                                        <i class="bi bi-upload me-2"></i>Upload Sample
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-sliders me-2"></i>Conversion Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Conversion Strength</label>
+                                <input type="range" class="form-range" min="0" max="100" value="80">
+                                <small class="text-muted">Higher = more like target voice</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Preserve Emotion</label>
+                                <select class="form-select">
+                                    <option value="high" selected>High (keep original emotion)</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low (neutral output)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Convert Button -->
+                <div class="d-grid">
+                    <button class="btn btn-warning btn-lg" id="convertBtn" disabled>
+                        <i class="bi bi-arrow-repeat me-2"></i>Convert Voice (2 Credits)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-coin me-2"></i>Your Credits</h6>
+                            <span class="badge bg-warning text-dark fs-6">{{ user.credits|default:10 }}</span>
+                        </div>
+                        <a href="/pricing/" class="small">Get more credits</a>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>How It Works</h6>
+                    </div>
+                    <div class="card-body">
+                        <ol class="list-group list-group-numbered list-group-flush">
+                            <li class="list-group-item border-0 px-0">Upload the source audio (the speech you want to keep)</li>
+                            <li class="list-group-item border-0 px-0">Select or upload a target voice</li>
+                            <li class="list-group-item border-0 px-0">Adjust conversion settings</li>
+                            <li class="list-group-item border-0 px-0">The AI transforms the voice while keeping words, timing, and emotion</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Perfect For</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-film display-4 text-warning mb-3"></i>
+                        <h5>Video Dubbing</h5>
+                        <p class="text-muted small">Dub videos into different voices while keeping lip-sync and timing.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-shield-lock display-4 text-primary mb-3"></i>
+                        <h5>Voice Anonymization</h5>
+                        <p class="text-muted small">Protect speaker identity while preserving content for privacy.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-mic display-4 text-success mb-3"></i>
+                        <h5>Podcast Production</h5>
+                        <p class="text-muted small">Match guest voices to consistent hosts or improve audio quality.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-controller display-4 text-info mb-3"></i>
+                        <h5>Game Development</h5>
+                        <p class="text-muted small">Create diverse character voices from a single voice actor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

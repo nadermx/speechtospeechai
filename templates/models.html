@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="bi bi-cpu text-primary me-3"></i>AI Models
+        </h1>
+        <p class="lead mb-4 opacity-75">
+            We integrate the best open-source speech AI models. All models are available via API and web interface.
+        </p>
+    </div>
+</section>
+
+<!-- Models Grid -->
+<section class="py-5">
+    <div class="container">
+        <!-- TTS Models -->
+        <h2 class="fw-bold mb-4"><i class="bi bi-chat-square-text me-2"></i>Text-to-Speech Models</h2>
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Fish Speech v1.5</h5>
+                            <span class="badge bg-light text-primary">Recommended</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">State-of-the-art multilingual TTS model with the lowest word error rate. Supports zero-shot voice cloning from 10-30 second samples.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Languages</small>
+                                <strong>13</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>4B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">VRAM</small>
+                                <strong>~6GB</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Latency</small>
+                                <strong>~300ms</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-success">Zero-shot Cloning</span>
+                            <span class="badge bg-info">Multilingual</span>
+                            <span class="badge bg-secondary">Streaming</span>
+                        </div>
+                        <a href="https://github.com/fishaudio/fish-speech" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Orpheus TTS 3B</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Llama-based expressive TTS with emotion control. Produces human-like speech with natural intonation and the ability to add emotion tags.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Languages</small>
+                                <strong>English</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>3B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">VRAM</small>
+                                <strong>~8GB</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Latency</small>
+                                <strong>~100ms</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-warning text-dark">Emotion Control</span>
+                            <span class="badge bg-success">Real-time Streaming</span>
+                            <span class="badge bg-info">Voice Cloning</span>
+                        </div>
+                        <a href="https://github.com/canopyai/Orpheus-TTS" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">OpenVoice v2</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Lightweight voice cloning with tone and style control. Great for voice conversion and quick cloning with minimal resources.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Languages</small>
+                                <strong>4</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>~500M</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">VRAM</small>
+                                <strong>~3GB</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Latency</small>
+                                <strong>~150ms</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-success">Fast</span>
+                            <span class="badge bg-info">Voice Conversion</span>
+                            <span class="badge bg-secondary">Style Control</span>
+                        </div>
+                        <a href="https://github.com/myshell-ai/OpenVoice" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">XTTS v2</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Coqui's versatile multilingual TTS. Supports 17 languages with voice cloning and fine-tuning capabilities.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Languages</small>
+                                <strong>17</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>~1.5B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">VRAM</small>
+                                <strong>~4GB</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Latency</small>
+                                <strong>~400ms</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-info">Multilingual</span>
+                            <span class="badge bg-success">Fine-tunable</span>
+                            <span class="badge bg-secondary">Long-form</span>
+                        </div>
+                        <a href="https://github.com/coqui-ai/TTS" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STT Models -->
+        <h2 class="fw-bold mb-4"><i class="bi bi-mic me-2"></i>Speech-to-Text Models</h2>
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Whisper Large v3</h5>
+                            <span class="badge bg-light text-info">Most Used</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">OpenAI's industry-standard speech recognition. Excellent accuracy across 100+ languages with robust noise handling.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Languages</small>
+                                <strong>100+</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>1.5B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">VRAM</small>
+                                <strong>~10GB</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">WER (English)</small>
+                                <strong>~4%</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-success">High Accuracy</span>
+                            <span class="badge bg-info">Multilingual</span>
+                            <span class="badge bg-secondary">Timestamps</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Canary Qwen 2.5B</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">NVIDIA's speech-augmented language model. Currently tops the Open ASR Leaderboard with lowest WER.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Languages</small>
+                                <strong>English focus</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>2.5B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">VRAM</small>
+                                <strong>~8GB</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">WER (English)</small>
+                                <strong>~5.6%</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-warning text-dark">Lowest WER</span>
+                            <span class="badge bg-info">LLM-powered</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversational Models -->
+        <h2 class="fw-bold mb-4"><i class="bi bi-headset me-2"></i>Conversational Models</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">PersonaPlex 7B</h5>
+                            <span class="badge bg-light text-danger">Featured</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">NVIDIA's full-duplex conversational AI. Listens and speaks simultaneously with natural interruptions and backchannels.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>7B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Base Model</small>
+                                <strong>Moshi</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Audio Rate</small>
+                                <strong>24kHz</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Latency</small>
+                                <strong>&lt;200ms</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-danger">Full-Duplex</span>
+                            <span class="badge bg-warning text-dark">Custom Personas</span>
+                            <span class="badge bg-success">Voice Conditioning</span>
+                        </div>
+                        <a href="https://github.com/NVIDIA/personaplex" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Moshi (Kyutai)</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">The original full-duplex speech model that PersonaPlex is built upon. Real-time voice conversations with natural turn-taking.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Parameters</small>
+                                <strong>7B</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">LLM</small>
+                                <strong>Helium</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Codec</small>
+                                <strong>Mimi</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">License</small>
+                                <strong>CC-BY-4.0</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-info">Full-Duplex</span>
+                            <span class="badge bg-secondary">Foundation Model</span>
+                        </div>
+                        <a href="https://github.com/kyutai-labs/moshi" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

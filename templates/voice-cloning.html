@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-3">
+                        <li class="breadcrumb-item"><a href="/" class="text-light">Home</a></li>
+                        <li class="breadcrumb-item active text-primary">Voice Cloning</li>
+                    </ol>
+                </nav>
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-person-badge text-primary me-3"></i>Voice Cloning
+                </h1>
+                <p class="lead mb-4 opacity-75">
+                    Clone any voice from just 10-30 seconds of audio. Zero-shot voice cloning with natural prosody, emotion preservation, and multilingual support.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge bg-primary"><i class="bi bi-clock me-1"></i>10-30 sec samples</span>
+                    <span class="badge bg-success"><i class="bi bi-globe me-1"></i>29 languages</span>
+                    <span class="badge bg-info"><i class="bi bi-lightning me-1"></i>Real-time capable</span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="bi bi-person-badge display-1 text-primary opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Tool -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Upload/Record Panel -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#upload-tab">
+                                    <i class="bi bi-upload me-2"></i>Upload Audio
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#record-tab">
+                                    <i class="bi bi-mic me-2"></i>Record Voice
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#url-tab">
+                                    <i class="bi bi-link-45deg me-2"></i>From URL
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="tab-content">
+                            <!-- Upload Tab -->
+                            <div class="tab-pane fade show active" id="upload-tab">
+                                <div class="border-2 border-dashed rounded p-5 text-center bg-light" id="dropzone">
+                                    <i class="bi bi-cloud-arrow-up display-3 text-primary mb-3"></i>
+                                    <h5>Drag & drop your audio file here</h5>
+                                    <p class="text-muted mb-3">or click to browse</p>
+                                    <input type="file" class="d-none" id="audioFile" accept="audio/*">
+                                    <button class="btn btn-primary" onclick="document.getElementById('audioFile').click()">
+                                        <i class="bi bi-folder2-open me-2"></i>Choose File
+                                    </button>
+                                    <p class="text-muted small mt-3 mb-0">Supports MP3, WAV, FLAC, M4A, OGG (max 100MB)</p>
+                                </div>
+                            </div>
+                            <!-- Record Tab -->
+                            <div class="tab-pane fade" id="record-tab">
+                                <div class="text-center p-4">
+                                    <div class="mb-4">
+                                        <button class="btn btn-lg rounded-circle p-4" id="recordBtn" style="width: 100px; height: 100px;">
+                                            <i class="bi bi-mic fs-1"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-muted mb-2">Click to start recording</p>
+                                    <p class="small text-muted">Record 10-30 seconds of clear speech</p>
+                                    <div class="progress d-none" id="recordProgress" style="height: 6px;">
+                                        <div class="progress-bar bg-danger" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- URL Tab -->
+                            <div class="tab-pane fade" id="url-tab">
+                                <div class="mb-3">
+                                    <label class="form-label">Audio URL</label>
+                                    <input type="url" class="form-control form-control-lg" placeholder="https://example.com/audio.mp3">
+                                </div>
+                                <button class="btn btn-primary">
+                                    <i class="bi bi-download me-2"></i>Fetch Audio
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Audio Preview (shown after upload) -->
+                        <div class="d-none mt-4" id="audioPreview">
+                            <hr>
+                            <h6 class="mb-3"><i class="bi bi-soundwave me-2"></i>Audio Preview</h6>
+                            <audio controls class="w-100" id="previewPlayer"></audio>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="text-muted small" id="audioDuration">Duration: --</span>
+                                <button class="btn btn-sm btn-outline-danger" id="removeAudio">
+                                    <i class="bi bi-trash me-1"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Name & Settings -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Voice Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Voice Name</label>
+                                <input type="text" class="form-control" placeholder="My Custom Voice" id="voiceName">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Model</label>
+                                <select class="form-select" id="modelSelect">
+                                    <option value="fish-speech-v1.5" selected>Fish Speech v1.5 (Recommended)</option>
+                                    <option value="openvoice-v2">OpenVoice v2</option>
+                                    <option value="xtts-v2">XTTS v2</option>
+                                    <option value="orpheus-3b">Orpheus TTS 3B</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Language</label>
+                                <select class="form-select" id="languageSelect">
+                                    <option value="auto">Auto-detect</option>
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="it">Italian</option>
+                                    <option value="pt">Portuguese</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="ar">Arabic</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Quality</label>
+                                <select class="form-select" id="qualitySelect">
+                                    <option value="standard">Standard (faster)</option>
+                                    <option value="high" selected>High Quality</option>
+                                    <option value="ultra">Ultra (best quality)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="d-grid mt-4">
+                    <button class="btn btn-primary btn-lg" id="cloneBtn" disabled>
+                        <i class="bi bi-magic me-2"></i>Clone Voice (1 Credit)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Credits Info -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-coin me-2"></i>Your Credits</h6>
+                            <span class="badge bg-primary fs-6">{{ user.credits|default:10 }}</span>
+                        </div>
+                        <div class="progress mb-2" style="height: 6px;">
+                            <div class="progress-bar" style="width: 70%"></div>
+                        </div>
+                        <a href="/pricing/" class="small">Get more credits</a>
+                    </div>
+                </div>
+
+                <!-- Tips Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Tips for Best Results</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                <small>Use 10-30 seconds of clear audio</small>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                <small>Minimal background noise</small>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                <small>Natural speaking pace</small>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                <small>Varied intonation helps quality</small>
+                            </li>
+                            <li>
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                <small>Single speaker only</small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- My Voices -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="bi bi-collection me-2"></i>My Cloned Voices</h6>
+                        <span class="badge bg-secondary">0</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small text-center py-3">
+                            <i class="bi bi-inbox display-6 d-block mb-2 opacity-25"></i>
+                            No voices cloned yet.<br>Upload audio to create your first voice.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">How Voice Cloning Works</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fs-4 fw-bold">1</span>
+                    </div>
+                    <h5>Upload Sample</h5>
+                    <p class="text-muted small">Provide 10-30 seconds of clear speech from the voice you want to clone.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fs-4 fw-bold">2</span>
+                    </div>
+                    <h5>AI Analysis</h5>
+                    <p class="text-muted small">Our AI extracts voice characteristics, tone, accent, and speaking patterns.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fs-4 fw-bold">3</span>
+                    </div>
+                    <h5>Voice Model</h5>
+                    <p class="text-muted small">A personalized voice model is created and saved to your account.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <span class="fs-4 fw-bold">4</span>
+                    </div>
+                    <h5>Generate Speech</h5>
+                    <p class="text-muted small">Use your cloned voice to generate speech from any text, in any language.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Models Comparison -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Available Models</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Fish Speech v1.5</h6>
+                        <small>Recommended</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled small">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Lowest WER</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>13 languages</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Zero-shot cloning</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Best for accuracy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h6 class="mb-0">OpenVoice v2</h6>
+                        <small>Fast</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled small">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Fastest processing</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Tone control</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Style transfer</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Lightweight</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h6 class="mb-0">XTTS v2</h6>
+                        <small>Versatile</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled small">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>17 languages</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Emotion support</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Long-form audio</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Fine-tunable</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h6 class="mb-0">Orpheus TTS 3B</h6>
+                        <small>Expressive</small>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled small">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Most expressive</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Emotion tags</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>100ms streaming</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Llama backbone</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- API Example -->
+<section class="py-5 bg-dark text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-4">Clone Voices via API</h2>
+                <p class="opacity-75 mb-4">Integrate voice cloning into your applications with our simple REST API.</p>
+                <a href="/api-docs/#voice-cloning" class="btn btn-primary">
+                    <i class="bi bi-book me-2"></i>API Documentation
+                </a>
+            </div>
+            <div class="col-lg-7">
+                <div class="card bg-black border-secondary">
+                    <div class="card-body">
+<pre class="text-light mb-0"><code>curl -X POST https://api.speechtospeechai.com/v1/voices/clone \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "name=My Voice" \
+  -F "file=@sample.mp3" \
+  -F "model=fish-speech-v1.5"
+
+# Response
+{
+  "id": "voice_abc123",
+  "name": "My Voice",
+  "model": "fish-speech-v1.5",
+  "status": "ready",
+  "created_at": "2026-02-03T12:00:00Z"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const audioFile = document.getElementById('audioFile');
+    const audioPreview = document.getElementById('audioPreview');
+    const previewPlayer = document.getElementById('previewPlayer');
+    const cloneBtn = document.getElementById('cloneBtn');
+
+    // Drag and drop
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('border-primary');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('border-primary');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-primary');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('audio/')) {
+            handleFile(file);
+        }
+    });
+
+    audioFile.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        const url = URL.createObjectURL(file);
+        previewPlayer.src = url;
+        audioPreview.classList.remove('d-none');
+        cloneBtn.disabled = false;
+    }
+
+    document.getElementById('removeAudio').addEventListener('click', () => {
+        audioPreview.classList.add('d-none');
+        previewPlayer.src = '';
+        audioFile.value = '';
+        cloneBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

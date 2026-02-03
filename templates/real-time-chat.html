@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <span class="badge bg-danger mb-3"><i class="bi bi-stars me-1"></i> Powered by PersonaPlex 7B</span>
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-headset text-danger me-3"></i>Real-Time Voice Chat
+                </h1>
+                <p class="lead mb-4 opacity-75">
+                    Full-duplex conversational AI that listens and speaks simultaneously. Natural interruptions, backchannels, and customizable personas with under 200ms latency.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-danger"><i class="bi bi-lightning me-1"></i>&lt;200ms Latency</span>
+                    <span class="badge bg-primary"><i class="bi bi-arrows-fullscreen me-1"></i>Full Duplex</span>
+                    <span class="badge bg-success"><i class="bi bi-person-badge me-1"></i>Custom Personas</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Chat Interface -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Main Chat Area -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm" style="min-height: 600px;">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success p-2 me-3" style="width: 12px; height: 12px;"></div>
+                            <div>
+                                <h6 class="mb-0">AI Assistant</h6>
+                                <small class="text-muted">Online - Ready to chat</small>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-light" title="Settings">
+                                <i class="bi bi-gear"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-light" title="End call">
+                                <i class="bi bi-telephone-x"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <!-- Chat Messages -->
+                        <div class="flex-grow-1 overflow-auto mb-4" id="chatMessages" style="max-height: 400px;">
+                            <div class="text-center py-5">
+                                <i class="bi bi-headset display-1 text-muted opacity-25"></i>
+                                <h5 class="text-muted mt-3">Ready for Voice Conversation</h5>
+                                <p class="text-muted small">Click the microphone button to start talking</p>
+                            </div>
+                        </div>
+
+                        <!-- Voice Visualizer -->
+                        <div class="bg-dark rounded p-4 mb-4">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="rounded-circle bg-primary p-3">
+                                            <i class="bi bi-person-circle fs-4 text-white"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted">You</small>
+                                            <div class="d-flex gap-1" id="userWaveform">
+                                                <div class="bg-primary" style="width: 3px; height: 20px; border-radius: 2px;"></div>
+                                                <div class="bg-primary" style="width: 3px; height: 15px; border-radius: 2px;"></div>
+                                                <div class="bg-primary" style="width: 3px; height: 25px; border-radius: 2px;"></div>
+                                                <div class="bg-primary" style="width: 3px; height: 10px; border-radius: 2px;"></div>
+                                                <div class="bg-primary" style="width: 3px; height: 18px; border-radius: 2px;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-light btn-sm" id="muteBtn">
+                                            <i class="bi bi-mic"></i>
+                                        </button>
+                                        <button class="btn btn-outline-light btn-sm" id="speakerBtn">
+                                            <i class="bi bi-volume-up"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col text-end">
+                                    <div class="d-flex align-items-center justify-content-end gap-3">
+                                        <div>
+                                            <small class="text-muted">AI</small>
+                                            <div class="d-flex gap-1" id="aiWaveform">
+                                                <div class="bg-success" style="width: 3px; height: 12px; border-radius: 2px;"></div>
+                                                <div class="bg-success" style="width: 3px; height: 20px; border-radius: 2px;"></div>
+                                                <div class="bg-success" style="width: 3px; height: 8px; border-radius: 2px;"></div>
+                                                <div class="bg-success" style="width: 3px; height: 22px; border-radius: 2px;"></div>
+                                                <div class="bg-success" style="width: 3px; height: 15px; border-radius: 2px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="rounded-circle bg-success p-3">
+                                            <i class="bi bi-robot fs-4 text-white"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="text-center">
+                            <button class="btn btn-danger btn-lg rounded-circle p-4" id="callBtn" style="width: 80px; height: 80px;">
+                                <i class="bi bi-mic fs-2"></i>
+                            </button>
+                            <p class="text-muted small mt-2 mb-0">Press to start conversation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Persona Settings -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-person-gear me-2"></i>Persona Settings</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">AI Role</label>
+                            <select class="form-select form-select-sm">
+                                <option value="assistant" selected>Helpful Assistant</option>
+                                <option value="customer-service">Customer Service Agent</option>
+                                <option value="tutor">Language Tutor</option>
+                                <option value="interviewer">Interview Practice</option>
+                                <option value="therapist">Supportive Listener</option>
+                                <option value="custom">Custom Persona...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Voice</label>
+                            <select class="form-select form-select-sm">
+                                <option value="nova" selected>Nova (Female, Warm)</option>
+                                <option value="onyx">Onyx (Male, Deep)</option>
+                                <option value="shimmer">Shimmer (Female, Energetic)</option>
+                                <option value="echo">Echo (Male, Neutral)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">System Prompt</label>
+                            <textarea class="form-control form-control-sm" rows="3" placeholder="You are a helpful AI assistant..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Settings -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-sliders me-2"></i>Voice Settings</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label small">Speaking Speed</label>
+                            <input type="range" class="form-range" min="0.5" max="1.5" step="0.1" value="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">Response Style</label>
+                            <select class="form-select form-select-sm">
+                                <option value="concise">Concise</option>
+                                <option value="balanced" selected>Balanced</option>
+                                <option value="detailed">Detailed</option>
+                            </select>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="backchannels" checked>
+                            <label class="form-check-label small" for="backchannels">Enable backchannels (uh-huh, etc.)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>Session Stats</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2 text-center">
+                            <div class="col-6">
+                                <div class="bg-light rounded p-2">
+                                    <div class="fs-4 fw-bold text-primary">0:00</div>
+                                    <small class="text-muted">Duration</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bg-light rounded p-2">
+                                    <div class="fs-4 fw-bold text-success">--ms</div>
+                                    <small class="text-muted">Latency</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bg-light rounded p-2">
+                                    <div class="fs-4 fw-bold text-info">0</div>
+                                    <small class="text-muted">Turns</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bg-light rounded p-2">
+                                    <div class="fs-4 fw-bold text-warning">0</div>
+                                    <small class="text-muted">Credits Used</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Full-Duplex Capabilities</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-arrows-fullscreen display-4 text-danger mb-3"></i>
+                        <h5>Listen & Speak Simultaneously</h5>
+                        <p class="text-muted small">Unlike traditional systems, PersonaPlex can listen while speaking, enabling natural turn-taking.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-chat-dots display-4 text-primary mb-3"></i>
+                        <h5>Natural Interruptions</h5>
+                        <p class="text-muted small">Interrupt the AI naturally, just like in a real conversation. No awkward pauses.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-emoji-smile display-4 text-success mb-3"></i>
+                        <h5>Backchannels</h5>
+                        <p class="text-muted small">Natural conversational cues like "uh-huh", "I see", "go on" to show active listening.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Use Cases</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-headset display-4 text-primary mb-3"></i>
+                    <h6>Customer Support</h6>
+                    <p class="text-muted small">Build voice agents that handle complex customer conversations naturally.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-translate display-4 text-success mb-3"></i>
+                    <h6>Language Practice</h6>
+                    <p class="text-muted small">Practice speaking any language with a patient, native-sounding AI tutor.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-briefcase display-4 text-warning mb-3"></i>
+                    <h6>Interview Practice</h6>
+                    <p class="text-muted small">Prepare for job interviews with realistic AI-powered mock interviews.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="bi bi-robot display-4 text-info mb-3"></i>
+                    <h6>Voice Assistants</h6>
+                    <p class="text-muted small">Create custom voice assistants for your applications and products.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -11,9 +11,15 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="{{ description|safe }}">
+    <meta property="og:image" content="{% static 'images/og-image.png' %}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}?v={{ g.scripts_version }}">
 
     <!-- Alternate languages -->
@@ -21,27 +27,52 @@
     {% for lang in g.languages %}
     <link rel="alternate" hreflang="{{ lang.iso }}" href="{{ request.path }}?lang={{ lang.iso }}">
     {% endfor %}
+    {% block head %}{% endblock %}
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/?lang={{ g.lang.iso }}">{{ g.i18n.site_name|default:"MyProject" }}</a>
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="/?lang={{ g.lang.iso }}">
+                <i class="bi bi-soundwave me-2"></i>
+                {{ g.i18n.site_name|default:"Speech to Speech AI" }}
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link{% if page == 'home' %} active{% endif %}" href="/?lang={{ g.lang.iso }}">{{ g.i18n.home|default:"Home" }}</a>
+                    <!-- Tools Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="toolsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-tools me-1"></i> Tools
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="toolsDropdown">
+                            <li><a class="dropdown-item" href="/voice-cloning/"><i class="bi bi-person-badge me-2"></i>Voice Cloning</a></li>
+                            <li><a class="dropdown-item" href="/text-to-speech/"><i class="bi bi-chat-square-text me-2"></i>Text to Speech</a></li>
+                            <li><a class="dropdown-item" href="/speech-to-text/"><i class="bi bi-mic me-2"></i>Speech to Text</a></li>
+                            <li><a class="dropdown-item" href="/voice-conversion/"><i class="bi bi-arrow-repeat me-2"></i>Voice Conversion</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/real-time-chat/"><i class="bi bi-headset me-2"></i>Real-Time Voice Chat</a></li>
+                            <li><a class="dropdown-item" href="/speech-translation/"><i class="bi bi-translate me-2"></i>Speech Translation</a></li>
+                            <li><a class="dropdown-item" href="/audio-enhancement/"><i class="bi bi-stars me-2"></i>Audio Enhancement</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/custom-training/"><i class="bi bi-gpu-card me-2"></i>Custom Voice Training</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'pricing' %} active{% endif %}" href="/pricing/?lang={{ g.lang.iso }}">{{ g.i18n.pricing|default:"Pricing" }}</a>
+                        <a class="nav-link{% if page == 'pricing' %} active{% endif %}" href="/pricing/?lang={{ g.lang.iso }}">
+                            <i class="bi bi-tags me-1"></i> Pricing
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'about' %} active{% endif %}" href="/about/?lang={{ g.lang.iso }}">{{ g.i18n.about_us|default:"About" }}</a>
+                        <a class="nav-link{% if page == 'api' %} active{% endif %}" href="/api-docs/">
+                            <i class="bi bi-code-slash me-1"></i> API
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'contact' %} active{% endif %}" href="/contact/?lang={{ g.lang.iso }}">{{ g.i18n.contact|default:"Contact" }}</a>
+                        <a class="nav-link{% if page == 'models' %} active{% endif %}" href="/models/">
+                            <i class="bi bi-cpu me-1"></i> Models
+                        </a>
                     </li>
                 </ul>
 
@@ -49,9 +80,9 @@
                     <!-- Language Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ g.lang.name }}
+                            <i class="bi bi-globe me-1"></i> {{ g.lang.name }}
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="languageDropdown">
                             {% for lang in g.languages %}
                             <li><a class="dropdown-item" href="{{ request.path }}?lang={{ lang.iso }}">{{ lang.name }}</a></li>
                             {% endfor %}
@@ -59,18 +90,34 @@
                     </li>
 
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link{% if page == 'account' %} active{% endif %}" href="/account/">{{ g.i18n.account_label|default:"Account" }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">{{ g.i18n.logout|default:"Logout" }}</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i> {{ user.email|truncatechars:15 }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/account/"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/account/#api-keys"><i class="bi bi-key me-2"></i>API Keys</a></li>
+                            <li><a class="dropdown-item" href="/account/#voices"><i class="bi bi-collection me-2"></i>My Voices</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <span class="dropdown-item-text text-muted">
+                                    <i class="bi bi-coin me-2"></i>Credits: <strong>{{ user.credits|default:0 }}</strong>
+                                </span>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link{% if page == 'login' %} active{% endif %}" href="/login/?lang={{ g.lang.iso }}">{{ g.i18n.login|default:"Login" }}</a>
+                        <a class="nav-link{% if page == 'login' %} active{% endif %}" href="/login/?lang={{ g.lang.iso }}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary ms-2" href="/signup/?lang={{ g.lang.iso }}">{{ g.i18n.sign_up|default:"Sign Up" }}</a>
+                        <a class="btn btn-primary ms-2" href="/signup/?lang={{ g.lang.iso }}">
+                            <i class="bi bi-rocket-takeoff me-1"></i> Get Started Free
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
@@ -78,24 +125,73 @@
         </div>
     </nav>
 
-    <main class="py-4">
+    <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-light py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-2">
-                <a href="/privacy/" class="text-decoration-none me-3">{{ g.i18n.privacy_policy|default:"Privacy Policy" }}</a>
-                <a href="/terms/" class="text-decoration-none me-3">{{ g.i18n.terms_of_service|default:"Terms of Service" }}</a>
-                <a href="/about/" class="text-decoration-none me-3">{{ g.i18n.about_us|default:"About Us" }}</a>
-                <a href="/contact/" class="text-decoration-none">{{ g.i18n.contact_us|default:"Contact Us" }}</a>
-            </p>
-            <p class="text-muted mb-0">&copy; {% now "Y" %} {{ g.i18n.site_name|default:"MyProject" }}</p>
+    <footer class="bg-dark text-light py-5 mt-auto">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-soundwave me-2"></i>Speech to Speech AI</h5>
+                    <p class="text-muted">The most advanced open-source speech AI platform. Clone voices, convert speech, and build voice applications with state-of-the-art models.</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://github.com/nadermx/speechtospeechai" class="text-muted"><i class="bi bi-github fs-5"></i></a>
+                        <a href="https://twitter.com/speechtospeech" class="text-muted"><i class="bi bi-twitter-x fs-5"></i></a>
+                        <a href="https://discord.gg/speechtospeech" class="text-muted"><i class="bi bi-discord fs-5"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">Tools</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/voice-cloning/" class="text-muted text-decoration-none">Voice Cloning</a></li>
+                        <li class="mb-2"><a href="/text-to-speech/" class="text-muted text-decoration-none">Text to Speech</a></li>
+                        <li class="mb-2"><a href="/speech-to-text/" class="text-muted text-decoration-none">Speech to Text</a></li>
+                        <li class="mb-2"><a href="/voice-conversion/" class="text-muted text-decoration-none">Voice Conversion</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">Platform</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/real-time-chat/" class="text-muted text-decoration-none">Real-Time Chat</a></li>
+                        <li class="mb-2"><a href="/custom-training/" class="text-muted text-decoration-none">Custom Training</a></li>
+                        <li class="mb-2"><a href="/api-docs/" class="text-muted text-decoration-none">API Docs</a></li>
+                        <li class="mb-2"><a href="/models/" class="text-muted text-decoration-none">Models</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/about/" class="text-muted text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="/pricing/" class="text-muted text-decoration-none">Pricing</a></li>
+                        <li class="mb-2"><a href="/contact/" class="text-muted text-decoration-none">Contact</a></li>
+                        <li class="mb-2"><a href="https://github.com/nadermx/speechtospeechai" class="text-muted text-decoration-none">Open Source</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/privacy/" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="/terms/" class="text-muted text-decoration-none">Terms of Service</a></li>
+                        <li class="mb-2"><a href="/refund/" class="text-muted text-decoration-none">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-muted mb-0">&copy; {% now "Y" %} Speech to Speech AI. Powered by open-source AI.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <span class="badge bg-success"><i class="bi bi-lightning-charge me-1"></i>All systems operational</span>
+                </div>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/utils.js' %}?v={{ g.scripts_version }}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

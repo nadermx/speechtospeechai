@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-dark text-white py-5">
+    <div class="container py-4">
+        <span class="badge bg-warning text-dark mb-3"><i class="bi bi-star me-1"></i> Pro Feature</span>
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="bi bi-gpu-card text-warning me-3"></i>Custom Voice Training
+        </h1>
+        <p class="lead mb-4 opacity-75">
+            Train personalized voice models with your own data. Fine-tune for perfect quality, specific accents, or unique speaking styles.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-primary"><i class="bi bi-cloud me-1"></i>Cloud GPUs</span>
+            <span class="badge bg-success"><i class="bi bi-shield-lock me-1"></i>Private Models</span>
+            <span class="badge bg-info"><i class="bi bi-graph-up me-1"></i>Quality Metrics</span>
+        </div>
+    </div>
+</section>
+
+<!-- Training Interface -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <!-- Step 1: Upload Dataset -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3" style="width: 30px; height: 30px; line-height: 22px;">1</span>
+                            <h5 class="mb-0">Upload Training Data</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4">Upload 30+ minutes of clean audio with transcripts for best results. More data = better quality.</p>
+
+                        <div class="border-2 border-dashed rounded p-4 text-center bg-light mb-4">
+                            <i class="bi bi-cloud-arrow-up display-4 text-primary mb-3"></i>
+                            <h6>Drag & drop your audio files</h6>
+                            <p class="text-muted small mb-3">or click to browse</p>
+                            <button class="btn btn-primary">
+                                <i class="bi bi-upload me-2"></i>Upload Audio Files
+                            </button>
+                            <p class="text-muted small mt-3 mb-0">MP3, WAV, FLAC supported. Max 2GB total.</p>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-file-earmark-music fs-1 text-muted mb-2"></i>
+                                        <h6>0 files</h6>
+                                        <small class="text-muted">0 minutes uploaded</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-file-text fs-1 text-muted mb-2"></i>
+                                        <h6>Transcripts</h6>
+                                        <small class="text-muted">Auto-generated or upload</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Configure Training -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary rounded-circle me-3" style="width: 30px; height: 30px; line-height: 22px;">2</span>
+                            <h5 class="mb-0">Configure Training</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Model Name</label>
+                                <input type="text" class="form-control" placeholder="My Custom Voice">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Base Model</label>
+                                <select class="form-select">
+                                    <option value="fish-speech-v1.5" selected>Fish Speech v1.5 (Recommended)</option>
+                                    <option value="xtts-v2">XTTS v2</option>
+                                    <option value="orpheus-3b">Orpheus TTS 3B</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Language</label>
+                                <select class="form-select">
+                                    <option value="en" selected>English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ja">Japanese</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Training Quality</label>
+                                <select class="form-select">
+                                    <option value="standard">Standard (faster, less credits)</option>
+                                    <option value="high" selected>High (recommended)</option>
+                                    <option value="ultra">Ultra (best quality, more credits)</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Description (optional)</label>
+                                <textarea class="form-control" rows="2" placeholder="Describe the voice characteristics..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Start Training -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-secondary rounded-circle me-3" style="width: 30px; height: 30px; line-height: 22px;">3</span>
+                            <h5 class="mb-0">Start Training</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info mb-4">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Training typically completes in 1-4 hours depending on dataset size and quality settings.
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="bg-light rounded p-3 text-center">
+                                    <div class="fs-4 fw-bold text-primary">0</div>
+                                    <small class="text-muted">Audio Minutes</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded p-3 text-center">
+                                    <div class="fs-4 fw-bold text-success">50</div>
+                                    <small class="text-muted">Credits Required</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded p-3 text-center">
+                                    <div class="fs-4 fw-bold text-info">~2h</div>
+                                    <small class="text-muted">Est. Time</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button class="btn btn-warning btn-lg" disabled>
+                                <i class="bi bi-play-circle me-2"></i>Start Training (50 Credits)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Credits -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-coin me-2"></i>Your Credits</h6>
+                            <span class="badge bg-warning text-dark fs-6">{{ user.credits|default:10 }}</span>
+                        </div>
+                        <p class="small text-muted mb-2">Training requires Pro plan or credits</p>
+                        <a href="/pricing/" class="btn btn-outline-warning btn-sm w-100">Upgrade to Pro</a>
+                    </div>
+                </div>
+
+                <!-- My Models -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="bi bi-collection me-2"></i>My Trained Models</h6>
+                        <span class="badge bg-secondary">0</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small text-center py-3">
+                            <i class="bi bi-inbox display-6 d-block mb-2 opacity-25"></i>
+                            No trained models yet.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Requirements -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="bi bi-list-check me-2"></i>Best Practices</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0 small">
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                30+ minutes of audio (more is better)
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Clean audio, minimal background noise
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Single speaker per training job
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Varied speech (not just reading)
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Consistent recording conditions
+                            </li>
+                            <li>
+                                <i class="bi bi-check-circle text-success me-2"></i>
+                                Accurate transcripts improve quality
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing for Training -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Training Credits</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold">Standard</h5>
+                        <div class="display-6 fw-bold text-primary mb-3">30 credits</div>
+                        <ul class="list-unstyled text-muted mb-4">
+                            <li class="mb-2">Up to 30 min audio</li>
+                            <li class="mb-2">Basic fine-tuning</li>
+                            <li class="mb-2">~1 hour training</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-warning shadow">
+                    <div class="card-header bg-warning text-center py-2">
+                        <span class="fw-bold">Recommended</span>
+                    </div>
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold">High Quality</h5>
+                        <div class="display-6 fw-bold text-warning mb-3">50 credits</div>
+                        <ul class="list-unstyled text-muted mb-4">
+                            <li class="mb-2">Up to 2 hours audio</li>
+                            <li class="mb-2">Extended training epochs</li>
+                            <li class="mb-2">~2-3 hours training</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <h5 class="fw-bold">Ultra</h5>
+                        <div class="display-6 fw-bold text-primary mb-3">100 credits</div>
+                        <ul class="list-unstyled text-muted mb-4">
+                            <li class="mb-2">Unlimited audio</li>
+                            <li class="mb-2">Maximum quality</li>
+                            <li class="mb-2">~4-6 hours training</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

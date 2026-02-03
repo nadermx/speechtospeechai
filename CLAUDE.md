@@ -1,10 +1,51 @@
-# CLAUDE.md
+# Speech to Speech AI
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The most comprehensive open-source speech AI platform, featuring voice cloning, text-to-speech, speech-to-text, voice conversion, and real-time conversational AI.
 
-## Project Overview
+**Live Site**: https://speechtospeechai.com
+**GitHub**: https://github.com/nadermx/speechtospeechai
+**API Docs**: https://speechtospeechai.com/api-docs/
 
-DjangoBase is a reusable Django 5.x project template with built-in user authentication, credits-based billing, multi-processor payments (Stripe, PayPal, Square, Coinbase), and a custom database-driven translation system. It's designed to be cloned and customized for new SaaS projects.
+## Tech Stack
+
+- **Backend**: Django 5.1, PostgreSQL, Redis
+- **Frontend**: Bootstrap 5, Bootstrap Icons
+- **Payments**: Stripe (primary), PayPal, Coinbase
+- **AI Models**: PersonaPlex 7B, Fish Speech v1.5, Orpheus TTS, Whisper Large v3, OpenVoice v2
+- **API Server**: api.imageeditor.ai (GPU processing)
+
+## Project Structure
+
+```
+speechtospeechai/
+├── accounts/           # User authentication, credits, subscriptions
+├── app/               # Django settings, main URLs
+├── core/              # Main views and page routing
+├── finances/          # Payment processing (Stripe, PayPal, etc.)
+├── translations/      # Database-driven i18n system
+├── contact_messages/  # Contact form handling
+├── templates/         # All HTML templates
+│   ├── base.html              # Main layout with nav
+│   ├── index.html             # Landing page
+│   ├── voice-cloning.html     # Voice cloning tool
+│   ├── text-to-speech.html    # TTS tool
+│   ├── speech-to-text.html    # STT tool
+│   ├── voice-conversion.html  # Voice conversion
+│   ├── real-time-chat.html    # PersonaPlex chat
+│   ├── speech-translation.html# Speech translation
+│   ├── audio-enhancement.html # Audio cleanup
+│   ├── custom-training.html   # Custom model training
+│   ├── api-docs.html          # API documentation
+│   ├── models.html            # AI models info
+│   ├── pricing.html           # Pricing page
+│   └── ...                    # Auth, legal pages
+├── static/
+│   ├── css/styles.css
+│   └── js/utils.js
+├── ansible/           # Deployment automation
+├── config.py          # Environment configuration (git-ignored)
+└── requirements.txt
+```
 
 ## Common Commands
 
@@ -14,148 +55,71 @@ python manage.py runserver
 python manage.py migrate
 python manage.py createsuperuser
 
-# Translations
-python manage.py set_languages      # Load languages from JSON
-python manage.py run_translation    # Auto-translate via Google Translate API
+# Setup
+python manage.py set_languages      # Load languages
+python manage.py set_plans          # Load pricing plans
 
-# Plans
-python manage.py set_plans          # Load plans from finances/json/plans.json
-
-# PayPal Setup (if using subscriptions)
-python manage.py create_paypal_product
-python manage.py create_paypal_plans
-
-# Subscription Management (run via cron)
-python manage.py rebill             # Daily billing for subscriptions
-python manage.py expire_pro_users   # Deactivate expired subscriptions
-
-# Run tests
-python manage.py test
-python manage.py test accounts      # Single app
+# Deployment
+cd ansible && ansible-playbook -i servers djangodeployubuntu20.yml
 ```
 
-## Quick Start for New Projects
+## Key Features
 
-```bash
-python customize.py           # Interactive setup script
-cp config_example.py config.py  # If not using customize.py
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py set_languages
-python manage.py runserver
-```
+1. **Voice Cloning** - Clone any voice from 10-30 seconds of audio
+2. **Text to Speech** - 50+ voices, 29 languages, emotion control
+3. **Speech to Text** - 99%+ accuracy with Whisper, speaker diarization
+4. **Voice Conversion** - Transform voices while preserving content
+5. **Real-Time Chat** - Full-duplex conversation with PersonaPlex
+6. **Speech Translation** - Translate speech preserving voice
+7. **Audio Enhancement** - AI-powered noise removal
+8. **Custom Training** - Train your own voice models
 
-See `SETUP.md` for detailed customization instructions.
+## AI Models Used
 
-## Architecture
+### Text-to-Speech
+- **Fish Speech v1.5** - Best quality, 13 languages, zero-shot cloning
+- **Orpheus TTS 3B** - Emotion control, 100ms streaming
+- **OpenVoice v2** - Fast voice conversion
+- **XTTS v2** - 17 languages, fine-tunable
 
-### Configuration
-Settings split between `app/settings.py` (Django defaults) and `config.py` (secrets/env-specific). The `config.py` is gitignored - copy from `config_example.py` or use `customize.py`.
+### Speech-to-Text
+- **Whisper Large v3** - 100+ languages, 99%+ accuracy
+- **Canary Qwen 2.5B** - Lowest WER
 
-Key config values:
-- `PROJECT_NAME` - Used in templates and emails
-- `PROJECT_DOMAIN` - Your domain for email sending
-- `ROOT_DOMAIN` - Full URL (e.g., https://myapp.com)
-- `PROCESSORS` - List of enabled payment processors: `['stripe', 'paypal']`
+### Conversational
+- **PersonaPlex 7B** - NVIDIA's full-duplex model (<200ms latency)
 
-### Custom Translation System
-**Not Django's built-in i18n.** Uses three models in `translations/`:
-- `Language` - available languages (populated via `set_languages` command)
-- `TextBase` - source text entries with `code_name` identifier
-- `Translation` - translated text per language
+## Credit System
 
-Usage in views: `Translation.get_text_by_lang('en')` returns dict of `{code_name: text}`. Add new text via admin at `Translations > Text bases`, then run `python manage.py run_translation`.
+| Feature | Credits |
+|---------|---------|
+| Voice Cloning | 1 per clone |
+| Text to Speech | 1 per 1000 chars |
+| Speech to Text | 1 per minute |
+| Voice Conversion | 2 per minute |
+| Real-Time Chat | 1 per minute |
+| Speech Translation | 3 per minute |
+| Audio Enhancement | 1 per minute |
+| Custom Training | 30-100 per job |
 
-### User & Authentication
-Custom user model `accounts.CustomUser` (single file at `accounts/models.py`) with:
-- Email as username (`USERNAME_FIELD = "email"`)
-- Credits system for usage-based billing
-- Subscription tracking (`is_plan_active`, `next_billing_date`, `plan_subscribed`)
-- Payment processor tokens (`payment_nonce`, `card_nonce`, `processor`)
-- 6-digit email verification codes (`verification_code`)
-- API token for external authentication
+## API Integration
 
-User model contains most business logic as static methods: `register_user()`, `login_user()`, `upgrade_account()`, `cancel_subscription()`, etc.
+The frontend communicates with `api.imageeditor.ai` for GPU processing:
 
-### Email System
-Uses `Utils.send_email()` from `app/utils.py` with Django's native SMTP backend. See `EMAIL_SETUP.md` for DNS configuration.
-
-Email templates in `templates/mailing/` use `{{ project_name }}` and `{{ root_domain }}` variables.
-
-For development, set in `config.py`:
 ```python
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+import requests
+
+response = requests.post(
+    'https://api.imageeditor.ai/v1/voice-clone/',
+    headers={'Authorization': f'Bearer {API_KEY}'},
+    files={'file': audio_file},
+    data={'model': 'fish-speech-v1.5'}
+)
 ```
 
-### Payment Processing
-`finances/` supports Stripe, Square, PayPal, Coinbase. Plans defined in `finances/json/plans.json` or admin.
+## Resources
 
-Key models:
-- `Plan` (`finances/models/plan.py`) - pricing, credits granted, subscription length, processor keys
-- `Payment` (`finances/models/payment.py`) - transactions with status (pending/success/failed/refunded)
-
-Payment methods are static on `Payment`: `make_charge_stripe()`, `make_charge_square()`, `make_charge_paypal()`.
-
-Webhooks at `/ipns/paypal` and `/ipns/coinbase`.
-
-### View Pattern
-All views call `GlobalVars.get_globals(request)` from `accounts/views.py` to build context:
-```python
-settings = GlobalVars.get_globals(request)
-# Returns: {'lang': Language, 'i18n': {code_name: text}, 'languages': [...], 'scripts_version': str}
-```
-Templates receive this as `g` context variable (e.g., `{{ g.i18n.welcome_title }}`).
-
-Views are class-based in `core/views.py`. Most authentication/payment logic is delegated to `CustomUser` model methods.
-
-### API Endpoints
-REST Framework views in `accounts/views.py` (not a separate api_views.py):
-- `/api/accounts/rate_limit/` - Check usage quotas per IP
-- `/api/accounts/consume/` - Decrement credits after API usage
-- `/api/accounts/resend-verification/` - Resend email verification
-- `/api/accounts/cancel-subscription/` - Cancel active subscription
-
-### Frontend
-- Bootstrap 5 (loaded via CDN)
-- Custom styles in `static/css/styles.css`
-- Language selector in navbar with `?lang=` URL parameter
-
-
-## Key Patterns
-
-### Method Return Convention
-Methods return `(object, error)` tuples - check first element for success:
-```python
-payment, errors = Payment.make_charge_stripe(user, token, amount, settings)
-if errors:
-    # handle error
-```
-This pattern is used throughout: `CustomUser.register_user()`, `Payment.make_refund()`, `Message.save_message()`, etc.
-
-### Adding New Translations
-1. Add TextBase entry in admin (`Translations > Text bases`) with unique `code_name`
-2. Run `python manage.py run_translation` to auto-translate via Google API
-3. Access in templates: `{{ g.i18n.your_code_name|default:"Fallback" }}`
-
-### Rate Limiting
-- API rate limiting in `RateLimit` view uses IP+User-Agent hash stored in Redis
-- Payment rate limiting in `CustomUser.payment_ratelimited()` - max 3 attempts per hour
-- Authenticated users with active plans or credits bypass limits
-
-### Caching
-Uses Django-Redis. Cache helpers in `app/utils.py`:
-- `Utils.get_from_cache(key)` / `Utils.set_to_cache(key, value, exp)`
-- Languages are cached globally in `GlobalVars.get_globals()`
-
-## Deployment
-
-Ansible playbooks in `ansible/`:
-```bash
-cd ansible
-ansible-playbook -i servers gitpull.yml           # Deploy updates
-ansible-playbook -i servers djangodeployubuntu20.yml  # Full deploy
-```
-
-Copy and configure before first deploy:
-- `ansible/servers.example` → `ansible/servers`
-- `ansible/group_vars/all.example` → `ansible/group_vars/all`
+- [PersonaPlex](https://research.nvidia.com/labs/adlr/personaplex/)
+- [Fish Speech](https://github.com/fishaudio/fish-speech)
+- [Orpheus TTS](https://github.com/canopyai/Orpheus-TTS)
+- [OpenVoice](https://github.com/myshell-ai/OpenVoice)

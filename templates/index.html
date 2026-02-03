@@ -1,21 +1,562 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1 class="display-4 mb-4">{{ g.i18n.welcome_title|default:"Welcome" }}</h1>
-            <p class="lead mb-4">{{ g.i18n.welcome_subtitle|default:"Your project description goes here." }}</p>
-
-            {% if not user.is_authenticated %}
-            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                <a href="/signup/?lang={{ g.lang.iso }}" class="btn btn-primary btn-lg px-4 me-md-2">{{ g.i18n.get_started|default:"Get Started" }}</a>
-                <a href="/about/?lang={{ g.lang.iso }}" class="btn btn-outline-secondary btn-lg px-4">{{ g.i18n.learn_more|default:"Learn More" }}</a>
+<!-- Hero Section -->
+<section class="bg-dark text-white py-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge bg-primary mb-3"><i class="bi bi-stars me-1"></i> Powered by PersonaPlex, Fish Speech & Orpheus</span>
+                <h1 class="display-3 fw-bold mb-4">
+                    The Ultimate<br>
+                    <span class="text-primary">Speech to Speech</span><br>
+                    AI Platform
+                </h1>
+                <p class="lead mb-4 text-light opacity-75">
+                    Clone any voice in seconds. Convert speech in real-time. Build voice applications with state-of-the-art open-source models. Full-duplex conversations that feel natural.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="/signup/" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Start Free
+                    </a>
+                    <a href="/voice-cloning/" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-play-circle me-2"></i>Try Voice Cloning
+                    </a>
+                </div>
+                <div class="d-flex flex-wrap gap-4 text-light opacity-75">
+                    <span><i class="bi bi-check-circle-fill text-success me-2"></i>No credit card required</span>
+                    <span><i class="bi bi-check-circle-fill text-success me-2"></i>10 free credits</span>
+                    <span><i class="bi bi-check-circle-fill text-success me-2"></i>API access included</span>
+                </div>
             </div>
-            {% else %}
-            <a href="/account/" class="btn btn-primary btn-lg">{{ g.i18n.go_to_account|default:"Go to Account" }}</a>
-            {% endif %}
+            <div class="col-lg-6">
+                <div class="card bg-dark border-secondary shadow-lg">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="rounded-circle bg-primary p-3 me-3">
+                                <i class="bi bi-soundwave fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 text-white">Live Voice Demo</h5>
+                                <small class="text-muted">Experience real-time voice cloning</small>
+                            </div>
+                        </div>
+                        <div class="bg-black rounded p-3 mb-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="text-muted small">Original Voice</span>
+                                <button class="btn btn-sm btn-outline-primary" id="playOriginal">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            </div>
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-primary" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-black rounded p-3 mb-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="text-muted small">Cloned Voice</span>
+                                <button class="btn btn-sm btn-outline-success" id="playCloned">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            </div>
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-success" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="/voice-cloning/" class="btn btn-primary w-100">
+                                <i class="bi bi-mic me-2"></i>Clone Your Voice Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Trusted By Section -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 text-center">
+                <p class="text-muted mb-3">Powered by state-of-the-art open-source models</p>
+                <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+                    <span class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-nvidia me-2"></i>PersonaPlex 7B</span>
+                    <span class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-water me-2"></i>Fish Speech v1.5</span>
+                    <span class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-music-note me-2"></i>Orpheus TTS 3B</span>
+                    <span class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-mic me-2"></i>Whisper Large v3</span>
+                    <span class="badge bg-dark fs-6 px-3 py-2"><i class="bi bi-chat me-2"></i>OpenVoice v2</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Everything You Need for Voice AI</h2>
+            <p class="lead text-muted">Comprehensive tools for every speech application</p>
+        </div>
+        <div class="row g-4">
+            <!-- Voice Cloning -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                            <i class="bi bi-person-badge fs-3 text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Voice Cloning</h4>
+                        <p class="text-muted">Clone any voice from just 10-30 seconds of audio. Zero-shot cloning with natural prosody and emotion preservation.</p>
+                        <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>10-30 second samples</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Multilingual support</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Emotion preservation</li>
+                        </ul>
+                        <a href="/voice-cloning/" class="btn btn-outline-primary">Try Voice Cloning <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Text to Speech -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 d-inline-block mb-3">
+                            <i class="bi bi-chat-square-text fs-3 text-success"></i>
+                        </div>
+                        <h4 class="fw-bold">Text to Speech</h4>
+                        <p class="text-muted">Convert text to natural-sounding speech with multiple voices, languages, and emotional styles.</p>
+                        <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>50+ premium voices</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>29 languages</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>SSML support</li>
+                        </ul>
+                        <a href="/text-to-speech/" class="btn btn-outline-success">Try Text to Speech <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Speech to Text -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3 d-inline-block mb-3">
+                            <i class="bi bi-mic fs-3 text-info"></i>
+                        </div>
+                        <h4 class="fw-bold">Speech to Text</h4>
+                        <p class="text-muted">Accurate transcription powered by Whisper with speaker diarization, timestamps, and automatic punctuation.</p>
+                        <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>99%+ accuracy</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Speaker diarization</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Word timestamps</li>
+                        </ul>
+                        <a href="/speech-to-text/" class="btn btn-outline-info">Try Speech to Text <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Voice Conversion -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 d-inline-block mb-3">
+                            <i class="bi bi-arrow-repeat fs-3 text-warning"></i>
+                        </div>
+                        <h4 class="fw-bold">Voice Conversion</h4>
+                        <p class="text-muted">Transform any voice into another while preserving the original speech content, timing, and emotion.</p>
+                        <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Any-to-any conversion</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Preserve timing</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Real-time capable</li>
+                        </ul>
+                        <a href="/voice-conversion/" class="btn btn-outline-warning">Try Voice Conversion <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Real-Time Chat -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4">
+                        <div class="rounded-circle bg-danger bg-opacity-10 p-3 d-inline-block mb-3">
+                            <i class="bi bi-headset fs-3 text-danger"></i>
+                        </div>
+                        <h4 class="fw-bold">Real-Time Voice Chat</h4>
+                        <p class="text-muted">Full-duplex conversational AI powered by PersonaPlex. Natural interruptions, backchannels, and <200ms latency.</p>
+                        <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Full-duplex (listen & speak)</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i><200ms latency</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Custom personas</li>
+                        </ul>
+                        <a href="/real-time-chat/" class="btn btn-outline-danger">Try Voice Chat <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Custom Training -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body p-4">
+                        <div class="rounded-circle bg-secondary bg-opacity-10 p-3 d-inline-block mb-3">
+                            <i class="bi bi-gpu-card fs-3 text-secondary"></i>
+                        </div>
+                        <h4 class="fw-bold">Custom Voice Training</h4>
+                        <p class="text-muted">Train your own voice models with our cloud GPUs. Fine-tune for perfect quality on your specific use case.</p>
+                        <ul class="list-unstyled mb-3">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Upload your dataset</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Fine-tune models</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Private voice models</li>
+                        </ul>
+                        <a href="/custom-training/" class="btn btn-outline-secondary">Start Training <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">How It Works</h2>
+            <p class="lead text-muted">Three simple steps to voice transformation</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">1</span>
+                    </div>
+                    <h4 class="fw-bold">Upload Audio</h4>
+                    <p class="text-muted">Upload a voice sample (10-30 seconds) or record directly in your browser. We support MP3, WAV, FLAC, and more.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">2</span>
+                    </div>
+                    <h4 class="fw-bold">Process with AI</h4>
+                    <p class="text-muted">Our GPU cluster processes your audio using state-of-the-art models like PersonaPlex, Fish Speech, and Orpheus.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <span class="fs-2 fw-bold">3</span>
+                    </div>
+                    <h4 class="fw-bold">Download or Stream</h4>
+                    <p class="text-muted">Get your results instantly. Download in multiple formats or stream directly via our real-time API.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Models Section -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Powered by the Best Open-Source Models</h2>
+            <p class="lead text-muted">We use and contribute to cutting-edge speech AI research</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 bg-dark text-white">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-primary">PersonaPlex 7B</h5>
+                        <p class="small text-muted mb-3">NVIDIA's full-duplex conversational AI</p>
+                        <ul class="list-unstyled small">
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Full-duplex conversation</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Custom personas</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i><200ms latency</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 bg-dark text-white">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-success">Fish Speech v1.5</h5>
+                        <p class="small text-muted mb-3">State-of-the-art multilingual TTS</p>
+                        <ul class="list-unstyled small">
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Zero-shot cloning</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>13 languages</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Lowest WER</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 bg-dark text-white">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-warning">Orpheus TTS 3B</h5>
+                        <p class="small text-muted mb-3">Llama-based emotional speech</p>
+                        <ul class="list-unstyled small">
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Emotion control</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>~100ms streaming</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Human-like prosody</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 bg-dark text-white">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-info">Whisper Large v3</h5>
+                        <p class="small text-muted mb-3">Industry-leading transcription</p>
+                        <ul class="list-unstyled small">
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>99%+ accuracy</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>100+ languages</li>
+                            <li class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>Speaker diarization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/models/" class="btn btn-outline-dark btn-lg">
+                <i class="bi bi-cpu me-2"></i>Explore All Models
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Built for Every Use Case</h2>
+            <p class="lead text-muted">From content creation to enterprise applications</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-play-btn fs-2 text-primary"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-bold">Content Creation</h5>
+                        <p class="text-muted mb-0">Create voiceovers for videos, podcasts, audiobooks, and social media content at scale.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-headset fs-2 text-primary"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-bold">Customer Service</h5>
+                        <p class="text-muted mb-0">Build voice agents that sound natural and can handle complex conversations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-translate fs-2 text-primary"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-bold">Localization</h5>
+                        <p class="text-muted mb-0">Dub content into multiple languages while preserving the original speaker's voice.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-universal-access fs-2 text-primary"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-bold">Accessibility</h5>
+                        <p class="text-muted mb-0">Give a voice to those who have lost theirs. Create personalized speech synthesis.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-controller fs-2 text-primary"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-bold">Gaming & Entertainment</h5>
+                        <p class="text-muted mb-0">Create dynamic NPC voices, character dialogues, and interactive experiences.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-mortarboard fs-2 text-primary"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="fw-bold">Education</h5>
+                        <p class="text-muted mb-0">Create engaging educational content with natural-sounding narration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- API Section -->
+<section class="py-5 bg-dark text-white">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge bg-primary mb-3">Developer API</span>
+                <h2 class="display-5 fw-bold">Build with Our API</h2>
+                <p class="lead text-light opacity-75 mb-4">
+                    Simple REST API with SDKs for Python, JavaScript, and more. Real-time WebSocket streaming for low-latency applications.
+                </p>
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>RESTful API</strong>
+                            <p class="text-muted mb-0 small">Simple HTTP endpoints for all features</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>WebSocket Streaming</strong>
+                            <p class="text-muted mb-0 small">Real-time audio streaming with <200ms latency</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <div>
+                            <strong>Webhooks</strong>
+                            <p class="text-muted mb-0 small">Get notified when processing completes</p>
+                        </div>
+                    </li>
+                </ul>
+                <a href="/api-docs/" class="btn btn-primary btn-lg">
+                    <i class="bi bi-book me-2"></i>View API Docs
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <div class="card bg-black border-secondary">
+                    <div class="card-header bg-black border-secondary d-flex align-items-center">
+                        <span class="badge bg-danger me-2">POST</span>
+                        <code class="text-light">/v1/voice-clone</code>
+                    </div>
+                    <div class="card-body">
+<pre class="text-light mb-0" style="font-size: 0.85rem;"><code class="language-python"><span class="text-info">import</span> speechtospeech
+
+client = speechtospeech.Client(api_key=<span class="text-success">"your-api-key"</span>)
+
+<span class="text-muted"># Clone a voice from audio</span>
+voice = client.voices.clone(
+    name=<span class="text-success">"My Voice"</span>,
+    files=[<span class="text-success">"sample.mp3"</span>]
+)
+
+<span class="text-muted"># Generate speech with cloned voice</span>
+audio = client.audio.speech.create(
+    model=<span class="text-success">"fish-speech-v1.5"</span>,
+    voice=voice.id,
+    input=<span class="text-success">"Hello, this is my cloned voice!"</span>
+)
+
+audio.save(<span class="text-success">"output.mp3"</span>)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Preview -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Simple, Transparent Pricing</h2>
+            <p class="lead text-muted">Start free, scale as you grow</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bold text-muted mb-3">Free</h5>
+                        <div class="display-4 fw-bold mb-3">$0<small class="fs-6 text-muted">/mo</small></div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>10 credits/month</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>All features included</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>API access</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Community support</li>
+                        </ul>
+                        <a href="/signup/" class="btn btn-outline-primary w-100">Get Started</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-primary shadow">
+                    <div class="card-header bg-primary text-white text-center py-2">
+                        <span class="fw-bold">Most Popular</span>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bold text-muted mb-3">Pro</h5>
+                        <div class="display-4 fw-bold mb-3">$29<small class="fs-6 text-muted">/mo</small></div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>500 credits/month</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Priority processing</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Custom voice training</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Email support</li>
+                        </ul>
+                        <a href="/signup/?plan=pro" class="btn btn-primary w-100">Start Pro Trial</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bold text-muted mb-3">Enterprise</h5>
+                        <div class="display-4 fw-bold mb-3">$99<small class="fs-6 text-muted">/mo</small></div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>2000 credits/month</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Dedicated GPU access</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Unlimited voice models</li>
+                            <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Priority support</li>
+                        </ul>
+                        <a href="/signup/?plan=enterprise" class="btn btn-outline-primary w-100">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/pricing/" class="text-decoration-none">View full pricing details <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container py-4 text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to Transform Your Voice Applications?</h2>
+        <p class="lead mb-4 opacity-75">Join thousands of developers and creators using Speech to Speech AI.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="/signup/" class="btn btn-light btn-lg px-4">
+                <i class="bi bi-rocket-takeoff me-2"></i>Start Free
+            </a>
+            <a href="/api-docs/" class="btn btn-outline-light btn-lg px-4">
+                <i class="bi bi-book me-2"></i>Read the Docs
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+</style>
 {% endblock %}
