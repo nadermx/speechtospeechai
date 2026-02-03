@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from django.core.cache import cache
 from accounts.models import CustomUser
 from app.utils import Utils
-from config import RATE_LIMIT, FILES_LIMIT, SCRIPT_VERSION
+from config import RATE_LIMIT, FILES_LIMIT, SCRIPT_VERSION, API_SERVER
 
 
 class GlobalVars:
@@ -34,6 +34,7 @@ class GlobalVars:
             'i18n': Translation.get_text_by_lang(lang.iso),
             'languages': languages,
             'scripts_version': SCRIPT_VERSION,
+            'api_server': API_SERVER,
         }
 class RateLimit(APIView):
     def post(self, request):
