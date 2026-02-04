@@ -1,0 +1,24 @@
+{
+  "name": "speechtospeechai",
+  "version": "1.0.0",
+  "description": "A minimal, reusable Django project template with: - Custom user authentication (email-based) - Credits-based billing system - Multi-processor payments (Stripe, PayPal, Square, Coinbase) - Database-driven translation system - Native SMTP email (no third-party services) - Bootstrap 5 frontend - Redis caching and job queues",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nadermx/speechtospeechai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nadermx/speechtospeechai/issues"
+  },
+  "homepage": "https://github.com/nadermx/speechtospeechai#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.1",
+    "playwright": "^1.58.1"
+  }
+}
