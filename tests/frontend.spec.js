@@ -433,19 +433,17 @@ test.describe('Unauthenticated API Handling', () => {
         expect(content.toLowerCase()).toMatch(/api key|log in|sign up/);
     });
 
-    test('Voice Cloning - Clone button is interactive', async ({ page }) => {
+    test('Voice Cloning - Clone button is present but disabled without file', async ({ page }) => {
         await page.goto(`${BASE_URL}/voice-cloning/`);
 
         // Clone button should be present
         const cloneBtn = page.locator('#cloneBtn');
         await expect(cloneBtn).toBeVisible();
 
-        // Dismiss any alerts that might pop up
-        page.on('dialog', dialog => dialog.dismiss());
+        // Button should be disabled by default (no file uploaded)
+        await expect(cloneBtn).toBeDisabled();
 
-        // Clicking should not navigate away
-        await cloneBtn.click();
-        await page.waitForTimeout(500);
+        // Page should still be on voice-cloning
         await expect(page).toHaveURL(/voice-cloning/);
     });
 
