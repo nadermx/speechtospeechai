@@ -1,7 +1,0 @@
-# Page snapshot
-
-```yaml
-- generic [active] [ref=e1]:
-  - heading "Server Error (500)" [level=1] [ref=e2]
-  - paragraph
-```

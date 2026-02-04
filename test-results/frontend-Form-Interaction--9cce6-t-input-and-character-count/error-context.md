@@ -1,0 +1,310 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Speech to Speech AI" [ref=e4] [cursor=pointer]:
+        - /url: /?lang=en
+        - generic [ref=e5]: 
+        - text: Speech to Speech AI
+      - generic [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - button " Tools" [ref=e9] [cursor=pointer]:
+              - generic [ref=e10]: 
+              - text: Tools
+            - text:        
+          - listitem [ref=e11]:
+            - link " Pricing" [ref=e12] [cursor=pointer]:
+              - /url: /pricing/?lang=en
+              - generic [ref=e13]: 
+              - text: Pricing
+          - listitem [ref=e14]:
+            - link " API" [ref=e15] [cursor=pointer]:
+              - /url: /api-docs/
+              - generic [ref=e16]: 
+              - text: API
+          - listitem [ref=e17]:
+            - link " Models" [ref=e18] [cursor=pointer]:
+              - /url: /models/
+              - generic [ref=e19]: 
+              - text: Models
+        - list [ref=e20]:
+          - listitem [ref=e21]:
+            - button " English" [ref=e22] [cursor=pointer]:
+              - generic [ref=e23]: 
+              - text: English
+          - listitem [ref=e24]:
+            - link " Login" [ref=e25] [cursor=pointer]:
+              - /url: /login/?lang=en
+              - generic [ref=e26]: 
+              - text: Login
+          - listitem [ref=e27]:
+            - link " Get Started Free" [ref=e28] [cursor=pointer]:
+              - /url: /signup/?lang=en
+              - generic [ref=e29]: 
+              - text: Get Started Free
+  - main [ref=e30]:
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - navigation "breadcrumb" [ref=e35]:
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Home" [ref=e38] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e39]: / Text to Speech
+        - heading " Text to Speech" [level=1] [ref=e40]:
+          - generic [ref=e41]: 
+          - text: Text to Speech
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: 
+          - text: 50+ Voices
+        - generic [ref=e45]:
+          - generic [ref=e46]: 
+          - text: 29 Languages
+        - generic [ref=e47]:
+          - generic [ref=e48]: 
+          - text: Emotion Control
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - heading " Enter Your Text" [level=5] [ref=e55]:
+              - generic [ref=e56]: 
+              - text: Enter Your Text
+            - generic [ref=e57]: 53 / 5000
+          - textbox "Enter the text you want to convert to speech..." [active] [ref=e59]: Hello, this is a test of the speech synthesis system.
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - button "" [ref=e63] [cursor=pointer]:
+                - generic [ref=e64]: 
+              - button "" [ref=e65] [cursor=pointer]:
+                - generic [ref=e66]: 
+              - button " Sample" [ref=e67] [cursor=pointer]:
+                - generic [ref=e68]: 
+                - text: Sample
+            - generic [ref=e69]: Supports SSML tags
+        - generic [ref=e70]:
+          - heading " Voice & Settings" [level=5] [ref=e72]:
+            - generic [ref=e73]: 
+            - text: Voice & Settings
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: Voice
+              - generic [ref=e78]:
+                - combobox [ref=e79]:
+                  - option "Alloy (Neutral)"
+                  - option "Echo (Male)"
+                  - option "Fable (British)"
+                  - option "Nova (Female)" [selected]
+                  - option "Onyx (Male, Deep)"
+                  - option "Shimmer (Female, Warm)"
+                  - option "Amy (British)"
+                  - option "Brian (British Male)"
+                  - option "Lucia (Spanish)"
+                  - option "Pablo (Spanish Male)"
+                  - option "Celine (French)"
+                  - option "Mathieu (French Male)"
+                  - option "Marlene (German)"
+                  - option "Hans (German Male)"
+                  - option "No cloned voices yet" [disabled]
+                - button "" [ref=e80] [cursor=pointer]:
+                  - generic [ref=e81]: 
+            - generic [ref=e82]:
+              - generic [ref=e83]: Model
+              - combobox [ref=e84]:
+                - option "Fish Speech v1.5 (Best)" [selected]
+                - option "Orpheus TTS 3B (Expressive)"
+                - option "OpenVoice v2 (Fast)"
+                - option "XTTS v2 (Versatile)"
+            - generic [ref=e85]:
+              - generic [ref=e86]: Speed
+              - generic [ref=e87]:
+                - slider [ref=e88]: "1"
+                - generic [ref=e89]: 1.0x
+            - generic [ref=e90]:
+              - generic [ref=e91]: Pitch
+              - generic [ref=e92]:
+                - slider [ref=e93]: "0"
+                - generic [ref=e94]: "0"
+            - generic [ref=e95]:
+              - generic [ref=e96]: Emotion
+              - combobox [ref=e97]:
+                - option "Neutral" [selected]
+                - option "Happy"
+                - option "Sad"
+                - option "Angry"
+                - option "Fearful"
+                - option "Surprised"
+                - option "Whisper"
+            - generic [ref=e98]:
+              - generic [ref=e99]: Output Format
+              - combobox [ref=e100]:
+                - option "MP3 (Recommended)" [selected]
+                - option "WAV (Lossless)"
+                - option "OGG Vorbis"
+                - option "FLAC"
+            - generic [ref=e101]:
+              - generic [ref=e102]: Quality
+              - combobox [ref=e103]:
+                - option "Standard (128kbps)"
+                - option "High (256kbps)" [selected]
+                - option "Ultra (320kbps)"
+        - button " Generate Speech (1 Credit)" [ref=e105] [cursor=pointer]:
+          - generic [ref=e106]: 
+          - text: Generate Speech (1 Credit)
+        - text:    
+      - generic [ref=e107]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - heading " Your Credits" [level=6] [ref=e111]:
+              - generic [ref=e112]: 
+              - text: Your Credits
+            - generic [ref=e113]: "10"
+          - paragraph [ref=e114]: 1 credit = ~1000 characters
+          - link "Get more credits" [ref=e115] [cursor=pointer]:
+            - /url: /pricing/
+        - generic [ref=e116]:
+          - heading " Popular Voices" [level=6] [ref=e118]:
+            - generic [ref=e119]: 
+            - text: Popular Voices
+          - generic [ref=e120]:
+            - link " Nova Female, Warm " [ref=e121] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e122]: 
+              - generic [ref=e123]:
+                - generic [ref=e124]: Nova
+                - text: Female, Warm
+              - button "" [ref=e125]:
+                - generic [ref=e126]: 
+            - link " Onyx Male, Deep " [ref=e127] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e128]: 
+              - generic [ref=e129]:
+                - generic [ref=e130]: Onyx
+                - text: Male, Deep
+              - button "" [ref=e131]:
+                - generic [ref=e132]: 
+            - link " Fable British, Storytelling " [ref=e133] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e134]: 
+              - generic [ref=e135]:
+                - generic [ref=e136]: Fable
+                - text: British, Storytelling
+              - button "" [ref=e137]:
+                - generic [ref=e138]: 
+        - generic [ref=e139]:
+          - heading " SSML Tags" [level=6] [ref=e141]:
+            - generic [ref=e142]: 
+            - text: SSML Tags
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - code [ref=e145]: <break time="1s"/>
+              - paragraph [ref=e146]: Add a pause
+            - generic [ref=e147]:
+              - code [ref=e148]: <emphasis level="strong">...</emphasis>
+              - paragraph [ref=e149]: Emphasize words
+            - generic [ref=e150]:
+              - code [ref=e151]: <prosody rate="slow">...</prosody>
+              - paragraph [ref=e152]: Control speech rate
+            - link "Full SSML reference" [ref=e153] [cursor=pointer]:
+              - /url: /api-docs/#ssml
+    - generic [ref=e155]:
+      - heading "What Can You Create?" [level=2] [ref=e156]
+      - generic [ref=e157]:
+        - generic [ref=e160]:
+          - generic [ref=e161]: 
+          - heading "Video Voiceovers" [level=5] [ref=e162]
+          - paragraph [ref=e163]: Create professional narration for YouTube, explainer videos, and documentaries.
+        - generic [ref=e166]:
+          - generic [ref=e167]: 
+          - heading "Audiobooks" [level=5] [ref=e168]
+          - paragraph [ref=e169]: Convert entire books to audio with consistent, natural-sounding narration.
+        - generic [ref=e172]:
+          - generic [ref=e173]: 
+          - heading "Podcasts" [level=5] [ref=e174]
+          - paragraph [ref=e175]: Generate intro/outro narration or full podcast episodes from scripts.
+  - contentinfo [ref=e176]:
+    - generic [ref=e177]:
+      - generic [ref=e178]:
+        - generic [ref=e179]:
+          - heading " Speech to Speech AI" [level=5] [ref=e180]:
+            - generic [ref=e181]: 
+            - text: Speech to Speech AI
+          - paragraph [ref=e182]: The most advanced open-source speech AI platform. Clone voices, convert speech, and build voice applications with state-of-the-art models.
+          - generic [ref=e183]:
+            - link "" [ref=e184] [cursor=pointer]:
+              - /url: https://github.com/nadermx/speechtospeechai
+              - generic [ref=e185]: 
+            - link "" [ref=e186] [cursor=pointer]:
+              - /url: https://twitter.com/speechtospeech
+              - generic [ref=e187]: 
+            - link "" [ref=e188] [cursor=pointer]:
+              - /url: https://discord.gg/speechtospeech
+              - generic [ref=e189]: 
+        - generic [ref=e190]:
+          - heading "Tools" [level=6] [ref=e191]
+          - list [ref=e192]:
+            - listitem [ref=e193]:
+              - link "Voice Cloning" [ref=e194] [cursor=pointer]:
+                - /url: /voice-cloning/
+            - listitem [ref=e195]:
+              - link "Text to Speech" [ref=e196] [cursor=pointer]:
+                - /url: /text-to-speech/
+            - listitem [ref=e197]:
+              - link "Speech to Text" [ref=e198] [cursor=pointer]:
+                - /url: /speech-to-text/
+            - listitem [ref=e199]:
+              - link "Voice Conversion" [ref=e200] [cursor=pointer]:
+                - /url: /voice-conversion/
+        - generic [ref=e201]:
+          - heading "Platform" [level=6] [ref=e202]
+          - list [ref=e203]:
+            - listitem [ref=e204]:
+              - link "Real-Time Chat" [ref=e205] [cursor=pointer]:
+                - /url: /real-time-chat/
+            - listitem [ref=e206]:
+              - link "Custom Training" [ref=e207] [cursor=pointer]:
+                - /url: /custom-training/
+            - listitem [ref=e208]:
+              - link "API Docs" [ref=e209] [cursor=pointer]:
+                - /url: /api-docs/
+            - listitem [ref=e210]:
+              - link "Models" [ref=e211] [cursor=pointer]:
+                - /url: /models/
+        - generic [ref=e212]:
+          - heading "Company" [level=6] [ref=e213]
+          - list [ref=e214]:
+            - listitem [ref=e215]:
+              - link "About Us" [ref=e216] [cursor=pointer]:
+                - /url: /about/
+            - listitem [ref=e217]:
+              - link "Pricing" [ref=e218] [cursor=pointer]:
+                - /url: /pricing/
+            - listitem [ref=e219]:
+              - link "Contact" [ref=e220] [cursor=pointer]:
+                - /url: /contact/
+            - listitem [ref=e221]:
+              - link "Open Source" [ref=e222] [cursor=pointer]:
+                - /url: https://github.com/nadermx/speechtospeechai
+        - generic [ref=e223]:
+          - heading "Legal" [level=6] [ref=e224]
+          - list [ref=e225]:
+            - listitem [ref=e226]:
+              - link "Privacy Policy" [ref=e227] [cursor=pointer]:
+                - /url: /privacy/
+            - listitem [ref=e228]:
+              - link "Terms of Service" [ref=e229] [cursor=pointer]:
+                - /url: /terms/
+            - listitem [ref=e230]:
+              - link "Refund Policy" [ref=e231] [cursor=pointer]:
+                - /url: /refund/
+      - separator [ref=e232]
+      - generic [ref=e233]:
+        - paragraph [ref=e235]: © 2026 Speech to Speech AI. Powered by open-source AI.
+        - generic [ref=e237]:
+          - generic [ref=e238]: 
+          - text: All systems operational
+```

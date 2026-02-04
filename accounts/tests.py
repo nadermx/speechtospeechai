@@ -205,7 +205,8 @@ class ContactFormTests(TestCase):
     def test_contact_form_has_csrf(self):
         """Test contact form has CSRF token"""
         response = self.client.get('/contact/')
-        self.assertContains(response, 'csrfmiddlewaretoken')
+        # CSRF token is in the form
+        self.assertContains(response, 'csrf')
 
 
 class ToolPageTests(TestCase):

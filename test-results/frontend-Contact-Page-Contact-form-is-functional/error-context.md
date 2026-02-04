@@ -1,0 +1,148 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Speech to Speech AI" [ref=e4] [cursor=pointer]:
+        - /url: /?lang=en
+        - generic [ref=e5]: 
+        - text: Speech to Speech AI
+      - generic [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - button " Tools" [ref=e9] [cursor=pointer]:
+              - generic [ref=e10]: 
+              - text: Tools
+            - text:        
+          - listitem [ref=e11]:
+            - link " Pricing" [ref=e12] [cursor=pointer]:
+              - /url: /pricing/?lang=en
+              - generic [ref=e13]: 
+              - text: Pricing
+          - listitem [ref=e14]:
+            - link " API" [ref=e15] [cursor=pointer]:
+              - /url: /api-docs/
+              - generic [ref=e16]: 
+              - text: API
+          - listitem [ref=e17]:
+            - link " Models" [ref=e18] [cursor=pointer]:
+              - /url: /models/
+              - generic [ref=e19]: 
+              - text: Models
+        - list [ref=e20]:
+          - listitem [ref=e21]:
+            - button " English" [ref=e22] [cursor=pointer]:
+              - generic [ref=e23]: 
+              - text: English
+          - listitem [ref=e24]:
+            - link " Login" [ref=e25] [cursor=pointer]:
+              - /url: /login/?lang=en
+              - generic [ref=e26]: 
+              - text: Login
+          - listitem [ref=e27]:
+            - link " Get Started Free" [ref=e28] [cursor=pointer]:
+              - /url: /signup/?lang=en
+              - generic [ref=e29]: 
+              - text: Get Started Free
+  - main [ref=e30]:
+    - generic [ref=e35]:
+      - paragraph
+      - link:
+        - /url: /cancel/
+      - link:
+        - /url: /refund/
+      - separator [ref=e36]
+      - heading [level=1]
+      - generic [ref=e37]:
+        - textbox "john@doe.com" [ref=e39]
+        - textbox [ref=e41]
+        - group "Captcha:" [ref=e44]:
+          - generic [ref=e45]: "Captcha:"
+          - img "captcha" [ref=e46]
+          - textbox [ref=e47]
+        - button [ref=e48] [cursor=pointer]
+      - separator [ref=e49]
+      - paragraph
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - heading " Speech to Speech AI" [level=5] [ref=e55]:
+            - generic [ref=e56]: 
+            - text: Speech to Speech AI
+          - paragraph [ref=e57]: The most advanced open-source speech AI platform. Clone voices, convert speech, and build voice applications with state-of-the-art models.
+          - generic [ref=e58]:
+            - link "" [ref=e59] [cursor=pointer]:
+              - /url: https://github.com/nadermx/speechtospeechai
+              - generic [ref=e60]: 
+            - link "" [ref=e61] [cursor=pointer]:
+              - /url: https://twitter.com/speechtospeech
+              - generic [ref=e62]: 
+            - link "" [ref=e63] [cursor=pointer]:
+              - /url: https://discord.gg/speechtospeech
+              - generic [ref=e64]: 
+        - generic [ref=e65]:
+          - heading "Tools" [level=6] [ref=e66]
+          - list [ref=e67]:
+            - listitem [ref=e68]:
+              - link "Voice Cloning" [ref=e69] [cursor=pointer]:
+                - /url: /voice-cloning/
+            - listitem [ref=e70]:
+              - link "Text to Speech" [ref=e71] [cursor=pointer]:
+                - /url: /text-to-speech/
+            - listitem [ref=e72]:
+              - link "Speech to Text" [ref=e73] [cursor=pointer]:
+                - /url: /speech-to-text/
+            - listitem [ref=e74]:
+              - link "Voice Conversion" [ref=e75] [cursor=pointer]:
+                - /url: /voice-conversion/
+        - generic [ref=e76]:
+          - heading "Platform" [level=6] [ref=e77]
+          - list [ref=e78]:
+            - listitem [ref=e79]:
+              - link "Real-Time Chat" [ref=e80] [cursor=pointer]:
+                - /url: /real-time-chat/
+            - listitem [ref=e81]:
+              - link "Custom Training" [ref=e82] [cursor=pointer]:
+                - /url: /custom-training/
+            - listitem [ref=e83]:
+              - link "API Docs" [ref=e84] [cursor=pointer]:
+                - /url: /api-docs/
+            - listitem [ref=e85]:
+              - link "Models" [ref=e86] [cursor=pointer]:
+                - /url: /models/
+        - generic [ref=e87]:
+          - heading "Company" [level=6] [ref=e88]
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - link "About Us" [ref=e91] [cursor=pointer]:
+                - /url: /about/
+            - listitem [ref=e92]:
+              - link "Pricing" [ref=e93] [cursor=pointer]:
+                - /url: /pricing/
+            - listitem [ref=e94]:
+              - link "Contact" [ref=e95] [cursor=pointer]:
+                - /url: /contact/
+            - listitem [ref=e96]:
+              - link "Open Source" [ref=e97] [cursor=pointer]:
+                - /url: https://github.com/nadermx/speechtospeechai
+        - generic [ref=e98]:
+          - heading "Legal" [level=6] [ref=e99]
+          - list [ref=e100]:
+            - listitem [ref=e101]:
+              - link "Privacy Policy" [ref=e102] [cursor=pointer]:
+                - /url: /privacy/
+            - listitem [ref=e103]:
+              - link "Terms of Service" [ref=e104] [cursor=pointer]:
+                - /url: /terms/
+            - listitem [ref=e105]:
+              - link "Refund Policy" [ref=e106] [cursor=pointer]:
+                - /url: /refund/
+      - separator [ref=e107]
+      - generic [ref=e108]:
+        - paragraph [ref=e110]: © 2026 Speech to Speech AI. Powered by open-source AI.
+        - generic [ref=e112]:
+          - generic [ref=e113]: 
+          - text: All systems operational
+```
