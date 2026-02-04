@@ -294,6 +294,10 @@
 
 {% block scripts %}
 <script>
+/**
+ * Real-Time Voice Chat - Powered by DeepSeek AI
+ * Connects to the backend API for true AI-powered conversations
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const callBtn = document.getElementById('callBtn');
     const chatMessages = document.getElementById('chatMessages');
@@ -302,57 +306,83 @@ document.addEventListener('DOMContentLoaded', function() {
     const userWaveform = document.getElementById('userWaveform');
     const aiWaveform = document.getElementById('aiWaveform');
 
+    // Session state
+    let sessionId = null;
     let isCallActive = false;
+    let isProcessing = false;
     let recognition = null;
-    let synth = window.speechSynthesis;
     let isMuted = false;
     let isSpeakerOn = true;
+    let turnCount = 0;
+    let sessionStartTime = null;
+    let audioContext = null;
 
+    // Stats elements
+    const durationEl = document.querySelector('.fs-4.fw-bold.text-primary');
+    const latencyEl = document.querySelector('.fs-4.fw-bold.text-success');
+    const turnsEl = document.querySelector('.fs-4.fw-bold.text-info');
+    const creditsEl = document.querySelector('.fs-4.fw-bold.text-warning');
+
+    // Persona & voice settings
+    const personaSelect = document.querySelector('select[name="persona"]') || document.querySelectorAll('.form-select-sm')[0];
+    const voiceSelect = document.querySelector('select[name="voice"]') || document.querySelectorAll('.form-select-sm')[1];
+    const systemPromptEl = document.querySelector('textarea');
+
+    // Browser speech recognition (for text input to API)
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
-        recognition.continuous = true;
+        recognition.continuous = false;
         recognition.interimResults = true;
+        recognition.lang = 'en-US';
 
-        recognition.onresult = function(event) {
+        recognition.onresult = async function(event) {
             const last = event.results.length - 1;
             const transcript = event.results[last][0].transcript;
 
-            if (event.results[last].isFinal) {
-                addMessage('user', transcript);
-                // Simulate AI response
-                setTimeout(() => {
-                    const responses = [
-                        "That's interesting! Tell me more about that.",
-                        "I understand what you're saying. How can I help further?",
-                        "Great point! Is there anything specific you'd like to explore?",
-                        "I'm here to help. What else would you like to discuss?",
-                        "That makes sense. Let me know if you have any questions."
-                    ];
-                    const response = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage('ai', response);
-                    if (isSpeakerOn) {
-                        speak(response);
-                    }
-                }, 1000);
+            if (event.results[last].isFinal && transcript.trim()) {
+                animateWaveform(userWaveform, false);
+                await processUserInput(transcript.trim());
             }
         };
 
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error:', event.error);
+            if (event.error === 'not-allowed') {
+                addMessage('system', 'Microphone access denied. Please allow microphone access and try again.');
+            }
+            animateWaveform(userWaveform, false);
+        };
+
         recognition.onend = function() {
-            if (isCallActive && !isMuted) {
-                recognition.start();
+            if (isCallActive && !isMuted && !isProcessing) {
+                // Brief pause before next listen
+                setTimeout(() => {
+                    if (isCallActive && !isMuted && !isProcessing) {
+                        try {
+                            recognition.start();
+                            animateWaveform(userWaveform, true);
+                        } catch (e) { }
+                    }
+                }, 500);
             }
         };
     }
 
     function addMessage(sender, text) {
         const isUser = sender === 'user';
+        const isSystem = sender === 'system';
+
+        let bgClass = isUser ? 'bg-primary' : (isSystem ? 'bg-warning' : 'bg-light');
+        let textClass = isUser ? 'text-white' : (isSystem ? 'text-dark' : '');
+        let smallClass = isUser ? 'text-white-50' : (isSystem ? 'text-dark' : 'text-muted');
+        let label = isUser ? 'You' : (isSystem ? 'System' : 'AI Assistant');
+
         const html = `
             <div class="d-flex ${isUser ? 'justify-content-end' : ''} mb-3">
-                <div class="bg-${isUser ? 'primary' : 'light'} rounded p-3" style="max-width: 80%;">
-                    <small class="text-${isUser ? 'white-50' : 'muted'}">${isUser ? 'You' : 'AI Assistant'}</small>
-                    <p class="mb-0 ${isUser ? 'text-white' : ''}">${text}</p>
+                <div class="${bgClass} rounded p-3" style="max-width: 80%;">
+                    <small class="${smallClass}">${label}</small>
+                    <p class="mb-0 ${textClass}">${text}</p>
                 </div>
             </div>
         `;
@@ -360,12 +390,180 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function speak(text) {
-        synth.cancel();
+    async function startSession() {
+        const apiKey = SpeechAPI.getApiKey();
+        if (!apiKey) {
+            addMessage('system', 'Please log in to use voice chat. Sign up for free to get started!');
+            return false;
+        }
+
+        try {
+            const persona = personaSelect?.value || 'assistant';
+            const customPrompt = systemPromptEl?.value || null;
+
+            const response = await fetch(`${SpeechAPI.baseUrl}/v1/voicechat/start/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    persona: persona,
+                    model: 'deepseek-r1:7b',
+                    custom_prompt: customPrompt,
+                    tts_model: 'piper'
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                if (error.error === 'rate_limit_exceeded') {
+                    addMessage('system', 'Daily free minutes used. Upgrade to premium for more voice chat time!');
+                } else {
+                    addMessage('system', error.message || 'Failed to start session');
+                }
+                return false;
+            }
+
+            const data = await response.json();
+            sessionId = data.session_id;
+            sessionStartTime = Date.now();
+
+            // Update remaining minutes display if available
+            if (data.remaining_minutes !== undefined) {
+                creditsEl.textContent = Math.round(data.remaining_minutes);
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Failed to start session:', error);
+            addMessage('system', 'Unable to connect to AI service. Please try again.');
+            return false;
+        }
+    }
+
+    async function processUserInput(text) {
+        if (!sessionId || isProcessing) return;
+
+        isProcessing = true;
+        addMessage('user', text);
+        animateWaveform(aiWaveform, true);
+
+        const startTime = Date.now();
+
+        try {
+            const apiKey = SpeechAPI.getApiKey();
+            const response = await fetch(`${SpeechAPI.baseUrl}/v1/voicechat/turn/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    text: text
+                })
+            });
+
+            const latency = Date.now() - startTime;
+            latencyEl.textContent = `${latency}ms`;
+
+            if (!response.ok) {
+                throw new Error('API error');
+            }
+
+            const data = await response.json();
+
+            // Show response
+            addMessage('ai', data.response_text);
+            turnCount = data.turn_number || turnCount + 1;
+            turnsEl.textContent = turnCount;
+
+            // Play audio response if available and speaker is on
+            if (isSpeakerOn && data.response_audio) {
+                await playAudioBase64(data.response_audio);
+            } else if (isSpeakerOn) {
+                // Fallback to browser TTS
+                speakBrowser(data.response_text);
+            }
+
+        } catch (error) {
+            console.error('Chat error:', error);
+            addMessage('ai', "I'm having trouble responding right now. Please try again.");
+        } finally {
+            isProcessing = false;
+            animateWaveform(aiWaveform, false);
+
+            // Resume listening if call is active
+            if (isCallActive && !isMuted && recognition) {
+                setTimeout(() => {
+                    try {
+                        recognition.start();
+                        animateWaveform(userWaveform, true);
+                    } catch (e) { }
+                }, 300);
+            }
+        }
+    }
+
+    async function playAudioBase64(base64Audio) {
+        try {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const audioData = atob(base64Audio);
+            const arrayBuffer = new ArrayBuffer(audioData.length);
+            const view = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < audioData.length; i++) {
+                view[i] = audioData.charCodeAt(i);
+            }
+
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+
+            animateWaveform(aiWaveform, true);
+            source.onended = () => animateWaveform(aiWaveform, false);
+            source.start(0);
+
+        } catch (error) {
+            console.error('Audio playback error:', error);
+            // Fallback to browser TTS
+            const text = chatMessages.lastElementChild?.querySelector('p')?.textContent;
+            if (text) speakBrowser(text);
+        }
+    }
+
+    function speakBrowser(text) {
+        if (!window.speechSynthesis) return;
+
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
-        synth.speak(utterance);
         animateWaveform(aiWaveform, true);
         utterance.onend = () => animateWaveform(aiWaveform, false);
+        window.speechSynthesis.speak(utterance);
+    }
+
+    async function endSession() {
+        if (!sessionId) return;
+
+        try {
+            const apiKey = SpeechAPI.getApiKey();
+            await fetch(`${SpeechAPI.baseUrl}/v1/voicechat/end/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ session_id: sessionId })
+            });
+        } catch (error) {
+            console.error('Error ending session:', error);
+        }
+
+        sessionId = null;
     }
 
     function animateWaveform(waveform, active) {
@@ -377,27 +575,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Call button
-    callBtn.addEventListener('click', function() {
+    function updateDuration() {
+        if (!sessionStartTime || !isCallActive) return;
+
+        const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+        const mins = Math.floor(elapsed / 60);
+        const secs = elapsed % 60;
+        durationEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Update duration every second
+    setInterval(updateDuration, 1000);
+
+    // Call button handler
+    callBtn.addEventListener('click', async function() {
         if (!recognition) {
-            alert('Voice recognition not supported in your browser. Try Chrome.');
+            addMessage('system', 'Voice recognition not supported in your browser. Try Chrome or Edge.');
             return;
         }
 
         if (!isCallActive) {
             // Start call
-            isCallActive = true;
-            this.classList.remove('btn-danger');
-            this.classList.add('btn-success');
-            this.innerHTML = '<i class="bi bi-telephone-x fs-2"></i>';
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-            chatMessages.innerHTML = '';
-            addMessage('ai', "Hello! I'm your AI assistant. How can I help you today?");
-            speak("Hello! I'm your AI assistant. How can I help you today?");
+            const started = await startSession();
 
-            if (!isMuted) {
-                recognition.start();
-                animateWaveform(userWaveform, true);
+            this.disabled = false;
+
+            if (started) {
+                isCallActive = true;
+                turnCount = 0;
+                this.classList.remove('btn-danger');
+                this.classList.add('btn-success');
+                this.innerHTML = '<i class="bi bi-telephone-x fs-2"></i>';
+
+                chatMessages.innerHTML = '';
+                addMessage('ai', "Hello! I'm your AI assistant powered by DeepSeek. How can I help you today?");
+
+                if (isSpeakerOn) {
+                    speakBrowser("Hello! I'm your AI assistant powered by DeepSeek. How can I help you today?");
+                }
+
+                if (!isMuted) {
+                    try {
+                        recognition.start();
+                        animateWaveform(userWaveform, true);
+                    } catch (e) {
+                        console.error('Could not start recognition:', e);
+                    }
+                }
+            } else {
+                this.innerHTML = '<i class="bi bi-mic fs-2"></i>';
             }
         } else {
             // End call
@@ -406,12 +635,16 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('btn-danger');
             this.innerHTML = '<i class="bi bi-mic fs-2"></i>';
 
-            recognition.stop();
-            synth.cancel();
+            try {
+                recognition.stop();
+            } catch (e) { }
+
+            window.speechSynthesis?.cancel();
             animateWaveform(userWaveform, false);
             animateWaveform(aiWaveform, false);
 
             addMessage('ai', "Thanks for chatting! Talk to you later.");
+            await endSession();
         }
     });
 
@@ -422,13 +655,15 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.toggle('btn-danger', isMuted);
         this.classList.toggle('btn-outline-light', !isMuted);
 
-        if (isCallActive) {
+        if (isCallActive && recognition) {
             if (isMuted) {
-                recognition.stop();
+                try { recognition.stop(); } catch (e) { }
                 animateWaveform(userWaveform, false);
-            } else {
-                recognition.start();
-                animateWaveform(userWaveform, true);
+            } else if (!isProcessing) {
+                try {
+                    recognition.start();
+                    animateWaveform(userWaveform, true);
+                } catch (e) { }
             }
         }
     });
@@ -439,8 +674,26 @@ document.addEventListener('DOMContentLoaded', function() {
         this.innerHTML = isSpeakerOn ? '<i class="bi bi-volume-up"></i>' : '<i class="bi bi-volume-mute"></i>';
         this.classList.toggle('btn-danger', !isSpeakerOn);
         this.classList.toggle('btn-outline-light', isSpeakerOn);
-        if (!isSpeakerOn) synth.cancel();
+
+        if (!isSpeakerOn) {
+            window.speechSynthesis?.cancel();
+            animateWaveform(aiWaveform, false);
+        }
     });
+
+    // Check API health on load
+    (async function checkHealth() {
+        try {
+            const response = await fetch(`${SpeechAPI.baseUrl}/v1/voicechat/health/`);
+            const data = await response.json();
+
+            if (data.status !== 'healthy') {
+                console.warn('Voice chat service:', data);
+            }
+        } catch (e) {
+            console.warn('Voice chat health check failed:', e);
+        }
+    })();
 });
 </script>
 <style>
