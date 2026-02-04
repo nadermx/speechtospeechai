@@ -2,40 +2,29 @@
 {% load static %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-dark text-white py-5">
-    <div class="container py-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
+<!-- Compact Header + Tool -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-3">
-                        <li class="breadcrumb-item"><a href="/" class="text-light">Home</a></li>
-                        <li class="breadcrumb-item active text-primary">Voice Cloning</li>
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Voice Cloning</li>
                     </ol>
                 </nav>
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="bi bi-person-badge text-primary me-3"></i>Voice Cloning
-                </h1>
-                <p class="lead mb-4 opacity-75">
-                    Clone any voice from just 10-30 seconds of audio. Zero-shot voice cloning with natural prosody, emotion preservation, and multilingual support.
-                </p>
-                <div class="d-flex flex-wrap gap-2 mb-4">
-                    <span class="badge bg-primary"><i class="bi bi-clock me-1"></i>10-30 sec samples</span>
-                    <span class="badge bg-success"><i class="bi bi-globe me-1"></i>29 languages</span>
-                    <span class="badge bg-info"><i class="bi bi-lightning me-1"></i>Real-time capable</span>
-                </div>
+                <h1 class="h3 mb-0"><i class="bi bi-person-badge text-primary me-2"></i>Voice Cloning</h1>
             </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <i class="bi bi-person-badge display-1 text-primary opacity-50"></i>
-                </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-primary"><i class="bi bi-clock me-1"></i>10-30 sec</span>
+                <span class="badge bg-success"><i class="bi bi-globe me-1"></i>29 languages</span>
+                <span class="badge bg-info"><i class="bi bi-lightning me-1"></i>Real-time</span>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Main Tool -->
-<section class="py-5">
+<section class="py-4">
     <div class="container">
         <div class="row g-4">
             <!-- Upload/Record Panel -->

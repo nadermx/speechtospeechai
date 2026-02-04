@@ -33,46 +33,143 @@
             <div class="col-lg-6">
                 <div class="card bg-dark border-secondary shadow-lg">
                     <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-4">
+                        <div class="d-flex align-items-center mb-3">
                             <div class="rounded-circle bg-primary p-3 me-3">
-                                <i class="bi bi-soundwave fs-4"></i>
+                                <i class="bi bi-arrow-left-right fs-4"></i>
                             </div>
                             <div>
-                                <h5 class="mb-0 text-white">Live TTS Demo</h5>
-                                <small class="text-muted">Try multilingual text-to-speech</small>
+                                <h5 class="mb-0 text-white">Voice Cloning Demo</h5>
+                                <small class="text-muted">Same words, different voice</small>
                             </div>
                         </div>
-                        <div class="bg-black rounded p-3 mb-3">
-                            <textarea id="demoText" class="form-control bg-black text-light border-secondary" rows="3" placeholder="Type something in any language..."></textarea>
-                            <div class="mt-2">
-                                <small class="text-muted">Try these examples:</small>
-                                <div class="d-flex flex-wrap gap-1 mt-1">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Hello! Welcome to Speech to Speech AI. Clone any voice in seconds with state-of-the-art AI technology." data-lang="en-US">🇺🇸 English</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="¡Hola! Bienvenido a Speech to Speech AI. Clona cualquier voz en segundos con inteligencia artificial de última generación." data-lang="es-ES">🇪🇸 Español</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Bonjour! Bienvenue sur Speech to Speech AI. Clonez n'importe quelle voix en quelques secondes grâce à l'IA." data-lang="fr-FR">🇫🇷 Français</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Hallo! Willkommen bei Speech to Speech AI. Klonen Sie jede Stimme in Sekunden mit modernster KI-Technologie." data-lang="de-DE">🇩🇪 Deutsch</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="你好！欢迎使用语音转语音人工智能。只需几秒钟即可使用尖端AI技术克隆任何声音。" data-lang="zh-CN">🇨🇳 中文</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="こんにちは！Speech to Speech AIへようこそ。最先端のAI技術で数秒であらゆる声をクローンできます。" data-lang="ja-JP">🇯🇵 日本語</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="مرحباً! مرحباً بكم في Speech to Speech AI. استنساخ أي صوت في ثوانٍ باستخدام الذكاء الاصطناعي." data-lang="ar-SA">🇸🇦 العربية</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Olá! Bem-vindo ao Speech to Speech AI. Clone qualquer voz em segundos com tecnologia de IA de ponta." data-lang="pt-BR">🇧🇷 Português</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Привет! Добро пожаловать в Speech to Speech AI. Клонируйте любой голос за секунды с помощью передового ИИ." data-lang="ru-RU">🇷🇺 Русский</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="안녕하세요! Speech to Speech AI에 오신 것을 환영합니다. 최첨단 AI로 몇 초 만에 어떤 목소리든 복제하세요." data-lang="ko-KR">🇰🇷 한국어</button>
+
+                        <!-- Demo Samples -->
+                        <div class="demo-samples">
+                            <!-- Sample 1 -->
+                            <div class="demo-sample bg-black rounded p-3 mb-2" data-sample="1">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge bg-secondary">Sample 1</span>
+                                    <small class="text-muted">English → Cloned</small>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-light btn-sm w-100 play-btn" data-type="original" data-sample="1">
+                                            <i class="bi bi-play-fill me-1"></i>Original
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-primary btn-sm w-100 play-btn" data-type="cloned" data-sample="1">
+                                            <i class="bi bi-play-fill me-1"></i>Cloned
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="waveform mt-2" id="waveform-1">
+                                    <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 30px;">
+                                        <div class="bar bg-primary" style="width: 3px; height: 40%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 70%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 50%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 90%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 60%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 80%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 45%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 100%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 55%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 75%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 40%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 85%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 50%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 65%;"></div>
+                                        <div class="bar bg-primary" style="width: 3px; height: 35%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sample 2 -->
+                            <div class="demo-sample bg-black rounded p-3 mb-2" data-sample="2">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge bg-secondary">Sample 2</span>
+                                    <small class="text-muted">Spanish → Cloned</small>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-light btn-sm w-100 play-btn" data-type="original" data-sample="2">
+                                            <i class="bi bi-play-fill me-1"></i>Original
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-success btn-sm w-100 play-btn" data-type="cloned" data-sample="2">
+                                            <i class="bi bi-play-fill me-1"></i>Cloned
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="waveform mt-2" id="waveform-2">
+                                    <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 30px;">
+                                        <div class="bar bg-success" style="width: 3px; height: 60%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 40%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 80%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 55%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 95%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 45%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 70%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 50%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 85%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 40%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 75%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 55%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 90%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 45%;"></div>
+                                        <div class="bar bg-success" style="width: 3px; height: 65%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sample 3 -->
+                            <div class="demo-sample bg-black rounded p-3 mb-3" data-sample="3">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="badge bg-secondary">Sample 3</span>
+                                    <small class="text-muted">Japanese → Cloned</small>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-light btn-sm w-100 play-btn" data-type="original" data-sample="3">
+                                            <i class="bi bi-play-fill me-1"></i>Original
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-warning btn-sm w-100 play-btn" data-type="cloned" data-sample="3">
+                                            <i class="bi bi-play-fill me-1"></i>Cloned
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="waveform mt-2" id="waveform-3">
+                                    <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 30px;">
+                                        <div class="bar bg-warning" style="width: 3px; height: 50%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 85%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 40%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 70%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 55%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 100%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 45%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 75%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 60%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 90%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 50%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 80%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 35%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 65%;"></div>
+                                        <div class="bar bg-warning" style="width: 3px; height: 45%;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex gap-2 mb-3">
-                            <select id="voiceSelect" class="form-select bg-black text-light border-secondary" style="flex: 1;">
-                                <option value="">Select a voice...</option>
-                            </select>
-                            <button id="speakBtn" class="btn btn-primary px-4">
-                                <i class="bi bi-play-fill me-1"></i>Speak
-                            </button>
+
+                        <div class="text-center small text-muted mb-3">
+                            <i class="bi bi-info-circle me-1"></i>Click to hear the same content in different voices
                         </div>
-                        <div class="text-center">
-                            <a href="/voice-cloning/" class="btn btn-outline-light w-100">
-                                <i class="bi bi-mic me-2"></i>Clone Your Voice Now
-                            </a>
-                        </div>
+
+                        <a href="/voice-cloning/" class="btn btn-outline-light w-100">
+                            <i class="bi bi-mic me-2"></i>Clone Your Own Voice
+                        </a>
                     </div>
                 </div>
             </div>
@@ -709,93 +806,124 @@ audio.save(<span class="text-success">"output.mp3"</span>)</code></pre>
     transform: translateY(-5px);
     box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
 }
-.example-btn {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+.waveform-bars .bar {
+    transition: height 0.1s ease;
+    border-radius: 2px;
 }
-.example-btn:hover {
-    background-color: rgba(255,255,255,0.1);
+.waveform-bars.playing .bar {
+    animation: wave 0.5s ease-in-out infinite alternate;
+}
+.waveform-bars.playing .bar:nth-child(1) { animation-delay: 0s; }
+.waveform-bars.playing .bar:nth-child(2) { animation-delay: 0.05s; }
+.waveform-bars.playing .bar:nth-child(3) { animation-delay: 0.1s; }
+.waveform-bars.playing .bar:nth-child(4) { animation-delay: 0.15s; }
+.waveform-bars.playing .bar:nth-child(5) { animation-delay: 0.2s; }
+.waveform-bars.playing .bar:nth-child(6) { animation-delay: 0.25s; }
+.waveform-bars.playing .bar:nth-child(7) { animation-delay: 0.3s; }
+.waveform-bars.playing .bar:nth-child(8) { animation-delay: 0.35s; }
+.waveform-bars.playing .bar:nth-child(9) { animation-delay: 0.4s; }
+.waveform-bars.playing .bar:nth-child(10) { animation-delay: 0.45s; }
+.waveform-bars.playing .bar:nth-child(11) { animation-delay: 0.5s; }
+.waveform-bars.playing .bar:nth-child(12) { animation-delay: 0.55s; }
+.waveform-bars.playing .bar:nth-child(13) { animation-delay: 0.6s; }
+.waveform-bars.playing .bar:nth-child(14) { animation-delay: 0.65s; }
+.waveform-bars.playing .bar:nth-child(15) { animation-delay: 0.7s; }
+@keyframes wave {
+    0% { transform: scaleY(0.5); }
+    100% { transform: scaleY(1.2); }
+}
+.demo-sample {
+    transition: all 0.2s ease;
+}
+.demo-sample.active {
+    border: 1px solid rgba(255,255,255,0.3);
+}
+.play-btn.playing i {
+    animation: pulse 0.5s ease infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const demoText = document.getElementById('demoText');
-    const voiceSelect = document.getElementById('voiceSelect');
-    const speakBtn = document.getElementById('speakBtn');
-    let voices = [];
-    let selectedLang = 'en-US';
+    // Demo audio samples (these would be real audio files in production)
+    const samples = {
+        1: {
+            original: '{% static "audio/demo1-original.mp3" %}',
+            cloned: '{% static "audio/demo1-cloned.mp3" %}'
+        },
+        2: {
+            original: '{% static "audio/demo2-original.mp3" %}',
+            cloned: '{% static "audio/demo2-cloned.mp3" %}'
+        },
+        3: {
+            original: '{% static "audio/demo3-original.mp3" %}',
+            cloned: '{% static "audio/demo3-cloned.mp3" %}'
+        }
+    };
 
-    // Load voices
-    function loadVoices() {
-        voices = window.speechSynthesis.getVoices();
-        voiceSelect.innerHTML = '<option value="">Select a voice...</option>';
+    let currentAudio = null;
+    let currentBtn = null;
 
-        // Filter for the selected language first, then add others
-        const langVoices = voices.filter(v => v.lang.startsWith(selectedLang.split('-')[0]));
-        const otherVoices = voices.filter(v => !v.lang.startsWith(selectedLang.split('-')[0]));
-
-        [...langVoices, ...otherVoices].forEach((voice, index) => {
-            const option = document.createElement('option');
-            option.value = voices.indexOf(voice);
-            option.textContent = `${voice.name} (${voice.lang})`;
-            if (langVoices.length > 0 && voice === langVoices[0]) {
-                option.selected = true;
-            }
-            voiceSelect.appendChild(option);
-        });
-    }
-
-    if ('speechSynthesis' in window) {
-        loadVoices();
-        window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
-
-    // Example button handlers
-    document.querySelectorAll('.example-btn').forEach(function(btn) {
+    // Play button handlers
+    document.querySelectorAll('.play-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            demoText.value = this.getAttribute('data-text');
-            selectedLang = this.getAttribute('data-lang');
-            loadVoices();
+            const sample = this.dataset.sample;
+            const type = this.dataset.type;
+            const waveformBars = document.querySelector(`#waveform-${sample} .waveform-bars`);
+
+            // Stop any current playback
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                if (currentBtn) {
+                    currentBtn.querySelector('i').className = 'bi bi-play-fill me-1';
+                    currentBtn.classList.remove('playing');
+                }
+                document.querySelectorAll('.waveform-bars').forEach(w => w.classList.remove('playing'));
+            }
+
+            // If clicking same button, just stop
+            if (currentBtn === this) {
+                currentAudio = null;
+                currentBtn = null;
+                return;
+            }
+
+            // Create audio and play
+            const audioUrl = samples[sample][type];
+            currentAudio = new Audio(audioUrl);
+            currentBtn = this;
+
+            // Update UI
+            this.querySelector('i').className = 'bi bi-pause-fill me-1';
+            this.classList.add('playing');
+            waveformBars.classList.add('playing');
+
+            currentAudio.play().catch(function(e) {
+                // If audio fails to load, show a simulated playback
+                console.log('Demo audio not available, simulating playback');
+                setTimeout(function() {
+                    if (currentBtn === btn) {
+                        btn.querySelector('i').className = 'bi bi-play-fill me-1';
+                        btn.classList.remove('playing');
+                        waveformBars.classList.remove('playing');
+                        currentAudio = null;
+                        currentBtn = null;
+                    }
+                }, 3000);
+            });
+
+            currentAudio.onended = function() {
+                btn.querySelector('i').className = 'bi bi-play-fill me-1';
+                btn.classList.remove('playing');
+                waveformBars.classList.remove('playing');
+                currentAudio = null;
+                currentBtn = null;
+            };
         });
-    });
-
-    // Speak button handler
-    speakBtn.addEventListener('click', function() {
-        const text = demoText.value.trim();
-        if (!text) {
-            alert('Please enter some text or click an example button.');
-            return;
-        }
-
-        // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-
-        // Set voice if selected
-        const selectedIndex = voiceSelect.value;
-        if (selectedIndex && voices[selectedIndex]) {
-            utterance.voice = voices[selectedIndex];
-        }
-
-        // Update button state
-        speakBtn.innerHTML = '<i class="bi bi-stop-fill me-1"></i>Stop';
-        speakBtn.classList.remove('btn-primary');
-        speakBtn.classList.add('btn-danger');
-
-        utterance.onend = function() {
-            speakBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Speak';
-            speakBtn.classList.remove('btn-danger');
-            speakBtn.classList.add('btn-primary');
-        };
-
-        utterance.onerror = function() {
-            speakBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Speak';
-            speakBtn.classList.remove('btn-danger');
-            speakBtn.classList.add('btn-primary');
-        };
-
-        window.speechSynthesis.speak(utterance);
     });
 });
 </script>
