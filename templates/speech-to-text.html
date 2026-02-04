@@ -245,6 +245,146 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const transcribeBtn = document.getElementById('transcribeBtn');
+    const resultsCard = document.getElementById('resultsCard');
+    const transcriptionOutput = document.getElementById('transcriptionOutput');
+    const recordTab = document.querySelector('[href="#record-tab"]');
+    const recordBtn = document.querySelector('#record-tab button');
+    const dropzone = document.getElementById('dropzone');
+    const mediaFile = document.getElementById('mediaFile');
+
+    let recognition = null;
+    let isRecording = false;
+    let finalTranscript = '';
+
+    // Check for Web Speech API support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = function(event) {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript + ' ';
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            transcriptionOutput.innerHTML = `<p>${finalTranscript}</p><p class="text-muted">${interimTranscript}</p>`;
+            resultsCard.classList.remove('d-none');
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error:', event.error);
+            stopRecording();
+        };
+
+        recognition.onend = function() {
+            if (isRecording) {
+                recognition.start(); // Keep recording
+            }
+        };
+    }
+
+    function startRecording() {
+        if (!recognition) {
+            alert('Speech recognition is not supported in your browser. Try Chrome.');
+            return;
+        }
+        isRecording = true;
+        finalTranscript = '';
+        recognition.start();
+        recordBtn.classList.remove('btn-info');
+        recordBtn.classList.add('btn-danger');
+        recordBtn.innerHTML = '<i class="bi bi-stop-circle fs-1"></i>';
+        transcriptionOutput.innerHTML = '<p class="text-muted">Listening...</p>';
+        resultsCard.classList.remove('d-none');
+    }
+
+    function stopRecording() {
+        isRecording = false;
+        if (recognition) {
+            recognition.stop();
+        }
+        recordBtn.classList.remove('btn-danger');
+        recordBtn.classList.add('btn-info');
+        recordBtn.innerHTML = '<i class="bi bi-mic fs-1"></i>';
+    }
+
+    // Record button
+    recordBtn.addEventListener('click', function() {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    });
+
+    // File upload
+    mediaFile.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            dropzone.innerHTML = `
+                <i class="bi bi-file-earmark-music display-3 text-success mb-3"></i>
+                <h5>${file.name}</h5>
+                <p class="text-muted mb-3">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <button class="btn btn-outline-danger btn-sm" onclick="location.reload()">Remove</button>
+            `;
+            transcribeBtn.disabled = false;
+            transcribeBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Transcribe (File transcription requires API)';
+        }
+    });
+
+    // Drag and drop
+    dropzone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('border-info');
+    });
+    dropzone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-info');
+    });
+    dropzone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-info');
+        if (e.dataTransfer.files.length > 0) {
+            mediaFile.files = e.dataTransfer.files;
+            mediaFile.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // Copy button
+    document.querySelector('#resultsCard .btn-light').addEventListener('click', function() {
+        navigator.clipboard.writeText(finalTranscript || transcriptionOutput.textContent);
+        this.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+        setTimeout(() => { this.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copy'; }, 2000);
+    });
+
+    // Language select
+    document.querySelector('select[class="form-select"]').addEventListener('change', function() {
+        if (recognition) {
+            const langMap = {
+                'auto': 'en-US', 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR',
+                'de': 'de-DE', 'zh': 'zh-CN', 'ja': 'ja-JP'
+            };
+            recognition.lang = langMap[this.value] || 'en-US';
+        }
+    });
+});
+</script>
+{% endblock %}
+
 <!-- Features -->
 <section class="py-5 bg-light">
     <div class="container">

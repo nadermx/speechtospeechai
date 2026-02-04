@@ -290,4 +290,162 @@
         </div>
     </div>
 </section>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const callBtn = document.getElementById('callBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const muteBtn = document.getElementById('muteBtn');
+    const speakerBtn = document.getElementById('speakerBtn');
+    const userWaveform = document.getElementById('userWaveform');
+    const aiWaveform = document.getElementById('aiWaveform');
+
+    let isCallActive = false;
+    let recognition = null;
+    let synth = window.speechSynthesis;
+    let isMuted = false;
+    let isSpeakerOn = true;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = function(event) {
+            const last = event.results.length - 1;
+            const transcript = event.results[last][0].transcript;
+
+            if (event.results[last].isFinal) {
+                addMessage('user', transcript);
+                // Simulate AI response
+                setTimeout(() => {
+                    const responses = [
+                        "That's interesting! Tell me more about that.",
+                        "I understand what you're saying. How can I help further?",
+                        "Great point! Is there anything specific you'd like to explore?",
+                        "I'm here to help. What else would you like to discuss?",
+                        "That makes sense. Let me know if you have any questions."
+                    ];
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage('ai', response);
+                    if (isSpeakerOn) {
+                        speak(response);
+                    }
+                }, 1000);
+            }
+        };
+
+        recognition.onend = function() {
+            if (isCallActive && !isMuted) {
+                recognition.start();
+            }
+        };
+    }
+
+    function addMessage(sender, text) {
+        const isUser = sender === 'user';
+        const html = `
+            <div class="d-flex ${isUser ? 'justify-content-end' : ''} mb-3">
+                <div class="bg-${isUser ? 'primary' : 'light'} rounded p-3" style="max-width: 80%;">
+                    <small class="text-${isUser ? 'white-50' : 'muted'}">${isUser ? 'You' : 'AI Assistant'}</small>
+                    <p class="mb-0 ${isUser ? 'text-white' : ''}">${text}</p>
+                </div>
+            </div>
+        `;
+        chatMessages.innerHTML += html;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function speak(text) {
+        synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        synth.speak(utterance);
+        animateWaveform(aiWaveform, true);
+        utterance.onend = () => animateWaveform(aiWaveform, false);
+    }
+
+    function animateWaveform(waveform, active) {
+        const bars = waveform.querySelectorAll('div');
+        if (active) {
+            bars.forEach(bar => bar.style.animation = 'wave 0.3s ease-in-out infinite alternate');
+        } else {
+            bars.forEach(bar => bar.style.animation = '');
+        }
+    }
+
+    // Call button
+    callBtn.addEventListener('click', function() {
+        if (!recognition) {
+            alert('Voice recognition not supported in your browser. Try Chrome.');
+            return;
+        }
+
+        if (!isCallActive) {
+            // Start call
+            isCallActive = true;
+            this.classList.remove('btn-danger');
+            this.classList.add('btn-success');
+            this.innerHTML = '<i class="bi bi-telephone-x fs-2"></i>';
+
+            chatMessages.innerHTML = '';
+            addMessage('ai', "Hello! I'm your AI assistant. How can I help you today?");
+            speak("Hello! I'm your AI assistant. How can I help you today?");
+
+            if (!isMuted) {
+                recognition.start();
+                animateWaveform(userWaveform, true);
+            }
+        } else {
+            // End call
+            isCallActive = false;
+            this.classList.remove('btn-success');
+            this.classList.add('btn-danger');
+            this.innerHTML = '<i class="bi bi-mic fs-2"></i>';
+
+            recognition.stop();
+            synth.cancel();
+            animateWaveform(userWaveform, false);
+            animateWaveform(aiWaveform, false);
+
+            addMessage('ai', "Thanks for chatting! Talk to you later.");
+        }
+    });
+
+    // Mute button
+    muteBtn.addEventListener('click', function() {
+        isMuted = !isMuted;
+        this.innerHTML = isMuted ? '<i class="bi bi-mic-mute"></i>' : '<i class="bi bi-mic"></i>';
+        this.classList.toggle('btn-danger', isMuted);
+        this.classList.toggle('btn-outline-light', !isMuted);
+
+        if (isCallActive) {
+            if (isMuted) {
+                recognition.stop();
+                animateWaveform(userWaveform, false);
+            } else {
+                recognition.start();
+                animateWaveform(userWaveform, true);
+            }
+        }
+    });
+
+    // Speaker button
+    speakerBtn.addEventListener('click', function() {
+        isSpeakerOn = !isSpeakerOn;
+        this.innerHTML = isSpeakerOn ? '<i class="bi bi-volume-up"></i>' : '<i class="bi bi-volume-mute"></i>';
+        this.classList.toggle('btn-danger', !isSpeakerOn);
+        this.classList.toggle('btn-outline-light', isSpeakerOn);
+        if (!isSpeakerOn) synth.cancel();
+    });
+});
+</script>
+<style>
+@keyframes wave {
+    0% { height: 10px; }
+    100% { height: 25px; }
+}
+</style>
 {% endblock %}

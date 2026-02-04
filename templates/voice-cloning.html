@@ -389,6 +389,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const audioPreview = document.getElementById('audioPreview');
     const previewPlayer = document.getElementById('previewPlayer');
     const cloneBtn = document.getElementById('cloneBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const recordProgress = document.getElementById('recordProgress');
+
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let recordingTimer = null;
+    let recordingSeconds = 0;
 
     // Drag and drop
     dropzone.addEventListener('dragover', (e) => {
@@ -420,6 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
         previewPlayer.src = url;
         audioPreview.classList.remove('d-none');
         cloneBtn.disabled = false;
+
+        // Get duration
+        previewPlayer.addEventListener('loadedmetadata', function() {
+            const duration = Math.round(previewPlayer.duration);
+            document.getElementById('audioDuration').textContent = `Duration: ${duration}s`;
+        });
     }
 
     document.getElementById('removeAudio').addEventListener('click', () => {
@@ -427,6 +441,80 @@ document.addEventListener('DOMContentLoaded', function() {
         previewPlayer.src = '';
         audioFile.value = '';
         cloneBtn.disabled = true;
+    });
+
+    // Recording functionality
+    recordBtn.addEventListener('click', async function() {
+        if (!isRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    previewPlayer.src = audioUrl;
+                    audioPreview.classList.remove('d-none');
+                    cloneBtn.disabled = false;
+                    document.getElementById('audioDuration').textContent = `Duration: ${recordingSeconds}s`;
+
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                recordingSeconds = 0;
+
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+                this.innerHTML = '<i class="bi bi-stop-circle fs-1"></i>';
+                recordProgress.classList.remove('d-none');
+
+                recordingTimer = setInterval(() => {
+                    recordingSeconds++;
+                    const percent = Math.min((recordingSeconds / 30) * 100, 100);
+                    recordProgress.querySelector('.progress-bar').style.width = percent + '%';
+                    if (recordingSeconds >= 30) {
+                        stopRecording();
+                    }
+                }, 1000);
+
+            } catch (err) {
+                alert('Could not access microphone. Please allow microphone access.');
+            }
+        } else {
+            stopRecording();
+        }
+    });
+
+    function stopRecording() {
+        if (mediaRecorder && isRecording) {
+            mediaRecorder.stop();
+            isRecording = false;
+            clearInterval(recordingTimer);
+
+            recordBtn.classList.remove('btn-danger');
+            recordBtn.classList.add('btn-primary');
+            recordBtn.innerHTML = '<i class="bi bi-mic fs-1"></i>';
+            recordProgress.classList.add('d-none');
+            recordProgress.querySelector('.progress-bar').style.width = '0%';
+        }
+    }
+
+    // Clone button
+    cloneBtn.addEventListener('click', function() {
+        this.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Cloning...';
+        this.disabled = true;
+        setTimeout(() => {
+            alert('Voice cloning requires our GPU backend. Sign up for API access to clone voices!');
+            this.innerHTML = '<i class="bi bi-magic me-2"></i>Clone Voice (1 Credit)';
+            this.disabled = false;
+        }, 2000);
     });
 });
 </script>

@@ -322,17 +322,125 @@ document.addEventListener('DOMContentLoaded', function() {
     const speedValue = document.getElementById('speedValue');
     const pitchRange = document.getElementById('pitchRange');
     const pitchValue = document.getElementById('pitchValue');
+    const generateBtn = document.getElementById('generateBtn');
+    const outputCard = document.getElementById('outputCard');
+    const outputPlayer = document.getElementById('outputPlayer');
+    const voiceSelect = document.getElementById('voiceSelect');
 
+    let synth = window.speechSynthesis;
+    let voices = [];
+    let currentUtterance = null;
+
+    // Load browser voices
+    function loadVoices() {
+        voices = synth.getVoices();
+        if (voices.length > 0) {
+            voiceSelect.innerHTML = '';
+            const groups = {};
+            voices.forEach((voice, i) => {
+                const lang = voice.lang.split('-')[0].toUpperCase();
+                if (!groups[lang]) groups[lang] = [];
+                groups[lang].push({voice, index: i});
+            });
+            Object.keys(groups).sort().forEach(lang => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = lang;
+                groups[lang].forEach(({voice, index}) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = voice.name;
+                    if (voice.default) option.selected = true;
+                    optgroup.appendChild(option);
+                });
+                voiceSelect.appendChild(optgroup);
+            });
+        }
+    }
+
+    if (synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = loadVoices;
+    }
+    loadVoices();
+
+    // Character count
     textInput.addEventListener('input', function() {
         charCount.textContent = `${this.value.length} / 5000`;
     });
 
+    // Sliders
     speedRange.addEventListener('input', function() {
         speedValue.textContent = `${this.value}x`;
     });
-
     pitchRange.addEventListener('input', function() {
         pitchValue.textContent = this.value;
+    });
+
+    // Clear button
+    document.querySelector('button[title="Clear text"]').addEventListener('click', function() {
+        textInput.value = '';
+        charCount.textContent = '0 / 5000';
+    });
+
+    // Sample button
+    document.querySelector('button[title="Sample text"]').addEventListener('click', function() {
+        textInput.value = "Welcome to Speech to Speech AI, the most advanced voice platform. Clone any voice in seconds, convert speech in real-time, and build voice applications with state-of-the-art AI models.";
+        charCount.textContent = `${textInput.value.length} / 5000`;
+    });
+
+    // Generate speech
+    generateBtn.addEventListener('click', function() {
+        const text = textInput.value.trim();
+        if (!text) {
+            alert('Please enter some text first.');
+            return;
+        }
+
+        // Cancel any ongoing speech
+        synth.cancel();
+
+        // Create utterance
+        currentUtterance = new SpeechSynthesisUtterance(text);
+
+        // Set voice
+        const voiceIndex = voiceSelect.value;
+        if (voices[voiceIndex]) {
+            currentUtterance.voice = voices[voiceIndex];
+        }
+
+        // Set rate and pitch
+        currentUtterance.rate = parseFloat(speedRange.value);
+        currentUtterance.pitch = 1 + (parseInt(pitchRange.value) / 20);
+
+        // Update button
+        generateBtn.innerHTML = '<i class="bi bi-stop-circle me-2"></i>Stop';
+        generateBtn.classList.remove('btn-success');
+        generateBtn.classList.add('btn-danger');
+
+        currentUtterance.onend = function() {
+            generateBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)';
+            generateBtn.classList.remove('btn-danger');
+            generateBtn.classList.add('btn-success');
+        };
+
+        currentUtterance.onerror = function() {
+            generateBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)';
+            generateBtn.classList.remove('btn-danger');
+            generateBtn.classList.add('btn-success');
+        };
+
+        synth.speak(currentUtterance);
+    });
+
+    // Voice preview buttons
+    document.querySelectorAll('.list-group-item button').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const voiceName = this.closest('.list-group-item').querySelector('.fw-semibold').textContent;
+            const utterance = new SpeechSynthesisUtterance(`Hi, I'm ${voiceName}. How can I help you today?`);
+            synth.cancel();
+            synth.speak(utterance);
+        });
     });
 });
 </script>

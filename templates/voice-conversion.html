@@ -230,4 +230,96 @@
         </div>
     </div>
 </section>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sourceDropzone = document.getElementById('sourceDropzone');
+    const sourceFile = document.getElementById('sourceFile');
+    const convertBtn = document.getElementById('convertBtn');
+    const voiceOptions = document.querySelectorAll('.voice-option');
+    let selectedVoice = null;
+    let hasSourceFile = false;
+
+    // File upload
+    sourceFile.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            hasSourceFile = true;
+            sourceDropzone.innerHTML = `
+                <i class="bi bi-file-earmark-music display-4 text-success mb-3"></i>
+                <h6>${file.name}</h6>
+                <p class="text-muted small mb-2">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <audio controls class="w-100 mb-2" src="${URL.createObjectURL(file)}"></audio>
+                <button class="btn btn-outline-danger btn-sm" id="removeSource">Remove</button>
+            `;
+            document.getElementById('removeSource').addEventListener('click', function() {
+                location.reload();
+            });
+            updateConvertBtn();
+        }
+    });
+
+    // Drag and drop
+    sourceDropzone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('border-warning');
+    });
+    sourceDropzone.addEventListener('dragleave', function() {
+        this.classList.remove('border-warning');
+    });
+    sourceDropzone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-warning');
+        if (e.dataTransfer.files.length > 0) {
+            sourceFile.files = e.dataTransfer.files;
+            sourceFile.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // Voice selection
+    voiceOptions.forEach(option => {
+        option.addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON') return;
+            voiceOptions.forEach(v => v.classList.remove('border-warning', 'border-2'));
+            this.classList.add('border-warning', 'border-2');
+            selectedVoice = this.dataset.voice;
+            updateConvertBtn();
+        });
+
+        // Preview button
+        option.querySelector('button').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const voiceName = option.querySelector('h6').textContent;
+            const synth = window.speechSynthesis;
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(`Hi, I'm ${voiceName}. This is how I sound.`);
+            synth.speak(utterance);
+        });
+    });
+
+    function updateConvertBtn() {
+        if (hasSourceFile && selectedVoice) {
+            convertBtn.disabled = false;
+        }
+    }
+
+    // Convert button
+    convertBtn.addEventListener('click', function() {
+        if (!hasSourceFile || !selectedVoice) {
+            alert('Please upload source audio and select a target voice.');
+            return;
+        }
+        this.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Converting...';
+        this.disabled = true;
+
+        // Simulate processing
+        setTimeout(() => {
+            alert('Voice conversion requires our GPU backend. Sign up for API access to use this feature!');
+            this.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Convert Voice (2 Credits)';
+            this.disabled = false;
+        }, 2000);
+    });
+});
+</script>
 {% endblock %}
