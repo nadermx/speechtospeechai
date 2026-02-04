@@ -28,3 +28,4 @@ staticfiles/
 ansible/group_vars/all
 ansible/servers
 ansible/disableroot.yml
+node_modules/
