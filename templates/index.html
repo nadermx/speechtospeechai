@@ -38,34 +38,38 @@
                                 <i class="bi bi-soundwave fs-4"></i>
                             </div>
                             <div>
-                                <h5 class="mb-0 text-white">Live Voice Demo</h5>
-                                <small class="text-muted">Experience real-time voice cloning</small>
+                                <h5 class="mb-0 text-white">Live TTS Demo</h5>
+                                <small class="text-muted">Try multilingual text-to-speech</small>
                             </div>
                         </div>
                         <div class="bg-black rounded p-3 mb-3">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <span class="text-muted small">Original Voice</span>
-                                <button class="btn btn-sm btn-outline-primary" id="playOriginal">
-                                    <i class="bi bi-play-fill"></i>
-                                </button>
-                            </div>
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-primary" style="width: 0%"></div>
+                            <textarea id="demoText" class="form-control bg-black text-light border-secondary" rows="3" placeholder="Type something in any language..."></textarea>
+                            <div class="mt-2">
+                                <small class="text-muted">Try these examples:</small>
+                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Hello! Welcome to Speech to Speech AI. Clone any voice in seconds with state-of-the-art AI technology." data-lang="en-US">🇺🇸 English</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="¡Hola! Bienvenido a Speech to Speech AI. Clona cualquier voz en segundos con inteligencia artificial de última generación." data-lang="es-ES">🇪🇸 Español</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Bonjour! Bienvenue sur Speech to Speech AI. Clonez n'importe quelle voix en quelques secondes grâce à l'IA." data-lang="fr-FR">🇫🇷 Français</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Hallo! Willkommen bei Speech to Speech AI. Klonen Sie jede Stimme in Sekunden mit modernster KI-Technologie." data-lang="de-DE">🇩🇪 Deutsch</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="你好！欢迎使用语音转语音人工智能。只需几秒钟即可使用尖端AI技术克隆任何声音。" data-lang="zh-CN">🇨🇳 中文</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="こんにちは！Speech to Speech AIへようこそ。最先端のAI技術で数秒であらゆる声をクローンできます。" data-lang="ja-JP">🇯🇵 日本語</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="مرحباً! مرحباً بكم في Speech to Speech AI. استنساخ أي صوت في ثوانٍ باستخدام الذكاء الاصطناعي." data-lang="ar-SA">🇸🇦 العربية</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Olá! Bem-vindo ao Speech to Speech AI. Clone qualquer voz em segundos com tecnologia de IA de ponta." data-lang="pt-BR">🇧🇷 Português</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="Привет! Добро пожаловать в Speech to Speech AI. Клонируйте любой голос за секунды с помощью передового ИИ." data-lang="ru-RU">🇷🇺 Русский</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary example-btn" data-text="안녕하세요! Speech to Speech AI에 오신 것을 환영합니다. 최첨단 AI로 몇 초 만에 어떤 목소리든 복제하세요." data-lang="ko-KR">🇰🇷 한국어</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-black rounded p-3 mb-3">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <span class="text-muted small">Cloned Voice</span>
-                                <button class="btn btn-sm btn-outline-success" id="playCloned">
-                                    <i class="bi bi-play-fill"></i>
-                                </button>
-                            </div>
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-success" style="width: 0%"></div>
-                            </div>
+                        <div class="d-flex gap-2 mb-3">
+                            <select id="voiceSelect" class="form-select bg-black text-light border-secondary" style="flex: 1;">
+                                <option value="">Select a voice...</option>
+                            </select>
+                            <button id="speakBtn" class="btn btn-primary px-4">
+                                <i class="bi bi-play-fill me-1"></i>Speak
+                            </button>
                         </div>
                         <div class="text-center">
-                            <a href="/voice-cloning/" class="btn btn-primary w-100">
+                            <a href="/voice-cloning/" class="btn btn-outline-light w-100">
                                 <i class="bi bi-mic me-2"></i>Clone Your Voice Now
                             </a>
                         </div>
@@ -558,5 +562,94 @@ audio.save(<span class="text-success">"output.mp3"</span>)</code></pre>
     transform: translateY(-5px);
     box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
 }
+.example-btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+.example-btn:hover {
+    background-color: rgba(255,255,255,0.1);
+}
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const demoText = document.getElementById('demoText');
+    const voiceSelect = document.getElementById('voiceSelect');
+    const speakBtn = document.getElementById('speakBtn');
+    let voices = [];
+    let selectedLang = 'en-US';
+
+    // Load voices
+    function loadVoices() {
+        voices = window.speechSynthesis.getVoices();
+        voiceSelect.innerHTML = '<option value="">Select a voice...</option>';
+
+        // Filter for the selected language first, then add others
+        const langVoices = voices.filter(v => v.lang.startsWith(selectedLang.split('-')[0]));
+        const otherVoices = voices.filter(v => !v.lang.startsWith(selectedLang.split('-')[0]));
+
+        [...langVoices, ...otherVoices].forEach((voice, index) => {
+            const option = document.createElement('option');
+            option.value = voices.indexOf(voice);
+            option.textContent = `${voice.name} (${voice.lang})`;
+            if (langVoices.length > 0 && voice === langVoices[0]) {
+                option.selected = true;
+            }
+            voiceSelect.appendChild(option);
+        });
+    }
+
+    if ('speechSynthesis' in window) {
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    // Example button handlers
+    document.querySelectorAll('.example-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            demoText.value = this.getAttribute('data-text');
+            selectedLang = this.getAttribute('data-lang');
+            loadVoices();
+        });
+    });
+
+    // Speak button handler
+    speakBtn.addEventListener('click', function() {
+        const text = demoText.value.trim();
+        if (!text) {
+            alert('Please enter some text or click an example button.');
+            return;
+        }
+
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Set voice if selected
+        const selectedIndex = voiceSelect.value;
+        if (selectedIndex && voices[selectedIndex]) {
+            utterance.voice = voices[selectedIndex];
+        }
+
+        // Update button state
+        speakBtn.innerHTML = '<i class="bi bi-stop-fill me-1"></i>Stop';
+        speakBtn.classList.remove('btn-primary');
+        speakBtn.classList.add('btn-danger');
+
+        utterance.onend = function() {
+            speakBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Speak';
+            speakBtn.classList.remove('btn-danger');
+            speakBtn.classList.add('btn-primary');
+        };
+
+        utterance.onerror = function() {
+            speakBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Speak';
+            speakBtn.classList.remove('btn-danger');
+            speakBtn.classList.add('btn-primary');
+        };
+
+        window.speechSynthesis.speak(utterance);
+    });
+});
+</script>
 {% endblock %}
