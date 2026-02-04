@@ -32,4 +32,7 @@ urlpatterns = [
     path('custom-training/', views.CustomTrainingPage.as_view(), name='custom-training'),
     path('api-docs/', views.APIDocsPage.as_view(), name='api-docs'),
     path('models/', views.ModelsPage.as_view(), name='models'),
+
+    # API endpoints
+    path('api/log-error/', views.LogFrontendError.as_view(), name='log-error'),
 ]

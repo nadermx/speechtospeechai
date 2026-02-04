@@ -4,6 +4,72 @@
  * JavaScript client for interacting with the Speech AI API endpoints.
  */
 
+// Error logging utility
+const ErrorLogger = {
+    enabled: true,
+    logEndpoint: '/api/log-error/',
+
+    log(error, context = {}) {
+        const errorData = {
+            message: error.message || String(error),
+            stack: error.stack || null,
+            url: window.location.href,
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString(),
+            context: context
+        };
+
+        // Log to console
+        console.error('[SpeechAPI Error]', errorData);
+
+        // Send to server (fire-and-forget)
+        if (this.enabled) {
+            try {
+                navigator.sendBeacon(this.logEndpoint, JSON.stringify(errorData));
+            } catch (e) {
+                // Fallback to fetch
+                fetch(this.logEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(errorData),
+                    keepalive: true
+                }).catch(() => {}); // Ignore send errors
+            }
+        }
+    },
+
+    // Track API call for debugging
+    trackCall(endpoint, method, success, duration, error = null) {
+        const data = {
+            endpoint,
+            method,
+            success,
+            duration_ms: duration,
+            error: error ? error.message : null,
+            timestamp: new Date().toISOString()
+        };
+
+        if (!success) {
+            console.warn('[SpeechAPI Call Failed]', data);
+        }
+    }
+};
+
+// Global error handler for uncaught errors
+window.addEventListener('error', (event) => {
+    ErrorLogger.log(event.error || event.message, {
+        type: 'uncaught',
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno
+    });
+});
+
+// Global promise rejection handler
+window.addEventListener('unhandledrejection', (event) => {
+    ErrorLogger.log(event.reason, { type: 'unhandledrejection' });
+});
+
 const SpeechAPI = {
     // API configuration
     baseUrl: window.API_SERVER || 'https://api.speechtospeechai.com',
@@ -16,10 +82,13 @@ const SpeechAPI = {
 
     // Make API request with fallback
     async request(endpoint, options = {}) {
+        const startTime = Date.now();
         const apiKey = this.getApiKey();
 
         if (!apiKey) {
-            throw new Error('API key required. Please log in.');
+            const error = new Error('API key required. Please log in or sign up to use this feature.');
+            ErrorLogger.log(error, { endpoint, reason: 'missing_api_key' });
+            throw error;
         }
 
         const defaultHeaders = {
@@ -42,24 +111,43 @@ const SpeechAPI = {
         try {
             // Try primary API server
             const response = await fetch(`${this.baseUrl}${endpoint}`, fetchOptions);
-            return await this.handleResponse(response);
+            const result = await this.handleResponse(response);
+            ErrorLogger.trackCall(endpoint, options.method || 'GET', true, Date.now() - startTime);
+            return result;
         } catch (error) {
             // Fallback to secondary server
             console.warn('Primary API failed, trying fallback:', error.message);
             try {
                 const response = await fetch(`${this.fallbackUrl}${endpoint}`, fetchOptions);
-                return await this.handleResponse(response);
+                const result = await this.handleResponse(response);
+                ErrorLogger.trackCall(endpoint, options.method || 'GET', true, Date.now() - startTime);
+                return result;
             } catch (fallbackError) {
-                throw new Error('API request failed: ' + fallbackError.message);
+                const finalError = new Error('API request failed: ' + fallbackError.message);
+                ErrorLogger.trackCall(endpoint, options.method || 'GET', false, Date.now() - startTime, fallbackError);
+                ErrorLogger.log(finalError, {
+                    endpoint,
+                    primaryError: error.message,
+                    fallbackError: fallbackError.message
+                });
+                throw finalError;
             }
         }
     },
 
     async handleResponse(response) {
-        const data = await response.json();
+        let data;
+        try {
+            data = await response.json();
+        } catch (e) {
+            throw new Error(`Invalid JSON response: ${response.status}`);
+        }
 
         if (!response.ok) {
-            throw new Error(data.error || `HTTP ${response.status}`);
+            const error = new Error(data.error || data.detail || `HTTP ${response.status}`);
+            error.status = response.status;
+            error.data = data;
+            throw error;
         }
 
         return data;
@@ -519,3 +607,4 @@ window.SpeechAPI = SpeechAPI;
 window.SpeechUI = SpeechUI;
 window.FileUploader = FileUploader;
 window.AudioRecorder = AudioRecorder;
+window.ErrorLogger = ErrorLogger;

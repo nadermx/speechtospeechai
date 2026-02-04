@@ -703,3 +703,36 @@ class ModelsPage(View):
                 'g': settings
             }
         )
+
+
+import json
+import logging
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+# Setup frontend error logger
+frontend_logger = logging.getLogger('frontend')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LogFrontendError(View):
+    """
+    Receives frontend JavaScript errors and logs them for debugging.
+    """
+    def post(self, request):
+        try:
+            data = json.loads(request.body) if request.body else {}
+
+            # Log to file
+            frontend_logger.error(
+                "Frontend Error | URL: %s | Message: %s | Context: %s | UserAgent: %s",
+                data.get('url', 'unknown'),
+                data.get('message', 'unknown'),
+                json.dumps(data.get('context', {})),
+                data.get('userAgent', 'unknown')[:200]
+            )
+
+            return JsonResponse({'status': 'logged'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
