@@ -280,8 +280,8 @@
     <!-- API Configuration -->
     <script>
         window.API_SERVER = '{{ g.api_server|default:"https://api.speechtospeechai.com" }}';
-        {% if user.is_authenticated and user.api_key %}
-        window.API_KEY = '{{ user.api_key }}';
+        {% if user.is_authenticated and user.api_token %}
+        window.API_KEY = '{{ user.api_token }}';
         {% endif %}
     </script>
     <script src="{% static 'js/speech-api.js' %}?v={{ g.scripts_version }}"></script>

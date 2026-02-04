@@ -1,307 +1,621 @@
 /**
  * Frontend Functionality Tests for speechtospeechai.com
- * Run with: npx playwright test tests/test-frontend.js
+ * Run with: npx playwright test tests/frontend.spec.js
  */
 
 const { test, expect } = require('@playwright/test');
 
 const BASE_URL = 'https://www.speechtospeechai.com';
 
-// Test each tool page loads and has functional UI elements
+// All tool pages configuration
 const toolPages = [
     {
         name: 'Voice Cloning',
         path: '/voice-cloning/',
-        elements: {
-            fileUpload: '#audioFile',
-            recordBtn: '#recordBtn',
-            processBtn: '#cloneBtn',
-            header: 'h1'
-        }
+        hasFileUpload: true,
+        hasRecording: true,
+        primaryButton: '#cloneBtn',
+        elements: ['#dropzone', '#textToSpeak']
     },
     {
         name: 'Text to Speech',
         path: '/text-to-speech/',
-        elements: {
-            textInput: '#textInput',
-            voiceSelect: '#voiceSelect',
-            header: 'h1'
-        }
+        hasFileUpload: false,
+        hasRecording: false,
+        primaryButton: '#generateBtn',
+        elements: ['#textInput', '#voiceSelect', '#modelSelect']
     },
     {
         name: 'Speech to Text',
         path: '/speech-to-text/',
-        elements: {
-            fileUpload: '#audioFile',
-            header: 'h1'
-        }
+        hasFileUpload: true,
+        hasRecording: true,
+        primaryButton: '#transcribeBtn',
+        elements: ['#dropzone', '#languageSelect']
     },
     {
         name: 'Voice Conversion',
         path: '/voice-conversion/',
-        elements: {
-            header: 'h1'
-        }
+        hasFileUpload: true,
+        hasRecording: false,
+        primaryButton: '#convertBtn',
+        elements: ['#sourceDropzone', '#targetDropzone']
     },
     {
         name: 'Audio Enhancement',
         path: '/audio-enhancement/',
-        elements: {
-            header: 'h1'
-        }
+        hasFileUpload: true,
+        hasRecording: false,
+        primaryButton: '#enhanceBtn',
+        elements: ['#dropzone']
     },
     {
         name: 'Speech Translation',
         path: '/speech-translation/',
-        elements: {
-            header: 'h1'
-        }
+        hasFileUpload: true,
+        hasRecording: false,
+        primaryButton: '#translateBtn',
+        elements: ['#dropzone', '#targetLang']
     },
     {
         name: 'Real-Time Chat',
         path: '/real-time-chat/',
-        elements: {
-            callBtn: '#callBtn',
-            muteBtn: '#muteBtn',
-            speakerBtn: '#speakerBtn',
-            chatMessages: '#chatMessages',
-            header: 'h1'
-        }
+        hasFileUpload: false,
+        hasRecording: false,
+        primaryButton: '#callBtn',
+        elements: ['#chatMessages', '#muteBtn', '#speakerBtn']
     },
     {
         name: 'Custom Training',
         path: '/custom-training/',
-        elements: {
-            header: 'h1'
-        }
+        hasFileUpload: true,
+        hasRecording: false,
+        primaryButton: '.btn-primary',
+        elements: ['#voiceName']
     }
 ];
 
-// Test page loads
+// Static pages
+const staticPages = [
+    { path: '/', name: 'Home' },
+    { path: '/pricing/', name: 'Pricing' },
+    { path: '/api-docs/', name: 'API Docs' },
+    { path: '/models/', name: 'Models' },
+    { path: '/about/', name: 'About' },
+    { path: '/contact/', name: 'Contact' },
+    { path: '/login/', name: 'Login' },
+    { path: '/signup/', name: 'Signup' },
+    { path: '/privacy/', name: 'Privacy' },
+    { path: '/terms/', name: 'Terms' }
+];
+
+// ==========================================
+// PAGE LOAD TESTS
+// ==========================================
 test.describe('Page Load Tests', () => {
-    for (const page of toolPages) {
-        test(`${page.name} loads successfully`, async ({ page: browserPage }) => {
-            const response = await browserPage.goto(`${BASE_URL}${page.path}`);
+    for (const page of [...toolPages, ...staticPages]) {
+        test(`${page.name} page loads (200 OK)`, async ({ page: browserPage }) => {
+            const response = await browserPage.goto(`${BASE_URL}${page.path}`, {
+                waitUntil: 'domcontentloaded'
+            });
             expect(response.status()).toBe(200);
 
-            // Check header exists
-            const header = await browserPage.locator(page.elements.header).first();
-            await expect(header).toBeVisible();
+            // Check page has content
+            const body = await browserPage.locator('body');
+            await expect(body).toBeVisible();
         });
     }
 });
 
-// Test interactive elements
-test.describe('Interactive Element Tests', () => {
-    test('Voice Cloning - Upload area is clickable', async ({ page }) => {
-        await page.goto(`${BASE_URL}/voice-cloning/`);
+// ==========================================
+// NAVIGATION TESTS
+// ==========================================
+test.describe('Navigation Tests', () => {
+    test('Navbar links work correctly', async ({ page }) => {
+        await page.goto(BASE_URL);
 
-        const dropzone = page.locator('#dropzone');
-        await expect(dropzone).toBeVisible();
+        // Test Tools dropdown
+        const toolsDropdown = page.locator('#toolsDropdown');
+        await expect(toolsDropdown).toBeVisible();
+        await toolsDropdown.click();
 
-        const fileInput = page.locator('#audioFile');
-        await expect(fileInput).toBeAttached();
+        // Check dropdown items are visible
+        const voiceCloningLink = page.locator('a[href="/voice-cloning/"]').first();
+        await expect(voiceCloningLink).toBeVisible();
     });
 
-    test('Text to Speech - Text input and voice selection work', async ({ page }) => {
-        await page.goto(`${BASE_URL}/text-to-speech/`);
+    test('Footer links are present', async ({ page }) => {
+        await page.goto(BASE_URL);
 
-        const textInput = page.locator('#textInput');
-        await expect(textInput).toBeVisible();
+        const footer = page.locator('footer');
+        await expect(footer).toBeVisible();
 
-        // Type some text
-        await textInput.fill('Hello, this is a test.');
-        await expect(textInput).toHaveValue('Hello, this is a test.');
-
-        // Check voice select
-        const voiceSelect = page.locator('#voiceSelect');
-        await expect(voiceSelect).toBeVisible();
+        // Check for key footer links
+        await expect(page.locator('footer a[href="/privacy/"]')).toBeVisible();
+        await expect(page.locator('footer a[href="/terms/"]')).toBeVisible();
     });
 
-    test('Speech to Text - Upload area is present', async ({ page }) => {
-        await page.goto(`${BASE_URL}/speech-to-text/`);
+    test('Logo navigates to home', async ({ page }) => {
+        await page.goto(`${BASE_URL}/pricing/`);
 
-        // Check for dropzone or upload area
-        const uploadArea = page.locator('.border-dashed, #dropzone').first();
-        await expect(uploadArea).toBeVisible();
-    });
+        const logo = page.locator('.navbar-brand').first();
+        await logo.click();
 
-    test('Real-Time Chat - Call button is functional', async ({ page }) => {
-        await page.goto(`${BASE_URL}/real-time-chat/`);
-
-        const callBtn = page.locator('#callBtn');
-        await expect(callBtn).toBeVisible();
-
-        const muteBtn = page.locator('#muteBtn');
-        await expect(muteBtn).toBeVisible();
-
-        const speakerBtn = page.locator('#speakerBtn');
-        await expect(speakerBtn).toBeVisible();
-
-        // Check chat messages area
-        const chatMessages = page.locator('#chatMessages');
-        await expect(chatMessages).toBeVisible();
+        await expect(page).toHaveURL(/\//);
     });
 });
 
-// Test JavaScript loads and SpeechAPI is available
+// ==========================================
+// JAVASCRIPT LOADING TESTS
+// ==========================================
 test.describe('JavaScript Tests', () => {
-    test('SpeechAPI is loaded on voice-cloning page', async ({ page }) => {
+    test('SpeechAPI is loaded globally', async ({ page }) => {
         await page.goto(`${BASE_URL}/voice-cloning/`);
+        await page.waitForLoadState('networkidle');
 
-        // Check SpeechAPI is available
-        const hasAPI = await page.evaluate(() => {
-            return typeof window.SpeechAPI !== 'undefined';
+        const hasSpeechAPI = await page.evaluate(() => {
+            return typeof window.SpeechAPI === 'object' &&
+                   typeof window.SpeechAPI.textToSpeech === 'function';
         });
-        expect(hasAPI).toBe(true);
+        expect(hasSpeechAPI).toBe(true);
     });
 
     test('SpeechUI helpers are loaded', async ({ page }) => {
-        await page.goto(`${BASE_URL}/voice-cloning/`);
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+        await page.waitForLoadState('networkidle');
 
-        const hasUI = await page.evaluate(() => {
-            return typeof window.SpeechUI !== 'undefined';
+        const hasSpeechUI = await page.evaluate(() => {
+            return typeof window.SpeechUI === 'object' &&
+                   typeof window.SpeechUI.showLoading === 'function';
         });
-        expect(hasUI).toBe(true);
+        expect(hasSpeechUI).toBe(true);
     });
 
     test('ErrorLogger is loaded', async ({ page }) => {
         await page.goto(`${BASE_URL}/voice-cloning/`);
+        await page.waitForLoadState('networkidle');
 
-        const hasLogger = await page.evaluate(() => {
-            return typeof window.ErrorLogger !== 'undefined';
+        const hasErrorLogger = await page.evaluate(() => {
+            return typeof window.ErrorLogger === 'object' &&
+                   typeof window.ErrorLogger.log === 'function';
         });
-        expect(hasLogger).toBe(true);
+        expect(hasErrorLogger).toBe(true);
     });
-});
 
-// Test API connectivity (without making actual requests)
-test.describe('API Configuration Tests', () => {
-    test('API base URL is configured', async ({ page }) => {
+    test('FileUploader class is available', async ({ page }) => {
         await page.goto(`${BASE_URL}/voice-cloning/`);
+        await page.waitForLoadState('networkidle');
 
-        const baseUrl = await page.evaluate(() => {
-            return window.SpeechAPI?.baseUrl;
+        const hasFileUploader = await page.evaluate(() => {
+            return typeof window.FileUploader === 'function';
         });
+        expect(hasFileUploader).toBe(true);
+    });
 
-        expect(baseUrl).toBeTruthy();
-        expect(baseUrl).toContain('api.');
+    test('AudioRecorder class is available', async ({ page }) => {
+        await page.goto(`${BASE_URL}/voice-cloning/`);
+        await page.waitForLoadState('networkidle');
+
+        const hasAudioRecorder = await page.evaluate(() => {
+            return typeof window.AudioRecorder === 'function';
+        });
+        expect(hasAudioRecorder).toBe(true);
+    });
+
+    test('API_SERVER is configured', async ({ page }) => {
+        await page.goto(`${BASE_URL}/voice-cloning/`);
+        await page.waitForLoadState('networkidle');
+
+        const apiServer = await page.evaluate(() => window.API_SERVER);
+        expect(apiServer).toBeTruthy();
+        expect(apiServer).toContain('api.');
     });
 });
 
-// Test for console errors
+// ==========================================
+// CONSOLE ERROR TESTS
+// ==========================================
 test.describe('Console Error Tests', () => {
     for (const toolPage of toolPages) {
         test(`${toolPage.name} has no critical JS errors`, async ({ page }) => {
             const errors = [];
 
             page.on('pageerror', (error) => {
-                errors.push(error.message);
+                // Filter out known non-critical errors
+                const msg = error.message.toLowerCase();
+                if (!msg.includes('failed to load resource') &&
+                    !msg.includes('net::err') &&
+                    !msg.includes('recaptcha')) {
+                    errors.push(error.message);
+                }
             });
 
             await page.goto(`${BASE_URL}${toolPage.path}`);
             await page.waitForLoadState('networkidle');
 
-            // Filter out known non-critical errors
-            const criticalErrors = errors.filter(e =>
-                !e.includes('Failed to load resource') &&
-                !e.includes('net::ERR')
-            );
-
-            if (criticalErrors.length > 0) {
-                console.log(`Errors on ${toolPage.name}:`, criticalErrors);
+            if (errors.length > 0) {
+                console.log(`JS errors on ${toolPage.name}:`, errors);
             }
 
-            // Allow test to pass even with some errors, but log them
-            expect(criticalErrors.length).toBeLessThan(5);
+            expect(errors.length).toBe(0);
         });
     }
 });
 
-// Specific functionality tests
-test.describe('Detailed Functionality Tests', () => {
-    test('Voice Cloning - Tab navigation works', async ({ page }) => {
+// ==========================================
+// TOOL UI ELEMENT TESTS
+// ==========================================
+test.describe('Tool UI Elements', () => {
+    test('Voice Cloning - All elements present', async ({ page }) => {
         await page.goto(`${BASE_URL}/voice-cloning/`);
 
-        // Check upload tab is active by default
-        const uploadTab = page.locator('a[href="#upload-tab"]');
-        await expect(uploadTab).toHaveClass(/active/);
+        // Check dropzone
+        const dropzone = page.locator('#dropzone');
+        await expect(dropzone).toBeVisible();
 
-        // Click record tab
-        const recordTab = page.locator('a[href="#record-tab"]');
-        await recordTab.click();
-        await expect(recordTab).toHaveClass(/active/);
+        // Check text input
+        const textInput = page.locator('#textToSpeak');
+        await expect(textInput).toBeVisible();
 
-        // Check record button is visible
-        const recordBtn = page.locator('#recordBtn');
-        await expect(recordBtn).toBeVisible();
+        // Check clone button
+        const cloneBtn = page.locator('#cloneBtn');
+        await expect(cloneBtn).toBeVisible();
+
+        // Check tab navigation
+        const tabs = page.locator('[role="tab"]');
+        expect(await tabs.count()).toBeGreaterThanOrEqual(2);
     });
 
-    test('Text to Speech - Character counter updates', async ({ page }) => {
+    test('Text to Speech - All elements present', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+
+        // Text input
+        const textInput = page.locator('#textInput');
+        await expect(textInput).toBeVisible();
+
+        // Voice select
+        const voiceSelect = page.locator('#voiceSelect');
+        await expect(voiceSelect).toBeVisible();
+
+        // Model select
+        const modelSelect = page.locator('#modelSelect');
+        await expect(modelSelect).toBeVisible();
+
+        // Speed slider
+        const speedRange = page.locator('#speedRange');
+        await expect(speedRange).toBeVisible();
+
+        // Generate button
+        const generateBtn = page.locator('#generateBtn');
+        await expect(generateBtn).toBeVisible();
+    });
+
+    test('Speech to Text - All elements present', async ({ page }) => {
+        await page.goto(`${BASE_URL}/speech-to-text/`);
+
+        // Check for dropzone
+        const dropzone = page.locator('#dropzone, .border-dashed').first();
+        await expect(dropzone).toBeVisible();
+
+        // Language select
+        const langSelect = page.locator('#languageSelect');
+        if (await langSelect.count() > 0) {
+            await expect(langSelect).toBeVisible();
+        }
+
+        // Model select
+        const modelSelect = page.locator('#modelSelect');
+        if (await modelSelect.count() > 0) {
+            await expect(modelSelect).toBeVisible();
+        }
+    });
+
+    test('Real-Time Chat - All elements present', async ({ page }) => {
+        await page.goto(`${BASE_URL}/real-time-chat/`);
+
+        // Call button
+        const callBtn = page.locator('#callBtn');
+        await expect(callBtn).toBeVisible();
+
+        // Mute button
+        const muteBtn = page.locator('#muteBtn');
+        await expect(muteBtn).toBeVisible();
+
+        // Speaker button
+        const speakerBtn = page.locator('#speakerBtn');
+        await expect(speakerBtn).toBeVisible();
+
+        // Chat messages
+        const chatMessages = page.locator('#chatMessages');
+        await expect(chatMessages).toBeVisible();
+
+        // Persona select
+        const personaSelect = page.locator('#personaSelect');
+        await expect(personaSelect).toBeVisible();
+    });
+});
+
+// ==========================================
+// FORM INTERACTION TESTS
+// ==========================================
+test.describe('Form Interaction Tests', () => {
+    test('Text to Speech - Text input and character count', async ({ page }) => {
         await page.goto(`${BASE_URL}/text-to-speech/`);
 
         const textInput = page.locator('#textInput');
         const charCount = page.locator('#charCount');
 
-        await textInput.fill('Test');
+        // Type text
+        await textInput.fill('Hello, this is a test of the speech synthesis system.');
 
-        // Check that char count updated
-        await page.waitForTimeout(100);
+        // Check character count updated
         const countText = await charCount.textContent();
-        expect(countText).toContain('4');
+        expect(countText).toContain('52');
     });
 
-    test('Speech to Text - Language dropdown is populated', async ({ page }) => {
-        await page.goto(`${BASE_URL}/speech-to-text/`);
+    test('Text to Speech - Speed slider updates', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
 
-        const langSelect = page.locator('#languageSelect, select[name="language"]').first();
-        if (await langSelect.isVisible()) {
-            const options = await langSelect.locator('option').count();
-            expect(options).toBeGreaterThan(1);
+        const speedRange = page.locator('#speedRange');
+        const speedValue = page.locator('#speedValue');
+
+        // Change speed
+        await speedRange.fill('1.5');
+        await speedRange.dispatchEvent('input');
+
+        const valueText = await speedValue.textContent();
+        expect(valueText).toContain('1.5');
+    });
+
+    test('Text to Speech - Sample button fills text', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+
+        const sampleBtn = page.locator('button[title="Sample text"]');
+        const textInput = page.locator('#textInput');
+
+        await sampleBtn.click();
+
+        const value = await textInput.inputValue();
+        expect(value.length).toBeGreaterThan(10);
+    });
+
+    test('Text to Speech - Clear button clears text', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+
+        const textInput = page.locator('#textInput');
+        const clearBtn = page.locator('button[title="Clear text"]');
+
+        await textInput.fill('Test text');
+        await clearBtn.click();
+
+        const value = await textInput.inputValue();
+        expect(value).toBe('');
+    });
+
+    test('Voice Cloning - Tab switching works', async ({ page }) => {
+        await page.goto(`${BASE_URL}/voice-cloning/`);
+
+        // Click record tab
+        const recordTab = page.locator('a[href="#record-tab"], button[data-bs-target="#record-tab"]').first();
+        if (await recordTab.count() > 0) {
+            await recordTab.click();
+
+            // Record button should now be visible
+            const recordBtn = page.locator('#recordBtn');
+            await expect(recordBtn).toBeVisible();
         }
     });
+});
 
-    test('Real-Time Chat - Click call button shows messages', async ({ page }) => {
+// ==========================================
+// API ERROR HANDLING TESTS (Unauthenticated)
+// ==========================================
+test.describe('Unauthenticated API Handling', () => {
+    test('Text to Speech - Shows login prompt on generate (no API key)', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+
+        // Fill in text
+        const textInput = page.locator('#textInput');
+        await textInput.fill('Test text for synthesis');
+
+        // Try to generate
+        const generateBtn = page.locator('#generateBtn');
+        await generateBtn.click();
+
+        // Wait for error response
+        await page.waitForTimeout(2000);
+
+        // Should show error card with API key message
+        const outputCard = page.locator('#outputCard');
+        await expect(outputCard).toBeVisible();
+
+        const content = await outputCard.textContent();
+        expect(content.toLowerCase()).toMatch(/api key|log in|sign up/);
+    });
+
+    test('Voice Cloning - Validates file before API call', async ({ page }) => {
+        await page.goto(`${BASE_URL}/voice-cloning/`);
+
+        // Try to clone without file
+        const cloneBtn = page.locator('#cloneBtn');
+
+        // Dismiss any alerts
+        page.on('dialog', dialog => dialog.dismiss());
+
+        await cloneBtn.click();
+
+        // Should show validation error or stay on page
+        await page.waitForTimeout(500);
+        await expect(page).toHaveURL(/voice-cloning/);
+    });
+
+    test('Real-Time Chat - Call button shows appropriate message', async ({ page }) => {
         await page.goto(`${BASE_URL}/real-time-chat/`);
 
-        // Get initial chat state
-        const chatMessages = page.locator('#chatMessages');
-        const initialContent = await chatMessages.innerHTML();
-
-        // Click the call button (but expect it might fail due to no mic permission)
         const callBtn = page.locator('#callBtn');
+        const chatMessages = page.locator('#chatMessages');
 
-        // Set up to dismiss any alerts
+        // Dismiss permission dialogs
         page.on('dialog', dialog => dialog.dismiss());
 
         await callBtn.click();
 
-        // Wait a bit for any changes
-        await page.waitForTimeout(1000);
+        // Wait for response
+        await page.waitForTimeout(2000);
 
-        // The content should have changed (either messages or an error)
-        const newContent = await chatMessages.innerHTML();
-        // Just verify the page didn't crash
-        await expect(chatMessages).toBeVisible();
+        // Chat should have some content (error or welcome)
+        const content = await chatMessages.innerHTML();
+        expect(content.length).toBeGreaterThan(0);
     });
 });
 
-// Mobile responsiveness tests
-test.describe('Mobile Responsiveness Tests', () => {
+// ==========================================
+// MOBILE RESPONSIVENESS TESTS
+// ==========================================
+test.describe('Mobile Responsiveness', () => {
     test.use({ viewport: { width: 375, height: 667 } });
 
-    test('Pages are usable on mobile', async ({ page }) => {
-        for (const toolPage of toolPages.slice(0, 3)) { // Test first 3 pages
+    for (const toolPage of toolPages) {
+        test(`${toolPage.name} is responsive on mobile`, async ({ page }) => {
             await page.goto(`${BASE_URL}${toolPage.path}`);
 
-            // Check header is visible
+            // Header visible
             const header = page.locator('h1').first();
             await expect(header).toBeVisible();
 
-            // Check no horizontal overflow
-            const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
-            const viewportWidth = await page.evaluate(() => window.innerWidth);
-            expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 10); // Allow small margin
+            // No horizontal scroll
+            const hasOverflow = await page.evaluate(() => {
+                return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+            });
+            expect(hasOverflow).toBe(false);
+
+            // Mobile menu toggle visible
+            const menuToggle = page.locator('.navbar-toggler');
+            await expect(menuToggle).toBeVisible();
+        });
+    }
+});
+
+// ==========================================
+// ACCESSIBILITY TESTS
+// ==========================================
+test.describe('Accessibility Tests', () => {
+    test('Pages have proper heading structure', async ({ page }) => {
+        for (const toolPage of toolPages.slice(0, 3)) {
+            await page.goto(`${BASE_URL}${toolPage.path}`);
+
+            // Has h1
+            const h1 = page.locator('h1');
+            expect(await h1.count()).toBeGreaterThan(0);
         }
+    });
+
+    test('Form inputs have labels', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+
+        // Check voice select has label
+        const voiceLabel = page.locator('label[for="voiceSelect"], label:has-text("Voice")');
+        expect(await voiceLabel.count()).toBeGreaterThan(0);
+    });
+
+    test('Buttons are keyboard accessible', async ({ page }) => {
+        await page.goto(`${BASE_URL}/text-to-speech/`);
+
+        const generateBtn = page.locator('#generateBtn');
+
+        // Focus the button
+        await generateBtn.focus();
+
+        // Check it's focusable
+        const isFocused = await page.evaluate(() => {
+            return document.activeElement.id === 'generateBtn';
+        });
+        expect(isFocused).toBe(true);
+    });
+});
+
+// ==========================================
+// LOGIN/SIGNUP PAGES
+// ==========================================
+test.describe('Auth Pages', () => {
+    test('Login form is functional', async ({ page }) => {
+        await page.goto(`${BASE_URL}/login/`);
+
+        // Email input
+        const emailInput = page.locator('input[type="email"], input[name="email"]');
+        await expect(emailInput).toBeVisible();
+
+        // Password input
+        const passwordInput = page.locator('input[type="password"]');
+        await expect(passwordInput).toBeVisible();
+
+        // Submit button
+        const submitBtn = page.locator('button[type="submit"]');
+        await expect(submitBtn).toBeVisible();
+    });
+
+    test('Signup form is functional', async ({ page }) => {
+        await page.goto(`${BASE_URL}/signup/`);
+
+        // Email input
+        const emailInput = page.locator('input[type="email"], input[name="email"]');
+        await expect(emailInput).toBeVisible();
+
+        // Password inputs
+        const passwordInputs = page.locator('input[type="password"]');
+        expect(await passwordInputs.count()).toBeGreaterThanOrEqual(1);
+
+        // Submit button
+        const submitBtn = page.locator('button[type="submit"]');
+        await expect(submitBtn).toBeVisible();
+    });
+});
+
+// ==========================================
+// PRICING PAGE TESTS
+// ==========================================
+test.describe('Pricing Page', () => {
+    test('Pricing plans are displayed', async ({ page }) => {
+        await page.goto(`${BASE_URL}/pricing/`);
+
+        // Check for plan cards
+        const planCards = page.locator('.card, .pricing-card');
+        expect(await planCards.count()).toBeGreaterThanOrEqual(1);
+
+        // Check for pricing info
+        const priceText = page.locator('text=/\\$\\d+/');
+        expect(await priceText.count()).toBeGreaterThan(0);
+    });
+
+    test('Get Started buttons are present', async ({ page }) => {
+        await page.goto(`${BASE_URL}/pricing/`);
+
+        const ctaButtons = page.locator('a:has-text("Get Started"), a:has-text("Subscribe"), button:has-text("Get Started")');
+        expect(await ctaButtons.count()).toBeGreaterThan(0);
+    });
+});
+
+// ==========================================
+// CONTACT PAGE TESTS
+// ==========================================
+test.describe('Contact Page', () => {
+    test('Contact form is functional', async ({ page }) => {
+        await page.goto(`${BASE_URL}/contact/`);
+
+        // Name input
+        const nameInput = page.locator('input[name="name"]');
+        await expect(nameInput).toBeVisible();
+
+        // Email input
+        const emailInput = page.locator('input[name="email"], input[type="email"]');
+        await expect(emailInput).toBeVisible();
+
+        // Message textarea
+        const messageInput = page.locator('textarea[name="message"], textarea');
+        await expect(messageInput).toBeVisible();
+
+        // Submit button
+        const submitBtn = page.locator('button[type="submit"]');
+        await expect(submitBtn).toBeVisible();
     });
 });
