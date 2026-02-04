@@ -232,25 +232,31 @@
 </section>
 
 {% block scripts %}
+<script src="{% static 'js/speech-api.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const sourceDropzone = document.getElementById('sourceDropzone');
     const sourceFile = document.getElementById('sourceFile');
     const convertBtn = document.getElementById('convertBtn');
     const voiceOptions = document.querySelectorAll('.voice-option');
+    const uploadVoiceTab = document.querySelector('#upload-voice');
+
     let selectedVoice = null;
     let hasSourceFile = false;
+    let sourceAudioFile = null;
+    let targetVoiceFile = null;
 
-    // File upload
+    // File upload for source
     sourceFile.addEventListener('change', function() {
         if (this.files.length > 0) {
             const file = this.files[0];
             hasSourceFile = true;
+            sourceAudioFile = file;
             sourceDropzone.innerHTML = `
                 <i class="bi bi-file-earmark-music display-4 text-success mb-3"></i>
                 <h6>${file.name}</h6>
                 <p class="text-muted small mb-2">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                <audio controls class="w-100 mb-2" src="${URL.createObjectURL(file)}"></audio>
+                <audio controls class="w-100 mb-2" id="sourcePlayer" src="${URL.createObjectURL(file)}"></audio>
                 <button class="btn btn-outline-danger btn-sm" id="removeSource">Remove</button>
             `;
             document.getElementById('removeSource').addEventListener('click', function() {
@@ -277,13 +283,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Voice selection
+    // Voice selection from presets
     voiceOptions.forEach(option => {
         option.addEventListener('click', function(e) {
             if (e.target.tagName === 'BUTTON') return;
             voiceOptions.forEach(v => v.classList.remove('border-warning', 'border-2'));
             this.classList.add('border-warning', 'border-2');
             selectedVoice = this.dataset.voice;
+            targetVoiceFile = null; // Clear custom upload
             updateConvertBtn();
         });
 
@@ -298,27 +305,176 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Upload custom target voice
+    const uploadVoiceBtn = uploadVoiceTab.querySelector('button');
+    const uploadVoiceInput = document.createElement('input');
+    uploadVoiceInput.type = 'file';
+    uploadVoiceInput.accept = 'audio/*';
+    uploadVoiceInput.style.display = 'none';
+    document.body.appendChild(uploadVoiceInput);
+
+    uploadVoiceBtn.addEventListener('click', function() {
+        uploadVoiceInput.click();
+    });
+
+    uploadVoiceInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            targetVoiceFile = file;
+            selectedVoice = 'custom';
+            voiceOptions.forEach(v => v.classList.remove('border-warning', 'border-2'));
+
+            uploadVoiceTab.innerHTML = `
+                <div class="border-2 border-success rounded p-4 text-center bg-light">
+                    <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+                    <h6>${file.name}</h6>
+                    <p class="text-muted small mb-2">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    <audio controls class="w-100 mb-2" src="${URL.createObjectURL(file)}"></audio>
+                    <button class="btn btn-outline-danger btn-sm" id="removeTargetVoice">Remove</button>
+                </div>
+            `;
+
+            document.getElementById('removeTargetVoice').addEventListener('click', function(e) {
+                e.stopPropagation();
+                targetVoiceFile = null;
+                selectedVoice = null;
+                uploadVoiceTab.innerHTML = `
+                    <div class="border-2 border-dashed rounded p-4 text-center bg-light">
+                        <i class="bi bi-mic display-4 text-muted mb-3"></i>
+                        <h6>Upload a voice sample</h6>
+                        <p class="text-muted small">10-30 seconds of clear speech</p>
+                        <button class="btn btn-outline-primary">
+                            <i class="bi bi-upload me-2"></i>Upload Sample
+                        </button>
+                    </div>
+                `;
+                // Re-attach event listener
+                uploadVoiceTab.querySelector('button').addEventListener('click', function() {
+                    uploadVoiceInput.click();
+                });
+                updateConvertBtn();
+            });
+
+            updateConvertBtn();
+        }
+    });
+
     function updateConvertBtn() {
-        if (hasSourceFile && selectedVoice) {
+        if (hasSourceFile && (selectedVoice || targetVoiceFile)) {
             convertBtn.disabled = false;
+        } else {
+            convertBtn.disabled = true;
         }
     }
 
-    // Convert button
-    convertBtn.addEventListener('click', function() {
-        if (!hasSourceFile || !selectedVoice) {
+    // Convert button - uses real API
+    convertBtn.addEventListener('click', async function() {
+        if (!hasSourceFile || (!selectedVoice && !targetVoiceFile)) {
             alert('Please upload source audio and select a target voice.');
             return;
         }
-        this.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Converting...';
+
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Uploading...';
         this.disabled = true;
 
-        // Simulate processing
-        setTimeout(() => {
-            alert('Voice conversion requires our GPU backend. Sign up for API access to use this feature!');
+        // Remove existing result
+        const existingResult = document.getElementById('resultCard');
+        if (existingResult) existingResult.remove();
+
+        try {
+            // Get conversion options
+            const strengthSlider = document.querySelector('input[type="range"]');
+            const emotionSelect = document.querySelector('.card-body select');
+
+            const options = {
+                model: 'openvoice',
+                strength: strengthSlider ? strengthSlider.value / 100 : 0.8,
+                preserve_emotion: emotionSelect ? emotionSelect.value : 'high'
+            };
+
+            // Call voice conversion API
+            const result = await SpeechAPI.voiceConvert(
+                sourceAudioFile,
+                targetVoiceFile || selectedVoice, // Use file or preset voice ID
+                options
+            );
+
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Converting...';
+
+            // Poll for results
+            const finalResult = await SpeechAPI.pollResults(result.uuid, (status) => {
+                if (status.status === 'queued') {
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Queued...';
+                } else if (status.status === 'processing') {
+                    const progress = status.progress ? ` (${Math.round(status.progress * 100)}%)` : '';
+                    this.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Converting${progress}...`;
+                }
+            });
+
+            // Show result
+            const voiceName = targetVoiceFile ? 'Custom Voice' : selectedVoice;
+            const resultHtml = `
+                <div class="card shadow-sm mt-4" id="resultCard">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>Conversion Complete</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3">Your audio has been converted to the "${voiceName}" voice.</p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted">Original</label>
+                                <audio controls class="w-100" src="${URL.createObjectURL(sourceAudioFile)}"></audio>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted">Converted</label>
+                                <audio controls class="w-100" src="${finalResult.output_url}"></audio>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="${finalResult.output_url}" download="converted-voice.wav" class="btn btn-success">
+                                <i class="bi bi-download me-2"></i>Download
+                            </a>
+                            <button class="btn btn-outline-secondary" onclick="location.reload()">
+                                <i class="bi bi-arrow-repeat me-2"></i>Convert Another
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            convertBtn.insertAdjacentHTML('afterend', resultHtml);
+
             this.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Convert Voice (2 Credits)';
             this.disabled = false;
-        }, 2000);
+
+        } catch (error) {
+            console.error('Conversion error:', error);
+
+            const errorHtml = `
+                <div class="card shadow-sm mt-4" id="resultCard">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Conversion Failed</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3">${error.message || 'An error occurred during voice conversion.'}</p>
+                        ${error.message && error.message.includes('API key') ? `
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Voice conversion requires an API key. <a href="/pricing/" class="alert-link">Sign up</a> to get started.
+                            </div>
+                        ` : ''}
+                        <button class="btn btn-outline-primary" onclick="location.reload()">
+                            <i class="bi bi-arrow-repeat me-2"></i>Try Again
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            convertBtn.insertAdjacentHTML('afterend', errorHtml);
+
+            this.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Convert Voice (2 Credits)';
+            this.disabled = false;
+        }
     });
 });
 </script>

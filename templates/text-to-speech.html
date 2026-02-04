@@ -314,6 +314,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'js/speech-api.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const textInput = document.getElementById('textInput');
@@ -326,41 +327,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const outputCard = document.getElementById('outputCard');
     const outputPlayer = document.getElementById('outputPlayer');
     const voiceSelect = document.getElementById('voiceSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const formatSelect = document.getElementById('formatSelect');
+    const emotionSelect = document.getElementById('emotionSelect');
 
-    let synth = window.speechSynthesis;
-    let voices = [];
-    let currentUtterance = null;
-
-    // Load browser voices
-    function loadVoices() {
-        voices = synth.getVoices();
-        if (voices.length > 0) {
-            voiceSelect.innerHTML = '';
-            const groups = {};
-            voices.forEach((voice, i) => {
-                const lang = voice.lang.split('-')[0].toUpperCase();
-                if (!groups[lang]) groups[lang] = [];
-                groups[lang].push({voice, index: i});
-            });
-            Object.keys(groups).sort().forEach(lang => {
-                const optgroup = document.createElement('optgroup');
-                optgroup.label = lang;
-                groups[lang].forEach(({voice, index}) => {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = voice.name;
-                    if (voice.default) option.selected = true;
-                    optgroup.appendChild(option);
-                });
-                voiceSelect.appendChild(optgroup);
-            });
-        }
-    }
-
-    if (synth.onvoiceschanged !== undefined) {
-        synth.onvoiceschanged = loadVoices;
-    }
-    loadVoices();
+    let isGenerating = false;
 
     // Character count
     textInput.addEventListener('input', function() {
@@ -381,64 +352,131 @@ document.addEventListener('DOMContentLoaded', function() {
         charCount.textContent = '0 / 5000';
     });
 
+    // Paste from clipboard
+    document.querySelector('button[title="Paste from clipboard"]').addEventListener('click', async function() {
+        try {
+            const text = await navigator.clipboard.readText();
+            textInput.value = text.substring(0, 5000);
+            charCount.textContent = `${textInput.value.length} / 5000`;
+        } catch (err) {
+            alert('Could not access clipboard. Please paste manually.');
+        }
+    });
+
     // Sample button
     document.querySelector('button[title="Sample text"]').addEventListener('click', function() {
         textInput.value = "Welcome to Speech to Speech AI, the most advanced voice platform. Clone any voice in seconds, convert speech in real-time, and build voice applications with state-of-the-art AI models.";
         charCount.textContent = `${textInput.value.length} / 5000`;
     });
 
-    // Generate speech
-    generateBtn.addEventListener('click', function() {
+    // Generate speech using API
+    generateBtn.addEventListener('click', async function() {
         const text = textInput.value.trim();
         if (!text) {
             alert('Please enter some text first.');
             return;
         }
 
-        // Cancel any ongoing speech
-        synth.cancel();
-
-        // Create utterance
-        currentUtterance = new SpeechSynthesisUtterance(text);
-
-        // Set voice
-        const voiceIndex = voiceSelect.value;
-        if (voices[voiceIndex]) {
-            currentUtterance.voice = voices[voiceIndex];
+        if (isGenerating) {
+            return;
         }
 
-        // Set rate and pitch
-        currentUtterance.rate = parseFloat(speedRange.value);
-        currentUtterance.pitch = 1 + (parseInt(pitchRange.value) / 20);
+        isGenerating = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
+        this.disabled = true;
 
-        // Update button
-        generateBtn.innerHTML = '<i class="bi bi-stop-circle me-2"></i>Stop';
-        generateBtn.classList.remove('btn-success');
-        generateBtn.classList.add('btn-danger');
+        try {
+            // Prepare options
+            const options = {
+                model: modelSelect.value,
+                voice_id: voiceSelect.value,
+                speed: parseFloat(speedRange.value),
+                format: formatSelect.value
+            };
 
-        currentUtterance.onend = function() {
-            generateBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)';
-            generateBtn.classList.remove('btn-danger');
-            generateBtn.classList.add('btn-success');
-        };
+            // Add emotion for Orpheus model
+            if (modelSelect.value === 'orpheus-3b' && emotionSelect.value !== 'neutral') {
+                options.emotion = emotionSelect.value;
+            }
 
-        currentUtterance.onerror = function() {
-            generateBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)';
-            generateBtn.classList.remove('btn-danger');
-            generateBtn.classList.add('btn-success');
-        };
+            // Call TTS API
+            const result = await SpeechAPI.textToSpeech(text, options);
 
-        synth.speak(currentUtterance);
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+
+            // Poll for results
+            const finalResult = await SpeechAPI.pollResults(result.uuid, (status) => {
+                if (status.status === 'queued') {
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Queued...';
+                } else if (status.status === 'processing') {
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating audio...';
+                }
+            });
+
+            // Show result
+            if (finalResult.output_url) {
+                outputPlayer.src = finalResult.output_url;
+                outputCard.classList.remove('d-none');
+
+                // Update download button
+                const downloadBtn = outputCard.querySelector('.btn-success');
+                downloadBtn.href = finalResult.output_url;
+                downloadBtn.download = `speech.${formatSelect.value}`;
+                downloadBtn.innerHTML = `<i class="bi bi-download me-2"></i>Download ${formatSelect.value.toUpperCase()}`;
+
+                // Scroll to result
+                outputCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            this.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)';
+            this.disabled = false;
+            isGenerating = false;
+
+        } catch (error) {
+            console.error('TTS error:', error);
+
+            // Show error in output card
+            outputCard.classList.remove('d-none');
+            outputCard.innerHTML = `
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Generation Failed</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">${error.message || 'An error occurred during speech generation.'}</p>
+                    ${error.message && error.message.includes('API key') ? `
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Text-to-speech requires an API key. <a href="/pricing/" class="alert-link">Sign up</a> to get started.
+                        </div>
+                    ` : ''}
+                    <button class="btn btn-outline-primary" onclick="location.reload()">
+                        <i class="bi bi-arrow-repeat me-2"></i>Try Again
+                    </button>
+                </div>
+            `;
+
+            this.innerHTML = '<i class="bi bi-play-circle me-2"></i>Generate Speech (1 Credit)';
+            this.disabled = false;
+            isGenerating = false;
+        }
+    });
+
+    // Regenerate button
+    outputCard.querySelector('.btn-outline-secondary:last-child')?.addEventListener('click', function() {
+        generateBtn.click();
     });
 
     // Voice preview buttons
     document.querySelectorAll('.list-group-item button').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', async function(e) {
             e.preventDefault();
             e.stopPropagation();
             const voiceName = this.closest('.list-group-item').querySelector('.fw-semibold').textContent;
-            const utterance = new SpeechSynthesisUtterance(`Hi, I'm ${voiceName}. How can I help you today?`);
+
+            // Use browser speech synthesis for quick preview
+            const synth = window.speechSynthesis;
             synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(`Hi, I'm ${voiceName}. How can I help you today?`);
             synth.speak(utterance);
         });
     });
