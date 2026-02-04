@@ -7,14 +7,35 @@
     <title>{{ title }}</title>
     <meta name="description" content="{{ description|safe }}">
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.speechtospeechai.com{{ request.path }}">
+
     <!-- Open Graph -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Speech to Speech AI">
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="{{ description|safe }}">
-    <meta property="og:image" content="{% static 'images/og-image.png' %}">
+    <meta property="og:url" content="https://www.speechtospeechai.com{{ request.path }}">
+    <meta property="og:image" content="https://www.speechtospeechai.com{% static 'images/og-image.png' %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="{{ g.lang.iso|default:'en' }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@speechtospeech">
+    <meta name="twitter:title" content="{{ title }}">
+    <meta name="twitter:description" content="{{ description|safe }}">
+    <meta name="twitter:image" content="https://www.speechtospeechai.com{% static 'images/og-image.png' %}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <meta name="theme-color" content="#0d6efd">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,6 +48,69 @@
     {% for lang in g.languages %}
     <link rel="alternate" hreflang="{{ lang.iso }}" href="{{ request.path }}?lang={{ lang.iso }}">
     {% endfor %}
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://www.speechtospeechai.com/#organization",
+                "name": "Speech to Speech AI",
+                "url": "https://www.speechtospeechai.com",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.speechtospeechai.com{% static 'images/og-image.png' %}"
+                },
+                "sameAs": [
+                    "https://twitter.com/speechtospeech",
+                    "https://github.com/nadermx/speechtospeechai",
+                    "https://discord.gg/speechtospeech"
+                ],
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "customer support",
+                    "email": "support@speechtospeechai.com"
+                }
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://www.speechtospeechai.com/#website",
+                "url": "https://www.speechtospeechai.com",
+                "name": "Speech to Speech AI",
+                "description": "The most advanced open-source speech AI platform. Clone voices, convert speech, and build voice applications.",
+                "publisher": {
+                    "@id": "https://www.speechtospeechai.com/#organization"
+                },
+                "inLanguage": ["en", "es", "fr", "de", "zh", "ja", "ar", "pt", "ru", "ko"]
+            },
+            {
+                "@type": "SoftwareApplication",
+                "@id": "https://www.speechtospeechai.com/#app",
+                "name": "Speech to Speech AI",
+                "applicationCategory": "MultimediaApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "USD"
+                },
+                "featureList": [
+                    "Voice Cloning",
+                    "Text to Speech",
+                    "Speech to Text",
+                    "Voice Conversion",
+                    "Real-Time Voice Chat",
+                    "Speech Translation",
+                    "Audio Enhancement",
+                    "Custom Voice Training"
+                ]
+            }
+        ]
+    }
+    </script>
+    {% block jsonld %}{% endblock %}
     {% block head %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">

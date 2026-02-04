@@ -65,6 +65,25 @@ main {
     display: none !important;
 }
 
+/* Footer text visibility */
+footer.bg-dark .text-muted {
+    color: #a8a8b3 !important;
+}
+
+footer.bg-dark a.text-muted {
+    color: #a8a8b3 !important;
+    transition: color 0.2s ease;
+}
+
+footer.bg-dark a.text-muted:hover {
+    color: #ffffff !important;
+}
+
+footer.bg-dark h5,
+footer.bg-dark h6 {
+    color: #ffffff !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .display-4 {

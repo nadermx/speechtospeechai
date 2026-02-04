@@ -536,6 +536,94 @@ audio.save(<span class="text-success">"output.mp3"</span>)</code></pre>
     </div>
 </section>
 
+<!-- FAQ Section -->
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Frequently Asked Questions</h2>
+            <p class="lead text-muted">Everything you need to know about Speech to Speech AI</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true">
+                                What is voice cloning and how does it work?
+                            </button>
+                        </h3>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Voice cloning uses AI to analyze a sample of someone's voice (typically 10-30 seconds) and create a digital model that can speak any text in that voice. Our platform uses state-of-the-art models like Fish Speech and OpenVoice to achieve natural-sounding results with emotion preservation.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How many languages does Speech to Speech AI support?
+                            </button>
+                        </h3>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We support 29 languages including English, Spanish, French, German, Chinese, Japanese, Korean, Arabic, Portuguese, Russian, Italian, Dutch, Polish, and many more. Our multilingual models can clone voices and generate speech in any of these languages.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Is it free to get started?
+                            </button>
+                        </h3>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We offer a free tier with 10 credits per month, which includes full access to all features: voice cloning, text-to-speech, speech-to-text, and more. No credit card required to sign up. Upgrade anytime for more credits and priority processing.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                What AI models power the platform?
+                            </button>
+                        </h3>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We use a combination of state-of-the-art open-source models: PersonaPlex 7B for full-duplex conversational AI, Fish Speech v1.5 for multilingual TTS, Orpheus TTS 3B for emotional speech synthesis, Whisper Large v3 for transcription, and OpenVoice v2 for voice conversion. All running on our high-performance GPU infrastructure.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Can I use this for commercial projects?
+                            </button>
+                        </h3>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! All our paid plans include commercial usage rights. You can use generated audio for videos, podcasts, apps, games, customer service, and any other commercial application. Just ensure you have rights to clone any voices you use.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                What is real-time voice chat?
+                            </button>
+                        </h3>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Real-time voice chat is our full-duplex conversational AI feature powered by PersonaPlex. It can listen and speak simultaneously, handle natural interruptions, and respond with less than 200ms latency. Perfect for building voice assistants, customer service bots, or interactive characters.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="py-5 bg-primary text-white">
     <div class="container py-4 text-center">
@@ -551,6 +639,65 @@ audio.save(<span class="text-success">"output.mp3"</span>)</code></pre>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block jsonld %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What is voice cloning and how does it work?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Voice cloning uses AI to analyze a sample of someone's voice (typically 10-30 seconds) and create a digital model that can speak any text in that voice. Our platform uses state-of-the-art models like Fish Speech and OpenVoice to achieve natural-sounding results with emotion preservation."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How many languages does Speech to Speech AI support?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We support 29 languages including English, Spanish, French, German, Chinese, Japanese, Korean, Arabic, Portuguese, Russian, Italian, Dutch, Polish, and many more."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is it free to get started?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! We offer a free tier with 10 credits per month, which includes full access to all features: voice cloning, text-to-speech, speech-to-text, and more. No credit card required to sign up."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What AI models power the platform?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We use PersonaPlex 7B for conversational AI, Fish Speech v1.5 for multilingual TTS, Orpheus TTS 3B for emotional speech, Whisper Large v3 for transcription, and OpenVoice v2 for voice conversion."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use this for commercial projects?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely! All our paid plans include commercial usage rights. You can use generated audio for videos, podcasts, apps, games, customer service, and any other commercial application."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is real-time voice chat?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Real-time voice chat is our full-duplex conversational AI feature powered by PersonaPlex. It can listen and speak simultaneously, handle natural interruptions, and respond with less than 200ms latency."
+            }
+        }
+    ]
+}
+</script>
 {% endblock %}
 
 {% block scripts %}
