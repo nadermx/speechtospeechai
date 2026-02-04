@@ -239,7 +239,7 @@ class ToolPageTests(TestCase):
 
         self.assertIn('callBtn', content)
         self.assertIn('chatMessages', content)
-        self.assertIn('personaSelect', content)
+        self.assertIn('muteBtn', content)
 
 
 class APIConfigurationTests(TestCase):

@@ -1,0 +1,276 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " Speech to Speech AI" [ref=e4] [cursor=pointer]:
+        - /url: /?lang=en
+        - generic [ref=e5]: 
+        - text: Speech to Speech AI
+      - generic [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - button " Tools" [ref=e9] [cursor=pointer]:
+              - generic [ref=e10]: 
+              - text: Tools
+            - text:        
+          - listitem [ref=e11]:
+            - link " Pricing" [ref=e12] [cursor=pointer]:
+              - /url: /pricing/?lang=en
+              - generic [ref=e13]: 
+              - text: Pricing
+          - listitem [ref=e14]:
+            - link " API" [ref=e15] [cursor=pointer]:
+              - /url: /api-docs/
+              - generic [ref=e16]: 
+              - text: API
+          - listitem [ref=e17]:
+            - link " Models" [ref=e18] [cursor=pointer]:
+              - /url: /models/
+              - generic [ref=e19]: 
+              - text: Models
+        - list [ref=e20]:
+          - listitem [ref=e21]:
+            - button " English" [ref=e22] [cursor=pointer]:
+              - generic [ref=e23]: 
+              - text: English
+          - listitem [ref=e24]:
+            - link " Login" [ref=e25] [cursor=pointer]:
+              - /url: /login/?lang=en
+              - generic [ref=e26]: 
+              - text: Login
+          - listitem [ref=e27]:
+            - link " Get Started Free" [ref=e28] [cursor=pointer]:
+              - /url: /signup/?lang=en
+              - generic [ref=e29]: 
+              - text: Get Started Free
+  - main [ref=e30]:
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - navigation "breadcrumb" [ref=e35]:
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Home" [ref=e38] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e39]: / Real-Time Voice Chat
+        - heading " Real-Time Voice Chat" [level=1] [ref=e40]:
+          - generic [ref=e41]: 
+          - text: Real-Time Voice Chat
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]: 
+          - text: <200ms Latency
+        - generic [ref=e45]:
+          - generic [ref=e46]: 
+          - text: Full Duplex
+        - generic [ref=e47]:
+          - generic [ref=e48]: 
+          - text: Custom Personas
+    - generic [ref=e51]:
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e57]:
+            - heading "AI Assistant" [level=6] [ref=e58]
+            - text: Online - Ready to chat
+          - generic [ref=e59]:
+            - button "" [ref=e60] [cursor=pointer]:
+              - generic [ref=e61]: 
+            - button "" [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: 
+        - generic [ref=e64]:
+          - generic [ref=e66]:
+            - generic [ref=e67]: 
+            - heading "Ready for Voice Conversation" [level=5] [ref=e68]
+            - paragraph [ref=e69]: Click the microphone button to start talking
+          - generic [ref=e71]:
+            - generic [ref=e73]:
+              - generic [ref=e75]: 
+              - generic [ref=e76]: You
+            - generic [ref=e84]:
+              - button "" [ref=e85] [cursor=pointer]:
+                - generic [ref=e86]: 
+              - button "" [ref=e87] [cursor=pointer]:
+                - generic [ref=e88]: 
+            - generic [ref=e90]:
+              - generic [ref=e91]: AI
+              - generic [ref=e99]: 
+          - generic [ref=e100]:
+            - button "" [ref=e101] [cursor=pointer]:
+              - generic [ref=e102]: 
+            - paragraph [ref=e103]: Press to start conversation
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - heading " Persona Settings" [level=6] [ref=e107]:
+            - generic [ref=e108]: 
+            - text: Persona Settings
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]: AI Role
+              - combobox [ref=e112]:
+                - option "Helpful Assistant" [selected]
+                - option "Customer Service Agent"
+                - option "Language Tutor"
+                - option "Interview Practice"
+                - option "Supportive Listener"
+                - option "Custom Persona..."
+            - generic [ref=e113]:
+              - generic [ref=e114]: Voice
+              - combobox [ref=e115]:
+                - option "Nova (Female, Warm)" [selected]
+                - option "Onyx (Male, Deep)"
+                - option "Shimmer (Female, Energetic)"
+                - option "Echo (Male, Neutral)"
+            - generic [ref=e116]:
+              - generic [ref=e117]: System Prompt
+              - textbox "You are a helpful AI assistant..." [ref=e118]
+        - generic [ref=e119]:
+          - heading " Voice Settings" [level=6] [ref=e121]:
+            - generic [ref=e122]: 
+            - text: Voice Settings
+          - generic [ref=e123]:
+            - generic [ref=e124]:
+              - generic [ref=e125]: Speaking Speed
+              - slider [ref=e126]: "1"
+            - generic [ref=e127]:
+              - generic [ref=e128]: Response Style
+              - combobox [ref=e129]:
+                - option "Concise"
+                - option "Balanced" [selected]
+                - option "Detailed"
+            - generic [ref=e130]:
+              - checkbox "Enable backchannels (uh-huh, etc.)" [checked] [ref=e131]
+              - generic [ref=e132]: Enable backchannels (uh-huh, etc.)
+        - generic [ref=e133]:
+          - heading " Session Stats" [level=6] [ref=e135]:
+            - generic [ref=e136]: 
+            - text: Session Stats
+          - generic [ref=e138]:
+            - generic [ref=e140]:
+              - generic [ref=e141]: 0:00
+              - text: Duration
+            - generic [ref=e143]:
+              - generic [ref=e144]: "--ms"
+              - text: Latency
+            - generic [ref=e146]:
+              - generic [ref=e147]: "0"
+              - text: Turns
+            - generic [ref=e149]:
+              - generic [ref=e150]: "0"
+              - text: Credits Used
+    - generic [ref=e152]:
+      - heading "Full-Duplex Capabilities" [level=2] [ref=e153]
+      - generic [ref=e154]:
+        - generic [ref=e157]:
+          - generic [ref=e158]: 
+          - heading "Listen & Speak Simultaneously" [level=5] [ref=e159]
+          - paragraph [ref=e160]: Unlike traditional systems, PersonaPlex can listen while speaking, enabling natural turn-taking.
+        - generic [ref=e163]:
+          - generic [ref=e164]: 
+          - heading "Natural Interruptions" [level=5] [ref=e165]
+          - paragraph [ref=e166]: Interrupt the AI naturally, just like in a real conversation. No awkward pauses.
+        - generic [ref=e169]:
+          - generic [ref=e170]: 
+          - heading "Backchannels" [level=5] [ref=e171]
+          - paragraph [ref=e172]: Natural conversational cues like "uh-huh", "I see", "go on" to show active listening.
+    - generic [ref=e174]:
+      - heading "Use Cases" [level=2] [ref=e175]
+      - generic [ref=e176]:
+        - generic [ref=e178]:
+          - generic [ref=e179]: 
+          - heading "Customer Support" [level=6] [ref=e180]
+          - paragraph [ref=e181]: Build voice agents that handle complex customer conversations naturally.
+        - generic [ref=e183]:
+          - generic [ref=e184]: 
+          - heading "Language Practice" [level=6] [ref=e185]
+          - paragraph [ref=e186]: Practice speaking any language with a patient, native-sounding AI tutor.
+        - generic [ref=e188]:
+          - generic [ref=e189]: 
+          - heading "Interview Practice" [level=6] [ref=e190]
+          - paragraph [ref=e191]: Prepare for job interviews with realistic AI-powered mock interviews.
+        - generic [ref=e193]:
+          - generic [ref=e194]: 
+          - heading "Voice Assistants" [level=6] [ref=e195]
+          - paragraph [ref=e196]: Create custom voice assistants for your applications and products.
+  - contentinfo [ref=e197]:
+    - generic [ref=e198]:
+      - generic [ref=e199]:
+        - generic [ref=e200]:
+          - heading " Speech to Speech AI" [level=5] [ref=e201]:
+            - generic [ref=e202]: 
+            - text: Speech to Speech AI
+          - paragraph [ref=e203]: The most advanced open-source speech AI platform. Clone voices, convert speech, and build voice applications with state-of-the-art models.
+          - generic [ref=e204]:
+            - link "" [ref=e205] [cursor=pointer]:
+              - /url: https://github.com/nadermx/speechtospeechai
+              - generic [ref=e206]: 
+            - link "" [ref=e207] [cursor=pointer]:
+              - /url: https://twitter.com/speechtospeech
+              - generic [ref=e208]: 
+            - link "" [ref=e209] [cursor=pointer]:
+              - /url: https://discord.gg/speechtospeech
+              - generic [ref=e210]: 
+        - generic [ref=e211]:
+          - heading "Tools" [level=6] [ref=e212]
+          - list [ref=e213]:
+            - listitem [ref=e214]:
+              - link "Voice Cloning" [ref=e215] [cursor=pointer]:
+                - /url: /voice-cloning/
+            - listitem [ref=e216]:
+              - link "Text to Speech" [ref=e217] [cursor=pointer]:
+                - /url: /text-to-speech/
+            - listitem [ref=e218]:
+              - link "Speech to Text" [ref=e219] [cursor=pointer]:
+                - /url: /speech-to-text/
+            - listitem [ref=e220]:
+              - link "Voice Conversion" [ref=e221] [cursor=pointer]:
+                - /url: /voice-conversion/
+        - generic [ref=e222]:
+          - heading "Platform" [level=6] [ref=e223]
+          - list [ref=e224]:
+            - listitem [ref=e225]:
+              - link "Real-Time Chat" [ref=e226] [cursor=pointer]:
+                - /url: /real-time-chat/
+            - listitem [ref=e227]:
+              - link "Custom Training" [ref=e228] [cursor=pointer]:
+                - /url: /custom-training/
+            - listitem [ref=e229]:
+              - link "API Docs" [ref=e230] [cursor=pointer]:
+                - /url: /api-docs/
+            - listitem [ref=e231]:
+              - link "Models" [ref=e232] [cursor=pointer]:
+                - /url: /models/
+        - generic [ref=e233]:
+          - heading "Company" [level=6] [ref=e234]
+          - list [ref=e235]:
+            - listitem [ref=e236]:
+              - link "About Us" [ref=e237] [cursor=pointer]:
+                - /url: /about/
+            - listitem [ref=e238]:
+              - link "Pricing" [ref=e239] [cursor=pointer]:
+                - /url: /pricing/
+            - listitem [ref=e240]:
+              - link "Contact" [ref=e241] [cursor=pointer]:
+                - /url: /contact/
+            - listitem [ref=e242]:
+              - link "Open Source" [ref=e243] [cursor=pointer]:
+                - /url: https://github.com/nadermx/speechtospeechai
+        - generic [ref=e244]:
+          - heading "Legal" [level=6] [ref=e245]
+          - list [ref=e246]:
+            - listitem [ref=e247]:
+              - link "Privacy Policy" [ref=e248] [cursor=pointer]:
+                - /url: /privacy/
+            - listitem [ref=e249]:
+              - link "Terms of Service" [ref=e250] [cursor=pointer]:
+                - /url: /terms/
+            - listitem [ref=e251]:
+              - link "Refund Policy" [ref=e252] [cursor=pointer]:
+                - /url: /refund/
+      - separator [ref=e253]
+      - generic [ref=e254]:
+        - paragraph [ref=e256]: © 2026 Speech to Speech AI. Powered by open-source AI.
+        - generic [ref=e258]:
+          - generic [ref=e259]: 
+          - text: All systems operational
+```

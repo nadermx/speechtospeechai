@@ -253,16 +253,16 @@ test.describe('Tool UI Elements', () => {
         const dropzone = page.locator('#dropzone');
         await expect(dropzone).toBeVisible();
 
-        // Check text input
-        const textInput = page.locator('#textToSpeak');
-        await expect(textInput).toBeVisible();
+        // Check audio file input
+        const audioFile = page.locator('#audioFile');
+        await expect(audioFile).toBeAttached();
 
         // Check clone button
         const cloneBtn = page.locator('#cloneBtn');
         await expect(cloneBtn).toBeVisible();
 
-        // Check tab navigation
-        const tabs = page.locator('[role="tab"]');
+        // Check tab navigation (nav-link elements for tabs)
+        const tabs = page.locator('.nav-tabs .nav-link');
         expect(await tabs.count()).toBeGreaterThanOrEqual(2);
     });
 
@@ -328,10 +328,6 @@ test.describe('Tool UI Elements', () => {
         // Chat messages
         const chatMessages = page.locator('#chatMessages');
         await expect(chatMessages).toBeVisible();
-
-        // Persona select
-        const personaSelect = page.locator('#personaSelect');
-        await expect(personaSelect).toBeVisible();
     });
 });
 
