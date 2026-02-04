@@ -43,128 +43,50 @@
                             </div>
                         </div>
 
-                        <!-- Demo Samples -->
-                        <div class="demo-samples">
-                            <!-- Sample 1 -->
-                            <div class="demo-sample bg-black rounded p-3 mb-2" data-sample="1">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="badge bg-secondary">Sample 1</span>
-                                    <small class="text-muted">English → Cloned</small>
+                        <!-- Demo Sample - Language aware -->
+                        <div class="demo-sample bg-black rounded p-3 mb-3"
+                             data-lang="{{ g.lang.iso|default:'en' }}"
+                             data-original="{% if g.lang.iso == 'es' %}{% static 'audio/demo2-original.mp3' %}{% elif g.lang.iso == 'ja' %}{% static 'audio/demo3-original.mp3' %}{% else %}{% static 'audio/demo1-original.mp3' %}{% endif %}"
+                             data-cloned="{% if g.lang.iso == 'es' %}{% static 'audio/demo2-cloned.mp3' %}{% elif g.lang.iso == 'ja' %}{% static 'audio/demo3-cloned.mp3' %}{% else %}{% static 'audio/demo1-cloned.mp3' %}{% endif %}">
+                            <div class="text-center mb-3">
+                                <p class="text-muted small mb-2">{{ g.i18n.demo_description|default:"Hear the same sentence in two different voices" }}</p>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-light w-100 play-btn" id="playOriginal" data-type="original">
+                                        <i class="bi bi-play-fill me-1"></i>{{ g.i18n.original_voice|default:"Original Voice" }}
+                                    </button>
                                 </div>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <button class="btn btn-outline-light btn-sm w-100 play-btn" data-type="original" data-sample="1">
-                                            <i class="bi bi-play-fill me-1"></i>Original
-                                        </button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button class="btn btn-primary btn-sm w-100 play-btn" data-type="cloned" data-sample="1">
-                                            <i class="bi bi-play-fill me-1"></i>Cloned
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="waveform mt-2" id="waveform-1">
-                                    <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 30px;">
-                                        <div class="bar bg-primary" style="width: 3px; height: 40%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 70%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 50%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 90%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 60%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 80%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 45%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 100%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 55%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 75%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 40%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 85%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 50%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 65%;"></div>
-                                        <div class="bar bg-primary" style="width: 3px; height: 35%;"></div>
-                                    </div>
+                                <div class="col-6">
+                                    <button class="btn btn-primary w-100 play-btn" id="playCloned" data-type="cloned">
+                                        <i class="bi bi-play-fill me-1"></i>{{ g.i18n.cloned_voice|default:"Cloned Voice" }}
+                                    </button>
                                 </div>
                             </div>
-
-                            <!-- Sample 2 -->
-                            <div class="demo-sample bg-black rounded p-3 mb-2" data-sample="2">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="badge bg-secondary">Sample 2</span>
-                                    <small class="text-muted">Spanish → Cloned</small>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <button class="btn btn-outline-light btn-sm w-100 play-btn" data-type="original" data-sample="2">
-                                            <i class="bi bi-play-fill me-1"></i>Original
-                                        </button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button class="btn btn-success btn-sm w-100 play-btn" data-type="cloned" data-sample="2">
-                                            <i class="bi bi-play-fill me-1"></i>Cloned
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="waveform mt-2" id="waveform-2">
-                                    <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 30px;">
-                                        <div class="bar bg-success" style="width: 3px; height: 60%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 40%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 80%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 55%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 95%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 45%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 70%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 50%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 85%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 40%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 75%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 55%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 90%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 45%;"></div>
-                                        <div class="bar bg-success" style="width: 3px; height: 65%;"></div>
-                                    </div>
+                            <div class="waveform" id="waveform">
+                                <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 40px;">
+                                    <div class="bar bg-primary" style="width: 4px; height: 40%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 70%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 50%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 90%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 60%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 80%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 45%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 100%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 55%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 75%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 40%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 85%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 50%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 65%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 35%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 70%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 55%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 80%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 45%;"></div>
+                                    <div class="bar bg-primary" style="width: 4px; height: 60%;"></div>
                                 </div>
                             </div>
-
-                            <!-- Sample 3 -->
-                            <div class="demo-sample bg-black rounded p-3 mb-3" data-sample="3">
-                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                    <span class="badge bg-secondary">Sample 3</span>
-                                    <small class="text-muted">Japanese → Cloned</small>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <button class="btn btn-outline-light btn-sm w-100 play-btn" data-type="original" data-sample="3">
-                                            <i class="bi bi-play-fill me-1"></i>Original
-                                        </button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button class="btn btn-warning btn-sm w-100 play-btn" data-type="cloned" data-sample="3">
-                                            <i class="bi bi-play-fill me-1"></i>Cloned
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="waveform mt-2" id="waveform-3">
-                                    <div class="waveform-bars d-flex align-items-end justify-content-center gap-1" style="height: 30px;">
-                                        <div class="bar bg-warning" style="width: 3px; height: 50%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 85%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 40%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 70%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 55%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 100%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 45%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 75%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 60%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 90%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 50%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 80%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 35%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 65%;"></div>
-                                        <div class="bar bg-warning" style="width: 3px; height: 45%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-center small text-muted mb-3">
-                            <i class="bi bi-info-circle me-1"></i>Click to hear the same content in different voices
                         </div>
 
                         <a href="/voice-cloning/" class="btn btn-outline-light w-100">
@@ -848,31 +770,21 @@ audio.save(<span class="text-success">"output.mp3"</span>)</code></pre>
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Demo audio samples (these would be real audio files in production)
-    const samples = {
-        1: {
-            original: '{% static "audio/demo1-original.mp3" %}',
-            cloned: '{% static "audio/demo1-cloned.mp3" %}'
-        },
-        2: {
-            original: '{% static "audio/demo2-original.mp3" %}',
-            cloned: '{% static "audio/demo2-cloned.mp3" %}'
-        },
-        3: {
-            original: '{% static "audio/demo3-original.mp3" %}',
-            cloned: '{% static "audio/demo3-cloned.mp3" %}'
-        }
-    };
-
+    const demoSample = document.querySelector('.demo-sample');
+    const waveformBars = document.querySelector('#waveform .waveform-bars');
     let currentAudio = null;
     let currentBtn = null;
+
+    // Get audio URLs from data attributes
+    const audioUrls = {
+        original: demoSample.dataset.original,
+        cloned: demoSample.dataset.cloned
+    };
 
     // Play button handlers
     document.querySelectorAll('.play-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            const sample = this.dataset.sample;
             const type = this.dataset.type;
-            const waveformBars = document.querySelector(`#waveform-${sample} .waveform-bars`);
 
             // Stop any current playback
             if (currentAudio) {
@@ -882,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentBtn.querySelector('i').className = 'bi bi-play-fill me-1';
                     currentBtn.classList.remove('playing');
                 }
-                document.querySelectorAll('.waveform-bars').forEach(w => w.classList.remove('playing'));
+                waveformBars.classList.remove('playing');
             }
 
             // If clicking same button, just stop
@@ -893,8 +805,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Create audio and play
-            const audioUrl = samples[sample][type];
-            currentAudio = new Audio(audioUrl);
+            currentAudio = new Audio(audioUrls[type]);
             currentBtn = this;
 
             // Update UI
@@ -903,17 +814,8 @@ document.addEventListener('DOMContentLoaded', function() {
             waveformBars.classList.add('playing');
 
             currentAudio.play().catch(function(e) {
-                // If audio fails to load, show a simulated playback
-                console.log('Demo audio not available, simulating playback');
-                setTimeout(function() {
-                    if (currentBtn === btn) {
-                        btn.querySelector('i').className = 'bi bi-play-fill me-1';
-                        btn.classList.remove('playing');
-                        waveformBars.classList.remove('playing');
-                        currentAudio = null;
-                        currentBtn = null;
-                    }
-                }, 3000);
+                console.log('Audio playback failed:', e);
+                waveformBars.classList.remove('playing');
             });
 
             currentAudio.onended = function() {
