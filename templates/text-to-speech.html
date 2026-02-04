@@ -2,35 +2,30 @@
 {% load static %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-dark text-white py-5">
-    <div class="container py-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
+<!-- Compact Header + Tool -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-3">
-                        <li class="breadcrumb-item"><a href="/" class="text-light">Home</a></li>
-                        <li class="breadcrumb-item active text-success">Text to Speech</li>
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Text to Speech</li>
                     </ol>
                 </nav>
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="bi bi-chat-square-text text-success me-3"></i>Text to Speech
-                </h1>
-                <p class="lead mb-4 opacity-75">
-                    Convert any text to natural-sounding speech. Choose from 50+ premium voices, 29 languages, and customize emotion, speed, and pitch.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-success"><i class="bi bi-mic me-1"></i>50+ Voices</span>
-                    <span class="badge bg-primary"><i class="bi bi-globe me-1"></i>29 Languages</span>
-                    <span class="badge bg-info"><i class="bi bi-emoji-smile me-1"></i>Emotion Control</span>
-                </div>
+                <h1 class="h3 mb-0"><i class="bi bi-chat-square-text text-success me-2"></i>Text to Speech</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-success"><i class="bi bi-mic me-1"></i>50+ Voices</span>
+                <span class="badge bg-primary"><i class="bi bi-globe me-1"></i>29 Languages</span>
+                <span class="badge bg-info"><i class="bi bi-emoji-smile me-1"></i>Emotion Control</span>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Main Tool -->
-<section class="py-5">
+<section class="py-4">
     <div class="container">
         <div class="row g-4">
             <!-- Text Input Panel -->

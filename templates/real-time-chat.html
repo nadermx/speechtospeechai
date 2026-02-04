@@ -2,30 +2,30 @@
 {% load static %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-dark text-white py-5">
-    <div class="container py-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <span class="badge bg-danger mb-3"><i class="bi bi-stars me-1"></i> Powered by PersonaPlex 7B</span>
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="bi bi-headset text-danger me-3"></i>Real-Time Voice Chat
-                </h1>
-                <p class="lead mb-4 opacity-75">
-                    Full-duplex conversational AI that listens and speaks simultaneously. Natural interruptions, backchannels, and customizable personas with under 200ms latency.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-danger"><i class="bi bi-lightning me-1"></i>&lt;200ms Latency</span>
-                    <span class="badge bg-primary"><i class="bi bi-arrows-fullscreen me-1"></i>Full Duplex</span>
-                    <span class="badge bg-success"><i class="bi bi-person-badge me-1"></i>Custom Personas</span>
-                </div>
+<!-- Compact Header + Tool -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Real-Time Voice Chat</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0"><i class="bi bi-headset text-danger me-2"></i>Real-Time Voice Chat</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-danger"><i class="bi bi-lightning me-1"></i>&lt;200ms Latency</span>
+                <span class="badge bg-primary"><i class="bi bi-arrows-fullscreen me-1"></i>Full Duplex</span>
+                <span class="badge bg-success"><i class="bi bi-person-badge me-1"></i>Custom Personas</span>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Chat Interface -->
-<section class="py-5">
+<section class="py-4">
     <div class="container">
         <div class="row g-4">
             <!-- Main Chat Area -->

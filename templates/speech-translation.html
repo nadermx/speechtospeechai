@@ -2,25 +2,30 @@
 {% load static %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-dark text-white py-5">
-    <div class="container py-4">
-        <h1 class="display-4 fw-bold mb-4">
-            <i class="bi bi-translate text-info me-3"></i>Speech Translation
-        </h1>
-        <p class="lead mb-4 opacity-75">
-            Translate speech from one language to another while preserving the original speaker's voice characteristics and emotion.
-        </p>
-        <div class="d-flex flex-wrap gap-2">
-            <span class="badge bg-info"><i class="bi bi-globe me-1"></i>50+ Languages</span>
-            <span class="badge bg-success"><i class="bi bi-person-badge me-1"></i>Voice Preservation</span>
-            <span class="badge bg-warning text-dark"><i class="bi bi-lightning me-1"></i>Real-time</span>
+<!-- Compact Header + Tool -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Speech Translation</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0"><i class="bi bi-translate text-info me-2"></i>Speech Translation</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-info"><i class="bi bi-globe me-1"></i>50+ Languages</span>
+                <span class="badge bg-success"><i class="bi bi-person-badge me-1"></i>Voice Preservation</span>
+                <span class="badge bg-warning text-dark"><i class="bi bi-lightning me-1"></i>Real-time</span>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Main Tool -->
-<section class="py-5">
+<section class="py-4">
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-8">

@@ -2,35 +2,30 @@
 {% load static %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-dark text-white py-5">
-    <div class="container py-4">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
+<!-- Compact Header + Tool -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-3">
-                        <li class="breadcrumb-item"><a href="/" class="text-light">Home</a></li>
-                        <li class="breadcrumb-item active text-info">Speech to Text</li>
+                    <ol class="breadcrumb mb-1 small">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Speech to Text</li>
                     </ol>
                 </nav>
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="bi bi-mic text-info me-3"></i>Speech to Text
-                </h1>
-                <p class="lead mb-4 opacity-75">
-                    Transcribe audio and video with 99%+ accuracy. Powered by Whisper Large v3 with speaker diarization, word timestamps, and 100+ language support.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-info"><i class="bi bi-check-circle me-1"></i>99%+ Accuracy</span>
-                    <span class="badge bg-primary"><i class="bi bi-globe me-1"></i>100+ Languages</span>
-                    <span class="badge bg-success"><i class="bi bi-people me-1"></i>Speaker Diarization</span>
-                </div>
+                <h1 class="h3 mb-0"><i class="bi bi-mic text-info me-2"></i>Speech to Text</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-info"><i class="bi bi-check-circle me-1"></i>99%+ Accuracy</span>
+                <span class="badge bg-primary"><i class="bi bi-globe me-1"></i>100+ Languages</span>
+                <span class="badge bg-success"><i class="bi bi-people me-1"></i>Speaker Diarization</span>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Main Tool -->
-<section class="py-5">
+<section class="py-4">
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-8">
