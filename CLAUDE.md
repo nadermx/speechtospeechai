@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Speech to Speech AI - A comprehensive speech AI platform featuring voice cloning, TTS, STT, voice conversion, and real-time conversational AI. Built on Django with a separate GPU API server for processing.
 
 **Live**: https://speechtospeechai.com | **API**: https://api.speechtospeechai.com
+**Server**: 167.172.17.40 (DigitalOcean) | **Deploy path**: /home/www/speechtospeechai | **ansible_user**: root
 
 ## Build & Run Commands
 
@@ -19,15 +20,29 @@ python manage.py createsuperuser
 # Database setup
 python manage.py set_languages      # Load languages from JSON
 python manage.py set_plans          # Load pricing plans
+python manage.py set_text_backup    # Load TextBase entries from translations/json/textbase.json
+
+# Other management commands
+python manage.py rebill               # Process recurring billing
+python manage.py expire_pro_users     # Expire lapsed subscriptions
+python manage.py remove_pro_for_old_plans  # Remove pro status from old plan users
+python manage.py up_users_backup      # Restore users from accounts/json/users.json
+python manage.py create_paypal_product # Create PayPal product catalog
+python manage.py create_paypal_plans  # Create PayPal billing plans
+python manage.py run_translation      # Auto-translate UI text
+python manage.py delete_translations  # Clean orphaned UI translations
 
 # Static files (production)
 python manage.py collectstatic --noinput
 
-# Deployment (from local machine)
-cd ansible && ansible-playbook -i servers djangodeployubuntu20.yml
-
-# Quick deploy via SSH
+# Deployment (NO gitpull.yml — use manual deploy via SSH)
 ssh root@167.172.17.40 "cd /home/www/speechtospeechai && git pull && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && supervisorctl restart speechtospeechai"
+
+# Or via Ansible ad-hoc:
+ansible -i ansible/servers all -m shell -a "cd /home/www/speechtospeechai && git pull https://nadermx:TOKEN@github.com/nadermx/speechtospeechai.git main && supervisorctl restart speechtospeechai"
+
+# Full server setup (first time only)
+cd ansible && ansible-playbook -i servers djangodeployubuntu20.yml
 ```
 
 ## Architecture
@@ -104,9 +119,27 @@ tail -f /var/log/speechtospeechai/speechtospeechai.err.log
 sudo -u postgres psql speechtospeechai
 ```
 
+## GPU Server Package Status
+
+The shared GPU server (38.248.6.142 / api.imageeditor.ai) has these TTS packages installed:
+
+### venv312 (Primary, Python 3.12)
+kokoro, chatterbox-tts, melotts, faster-whisper, funasr, demucs, librosa, suno-bark, piper-tts, openvoice, parler-tts, tortoise-tts, noisereduce
+
+### venv311 (Coqui TTS, Python 3.11)
+TTS 0.22.0 (Coqui TTS) - XTTS-v2/VITS only. Called via subprocess (`converter/coqui_tts_helper.py`) because Coqui TTS requires Python <3.12.
+
+### Cloned Model Repos (`/home/www/api/models/`)
+GPT-SoVITS, CosyVoice2, IndexTTS2, SparkTTS
+
+### Gated Models (not yet available)
+Higgs-v2, GLM-TTS, Sesame CSM - need HuggingFace token + access approval
+
 ## Deployment Notes
 
 - Use Ansible for server operations per global CLAUDE.md
+- **No gitpull.yml** — deploy manually via SSH or Ansible ad-hoc commands
+- **ansible_user is root** — `disableroot.yml` exists but was never run; consider running it to create a dedicated deploy user
 - `config.py` and `ansible/servers` are git-ignored - copy manually to server
 - Run migrations on server, not locally (files in .gitignore)
 - DNS nameservers must point to DigitalOcean (ns1/ns2/ns3.digitalocean.com)
