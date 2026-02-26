@@ -318,3 +318,23 @@ SpeechToSpeechAI.com is a comprehensive speech AI platform featuring 9 TTS engin
 6. **Implement speech output caching** -- cache by input hash to reduce redundant GPU work
 7. **Add usage analytics** -- track engine popularity, generation times, failure rates
 8. **Build real-time voice changer** as first expansion (streaming/gaming market is growing fast, high engagement)
+
+---
+
+
+---
+
+## Revenue Acceleration Addendum (February 2026)
+
+### Portfolio Conversion System (Apply Across Projects)
+1. Enforce a clear funnel: first free action -> email gate -> strict daily free cap -> paywall.
+2. Add in-product upgrade triggers at high intent moments (download/export/API usage/advanced options).
+3. Standardize paid packaging: one highlighted plan, annual discount, and role-based tiers (creator/pro/team).
+4. Add reactivation flows for abandoned usage (1 hour, 24 hour, 72 hour reminders with resume links).
+5. Add referral loop (invite to unlock credits) and clear usage counters for free limits.
+
+### Project-Specific Revenue + SEO Actions
+- Add premium low-latency tier for real-time use cases.
+- Add vertical plans (gaming, creators, support centers, dubbing studios).
+- Add SDK/API subscriptions for app developers.
+- Expand SEO with task pages (voice changer realtime, accent conversion, live dubbing).
