@@ -73,7 +73,7 @@ window.addEventListener('unhandledrejection', (event) => {
 const SpeechAPI = {
     // API configuration
     baseUrl: window.API_SERVER || 'https://api.speechtospeechai.com',
-    fallbackUrl: 'https://api.imageeditor.ai',
+    fallbackUrl: 'https://api.speechtospeechai.com',
 
     // Get API key from user session
     getApiKey: function() {
