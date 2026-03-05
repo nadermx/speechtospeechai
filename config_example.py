@@ -4,6 +4,9 @@ PROJECT_DOMAIN = 'example.com'  # Your domain (e.g., myproject.com)
 ROOT_DOMAIN = 'http://localhost:8000'
 DEBUG = True
 
+# GPU API Server (speech processing backend)
+API_SERVER = 'https://api.speechtospeechai.com'
+
 # Google Translate API (for translations)
 GOOGLE_API = ''
 
